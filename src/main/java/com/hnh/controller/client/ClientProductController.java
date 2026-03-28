@@ -1,4 +1,4 @@
-﻿package com.hnh.controller.client;
+package com.hnh.controller.client;
 
 import com.hnh.constant.AppConstants;
 import com.hnh.constant.FieldName;
@@ -84,13 +84,17 @@ public class ClientProductController {
             @RequestParam(name = "newable", required = false) boolean newable,
             @RequestParam(name = "slowSelling", required = false) boolean slowSelling
     ) {
+        // Tìm danh mục theo slug, ném lỗi 404 nếu không tồn tại
         Category category = categoryRepository.findBySlug(slug)
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceName.CATEGORY, FieldName.SLUG, slug));
 
-        List<Long> categoryIds = new java.util.ArrayList<>();
-        collectCategoryIds(category, categoryIds);
+        // Dùng WITH RECURSIVE query để lấy ID của danh mục cha + tất cả danh mục con (mọi cấp)
+        List<Long> categoryIds = categoryRepository.findAllDescendantIds(category.getId());
 
-        String categoryFilter = "category.id=in=(" + categoryIds.stream().map(Object::toString).collect(java.util.stream.Collectors.joining(",")) + ")";
+        // Xây dựng filter theo danh sách category IDs
+        String categoryFilter = "category.id=in=(" + categoryIds.stream()
+                .map(Object::toString)
+                .collect(java.util.stream.Collectors.joining(",")) + ")";
         String finalFilter = (filter == null || filter.isBlank()) ? categoryFilter : categoryFilter + ";" + filter;
 
         Pageable pageable = PageRequest.of(page - 1, size);
@@ -103,13 +107,6 @@ public class ClientProductController {
                 .map(product -> clientProductMapper.entityToListedResponse(product, productInventories)).toList();
 
         return ResponseEntity.status(HttpStatus.OK).body(ListResponse.of(clientListedProductResponses, products));
-    }
-
-    private void collectCategoryIds(Category category, List<Long> ids) {
-        ids.add(category.getId());
-        for (Category child : category.getChildren()) {
-            collectCategoryIds(child, ids);
-        }
     }
 
     @GetMapping("/{slug}")

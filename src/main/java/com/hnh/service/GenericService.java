@@ -1,4 +1,4 @@
-﻿package com.hnh.service;
+package com.hnh.service;
 
 import com.hnh.dto.ListResponse;
 import com.hnh.mapper.GenericMapper;
@@ -62,6 +62,21 @@ public class GenericService<E, I, O> implements CrudService<Long, I, O> {
     @Override
     public void delete(List<Long> ids) {
         repository.deleteAllById(ids);
+    }
+
+    @Override
+    public O updateStatus(Long id, Integer status) {
+        E entity = repository.findById(id)
+                .orElseThrow(() -> new com.hnh.exception.ResourceNotFoundException(resourceName, com.hnh.constant.FieldName.ID, id));
+        try {
+            java.lang.reflect.Field statusField = entity.getClass().getDeclaredField("status");
+            statusField.setAccessible(true);
+            statusField.set(entity, status);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException("Entity " + resourceName + " does not have a 'status' field or it's not accessible", e);
+        }
+        entity = repository.save(entity);
+        return mapper.entityToResponse(entity);
     }
 
 }

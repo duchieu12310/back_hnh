@@ -1,4 +1,4 @@
-﻿package com.hnh.controller;
+package com.hnh.controller;
 
 import com.hnh.constant.ResourceName;
 import com.hnh.constant.SearchFields;
@@ -715,6 +715,16 @@ public class GenericMappingRegister {
                         .build(),
                 controller,
                 controller.getClass().getMethod("deleteResources", List.class)
+        );
+        handlerMapping.registerMapping(
+                RequestMappingInfo.paths("/api/" + resource + "/{id}/status")
+                        .methods(RequestMethod.PUT)
+                        .consumes(MediaType.APPLICATION_JSON_VALUE)
+                        .produces(MediaType.APPLICATION_JSON_VALUE)
+                        .options(options)
+                        .build(),
+                controller,
+                controller.getClass().getMethod("updateStatus", Long.class, JsonNode.class)
         );
     }
 

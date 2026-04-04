@@ -1,4 +1,4 @@
-﻿package com.hnh.service;
+package com.hnh.service;
 
 import com.hnh.constant.FieldName;
 import com.hnh.dto.ListResponse;
@@ -30,6 +30,8 @@ public interface CrudService<ID, I, O> {
     void delete(ID id);
 
     void delete(List<ID> ids);
+
+    O updateStatus(ID id, Integer status);
 
     default O save(JsonNode request, Class<I> requestType) {
         ObjectMapper mapper = new ObjectMapper();

@@ -1,4 +1,4 @@
-﻿package com.hnh.controller;
+package com.hnh.controller;
 
 import com.hnh.constant.AppConstants;
 import com.hnh.dto.ListResponse;
@@ -57,6 +57,11 @@ public class GenericController<I, O> {
     public ResponseEntity<Void> deleteResources(@RequestBody List<Long> ids) {
         crudService.delete(ids);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    public ResponseEntity<O> updateStatus(@PathVariable("id") Long id, @RequestBody JsonNode request) {
+        int status = request.get("status").asInt();
+        return ResponseEntity.status(HttpStatus.OK).body(crudService.updateStatus(id, status));
     }
 
 }

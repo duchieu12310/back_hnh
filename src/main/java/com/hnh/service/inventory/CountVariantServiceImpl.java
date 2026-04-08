@@ -1,4 +1,4 @@
-﻿package com.hnh.service.inventory;
+package com.hnh.service.inventory;
 
 import com.hnh.constant.ResourceName;
 import com.hnh.constant.SearchFields;
@@ -49,6 +49,21 @@ public class CountVariantServiceImpl implements CountVariantService {
     @Override
     public void delete(List<CountVariantKey> ids) {
         countVariantRepository.deleteAllById(ids);
+    }
+
+    @Override
+    public CountVariantResponse updateStatus(CountVariantKey id, Integer status) {
+        com.hnh.entity.inventory.CountVariant entity = countVariantRepository.findById(id)
+                .orElseThrow(() -> new com.hnh.exception.ResourceNotFoundException(ResourceName.COUNT_VARIANT, com.hnh.constant.FieldName.ID, id));
+        try {
+            java.lang.reflect.Field statusField = entity.getClass().getDeclaredField("status");
+            statusField.setAccessible(true);
+            statusField.set(entity, status);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException("Entity " + ResourceName.COUNT_VARIANT + " does not have a 'status' field or it's not accessible", e);
+        }
+        entity = countVariantRepository.save(entity);
+        return countVariantMapper.entityToResponse(entity);
     }
 
 }

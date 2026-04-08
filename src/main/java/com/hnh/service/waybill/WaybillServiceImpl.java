@@ -1,4 +1,4 @@
-﻿package com.hnh.service.waybill;
+package com.hnh.service.waybill;
 
 import com.hnh.constant.FieldName;
 import com.hnh.constant.ResourceName;
@@ -508,6 +508,21 @@ public class WaybillServiceImpl implements WaybillService {
 
         notificationService.pushNotification(notification.getUser().getUsername(),
                 notificationMapper.entityToResponse(notification));
+    }
+
+    @Override
+    public WaybillResponse updateStatus(Long id, Integer status) {
+        Waybill entity = waybillRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(ResourceName.WAYBILL, FieldName.ID, id));
+        try {
+            java.lang.reflect.Field statusField = entity.getClass().getDeclaredField("status");
+            statusField.setAccessible(true);
+            statusField.set(entity, status);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException("Entity " + ResourceName.WAYBILL + " does not have a 'status' field or it's not accessible", e);
+        }
+        entity = waybillRepository.save(entity);
+        return waybillMapper.entityToResponse(entity);
     }
 
 }

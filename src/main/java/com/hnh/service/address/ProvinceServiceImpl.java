@@ -1,4 +1,4 @@
-﻿package com.hnh.service.address;
+package com.hnh.service.address;
 
 import com.hnh.constant.ResourceName;
 import com.hnh.constant.SearchFields;
@@ -48,6 +48,21 @@ public class ProvinceServiceImpl implements ProvinceService {
     @Override
     public void delete(List<Long> ids) {
         provinceRepository.deleteAllById(ids);
+    }
+
+    @Override
+    public ProvinceResponse updateStatus(Long id, Integer status) {
+        com.hnh.entity.address.Province entity = provinceRepository.findById(id)
+                .orElseThrow(() -> new com.hnh.exception.ResourceNotFoundException(ResourceName.PROVINCE, com.hnh.constant.FieldName.ID, id));
+        try {
+            java.lang.reflect.Field statusField = entity.getClass().getDeclaredField("status");
+            statusField.setAccessible(true);
+            statusField.set(entity, status);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException("Entity " + ResourceName.PROVINCE + " does not have a 'status' field or it's not accessible", e);
+        }
+        entity = provinceRepository.save(entity);
+        return provinceMapper.entityToResponse(entity);
     }
 
 }

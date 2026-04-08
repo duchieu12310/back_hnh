@@ -1,4 +1,4 @@
-﻿package com.hnh.service.chat;
+package com.hnh.service.chat;
 
 import com.hnh.constant.ResourceName;
 import com.hnh.constant.SearchFields;
@@ -68,6 +68,21 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public void delete(List<Long> ids) {
         messageRepository.deleteAllById(ids);
+    }
+
+    @Override
+    public MessageResponse updateStatus(Long id, Integer status) {
+        Message entity = messageRepository.findById(id)
+                .orElseThrow(() -> new com.hnh.exception.ResourceNotFoundException(ResourceName.MESSAGE, com.hnh.constant.FieldName.ID, id));
+        try {
+            java.lang.reflect.Field statusField = entity.getClass().getDeclaredField("status");
+            statusField.setAccessible(true);
+            statusField.set(entity, status);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException("Entity " + ResourceName.MESSAGE + " does not have a 'status' field or it's not accessible", e);
+        }
+        entity = messageRepository.save(entity);
+        return messageMapper.entityToResponse(entity);
     }
 
 }

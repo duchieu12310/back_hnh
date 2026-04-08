@@ -22,8 +22,10 @@ public class DocketVariantServiceImpl implements DocketVariantService {
     private DocketVariantMapper docketVariantMapper;
 
     @Override
-    public ListResponse<DocketVariantResponse> findAll(int page, int size, String sort, String filter, String search, boolean all) {
-        return defaultFindAll(page, size, sort, filter, search, all, SearchFields.DOCKET_VARIANT, docketVariantRepository, docketVariantMapper);
+    public ListResponse<DocketVariantResponse> findAll(int page, int size, String sort, String filter, String search,
+            boolean all) {
+        return defaultFindAll(page, size, sort, filter, search, all, SearchFields.DOCKET_VARIANT,
+                docketVariantRepository, docketVariantMapper);
     }
 
     @Override
@@ -52,4 +54,3 @@ public class DocketVariantServiceImpl implements DocketVariantService {
     }
 
 }
-

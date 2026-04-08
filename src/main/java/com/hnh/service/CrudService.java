@@ -31,7 +31,9 @@ public interface CrudService<ID, I, O> {
 
     void delete(List<ID> ids);
 
-    O updateStatus(ID id, Integer status);
+    default O updateStatus(ID id, Integer status) {
+        throw new UnsupportedOperationException("updateStatus is not supported for this entity");
+    }
 
     default O save(JsonNode request, Class<I> requestType) {
         ObjectMapper mapper = new ObjectMapper();

@@ -1,4 +1,4 @@
-﻿package com.hnh.service.review;
+package com.hnh.service.review;
 
 import com.hnh.constant.FieldName;
 import com.hnh.constant.ResourceName;
@@ -46,7 +46,7 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = reviewRepository.findById(id)
                 .map(existingEntity -> reviewMapper.partialUpdate(existingEntity, request))
                 .map(reviewRepository::save)
-                .orElseThrow(() -> new ResourceNotFoundException(ResourceName.DOCKET, FieldName.ID, id));
+                .orElseThrow(() -> new ResourceNotFoundException(ResourceName.REVIEW, FieldName.ID, id));
 
         // TODO: TẠM THỜI COMMENT - FLOW ĐIỂM THƯỞNG
         // rewardUtils.approveReviewHook(review);

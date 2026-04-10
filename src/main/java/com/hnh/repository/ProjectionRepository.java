@@ -1,16 +1,13 @@
-﻿package com.hnh.repository;
+package com.hnh.repository;
 
-import com.hnh.entity.inventory.Docket;
-import com.hnh.entity.inventory.DocketVariant;
 import com.hnh.entity.product.Variant;
-import com.hnh.projection.inventory.SimpleProductInventory;
+import com.hnh.projection.product.SimpleProductInventory;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
@@ -18,62 +15,21 @@ import java.util.List;
 @AllArgsConstructor
 public class ProjectionRepository {
 
-    private EntityManager em;
+    private final EntityManager em;
 
     public List<SimpleProductInventory> findSimpleProductInventories(List<Long> productIds) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<SimpleProductInventory> query = cb.createQuery(SimpleProductInventory.class);
 
         Root<Variant> variant = query.from(Variant.class);
-        Join<Variant, DocketVariant> docketVariant = variant.join("docketVariants");
-        Join<DocketVariant, Docket> docket = docketVariant.join("docket");
 
         query.select(cb.construct(
                 SimpleProductInventory.class,
                 variant.get("product").get("id"),
-                cb.sum(
-                        cb.<Integer>selectCase()
-                                .when(cb.and(cb.equal(docket.get("type"), 1),
-                                                cb.equal(docket.get("status"), 3)),
-                                        docketVariant.get("quantity"))
-                                .when(cb.and(cb.equal(docket.get("type"), 2),
-                                                cb.equal(docket.get("status"), 3)),
-                                        cb.prod(docketVariant.get("quantity"), -1))
-                                .otherwise(0)
-                ),
-                cb.sum(
-                        cb.<Integer>selectCase()
-                                .when(cb.and(cb.equal(docket.get("type"), 2),
-                                                docket.get("status").in(1, 2)),
-                                        docketVariant.get("quantity"))
-                                .otherwise(0)
-                ),
-                cb.diff(
-                        cb.sum(
-                                cb.<Integer>selectCase()
-                                        .when(cb.and(cb.equal(docket.get("type"), 1),
-                                                        cb.equal(docket.get("status"), 3)),
-                                                docketVariant.get("quantity"))
-                                        .when(cb.and(cb.equal(docket.get("type"), 2),
-                                                        cb.equal(docket.get("status"), 3)),
-                                                cb.prod(docketVariant.get("quantity"), -1))
-                                        .otherwise(0)
-                        ),
-                        cb.sum(
-                                cb.<Integer>selectCase()
-                                        .when(cb.and(cb.equal(docket.get("type"), 2),
-                                                        docket.get("status").in(1, 2)),
-                                                docketVariant.get("quantity"))
-                                        .otherwise(0)
-                        )
-                ),
-                cb.sum(
-                        cb.<Integer>selectCase()
-                                .when(cb.and(cb.equal(docket.get("type"), 1),
-                                                docket.get("status").in(1, 2)),
-                                        docketVariant.get("quantity"))
-                                .otherwise(0)
-                )
+                cb.sum(variant.get("quantity")), // inventory
+                cb.literal(0L), // waitingForDelivery placeholder
+                cb.sum(variant.get("quantity")), // canBeSold
+                cb.literal(0L) // areComing placeholder
         ));
 
         query.where(variant.get("product").get("id").in(productIds));

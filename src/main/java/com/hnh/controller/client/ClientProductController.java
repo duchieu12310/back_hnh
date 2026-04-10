@@ -11,7 +11,7 @@ import com.hnh.entity.product.Category;
 import com.hnh.entity.product.Product;
 import com.hnh.exception.ResourceNotFoundException;
 import com.hnh.mapper.client.ClientProductMapper;
-import com.hnh.projection.inventory.SimpleProductInventory;
+import com.hnh.projection.product.SimpleProductInventory;
 import com.hnh.repository.ProjectionRepository;
 import com.hnh.repository.product.CategoryRepository;
 import com.hnh.repository.product.ProductRepository;

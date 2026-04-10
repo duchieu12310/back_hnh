@@ -1,10 +1,14 @@
-﻿package com.hnh.dto.address;
+package com.hnh.dto.address;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProvinceResponse {
     private Long id;
     private Instant createdAt;
@@ -12,4 +16,3 @@ public class ProvinceResponse {
     private String name;
     private String code;
 }
-

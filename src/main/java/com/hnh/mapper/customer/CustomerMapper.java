@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper.customer;
+package com.hnh.mapper.customer;
 
 import com.hnh.dto.customer.CustomerRequest;
 import com.hnh.dto.customer.CustomerResponse;
@@ -15,16 +15,15 @@ import org.mapstruct.ReportingPolicy;
 public interface CustomerMapper extends GenericMapper<Customer, CustomerRequest, CustomerResponse> {
 
     @Override
-    @Mapping(source = "customerGroupId", target = "customerGroup")
-    @Mapping(source = "customerResourceId", target = "customerResource")
-    @Mapping(source = "customerStatusId", target = "customerStatus")
+    @Mapping(source = "customerGroupId", target = "customerGroup", qualifiedByName = "mapToCustomerGroup")
+    @Mapping(source = "customerResourceId", target = "customerResource", qualifiedByName = "mapToCustomerResource")
+    @Mapping(source = "customerStatusId", target = "customerStatus", qualifiedByName = "mapToCustomerStatus")
     Customer requestToEntity(CustomerRequest request);
 
     @Override
-    @Mapping(source = "customerGroupId", target = "customerGroup")
-    @Mapping(source = "customerResourceId", target = "customerResource")
-    @Mapping(source = "customerStatusId", target = "customerStatus")
+    @Mapping(source = "customerGroupId", target = "customerGroup", qualifiedByName = "mapToCustomerGroup")
+    @Mapping(source = "customerResourceId", target = "customerResource", qualifiedByName = "mapToCustomerResource")
+    @Mapping(source = "customerStatusId", target = "customerStatus", qualifiedByName = "mapToCustomerStatus")
     Customer partialUpdate(@MappingTarget Customer entity, CustomerRequest request);
 
 }
-

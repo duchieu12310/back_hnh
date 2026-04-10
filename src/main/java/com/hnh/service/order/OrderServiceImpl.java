@@ -1,4 +1,4 @@
-﻿package com.hnh.service.order;
+package com.hnh.service.order;
 
 import com.hnh.config.payment.paypal.PayPalHttpClient;
 import com.hnh.constant.AppConstants;
@@ -34,23 +34,14 @@ import com.hnh.repository.order.OrderRepository;
 import com.hnh.repository.promotion.PromotionRepository;
 import com.hnh.repository.waybill.WaybillLogRepository;
 import com.hnh.repository.waybill.WaybillRepository;
-import com.hnh.repository.inventory.DocketVariantRepository;
-import com.hnh.repository.inventory.DocketRepository;
-import com.hnh.repository.inventory.DocketReasonRepository;
-import com.hnh.repository.inventory.WarehouseRepository;
-import com.hnh.entity.inventory.Docket;
-import com.hnh.entity.inventory.DocketReason;
-import com.hnh.entity.inventory.DocketVariant;
-import com.hnh.entity.inventory.DocketVariantKey;
-import com.hnh.entity.inventory.Warehouse;
+import com.hnh.repository.product.VariantRepository;
 import com.hnh.service.general.NotificationService;
 import com.hnh.utils.VNpayService;
-import com.hnh.utils.InventoryUtils;
 import com.hnh.entity.cart.CartVariant;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.utility.RandomString;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -69,7 +60,7 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
+@Service("orderService")
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
@@ -81,11 +72,6 @@ public class OrderServiceImpl implements OrderService {
     private String ghnShopId;
     @Value("${app.shipping.ghnApiPath}")
     private String ghnApiPath;
-    @Value("${app.inventory.default-warehouse-id:1}")
-    private Long defaultWarehouseId;
-    @Value("${app.inventory.default-export-docket-reason-id:1}")
-    private Long defaultExportDocketReasonId;
-
     private final VNpayService vNpayService;
 
     private final OrderRepository orderRepository;
@@ -94,10 +80,7 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
     private final CartRepository cartRepository;
     private final PromotionRepository promotionRepository;
-    private final DocketVariantRepository docketVariantRepository;
-    private final DocketRepository docketRepository;
-    private final WarehouseRepository warehouseRepository;
-    private final DocketReasonRepository docketReasonRepository;
+    private final VariantRepository variantRepository;
 
     private final PayPalHttpClient payPalHttpClient;
     private final ClientOrderMapper clientOrderMapper;
@@ -118,13 +101,13 @@ public class OrderServiceImpl implements OrderService {
             order.setStatus(5); // Status 5 là trạng thái Hủy
             orderRepository.save(order);
 
-            // Xóa phiếu xuất kho để hoàn lại tồn kho
-            docketRepository.findByOrder_IdAndType(order.getId(), 2)
-                    .ifPresent(docket -> {
-                        // Xóa phiếu xuất kho (sẽ tự động xóa cả docket_variant do cascade)
-                        docketRepository.delete(docket);
-                        log.info("Deleted export docket {} for cancelled order {}", docket.getCode(), order.getCode());
-                    });
+            // Hoàn lại tồn kho
+            for (OrderVariant orderVariant : order.getOrderVariants()) {
+                com.hnh.entity.product.Variant variant = orderVariant.getVariant();
+                variant.setQuantity(variant.getQuantity() + orderVariant.getQuantity());
+                variantRepository.save(variant);
+            }
+
 
             Waybill waybill = waybillRepository.findByOrderId(order.getId()).orElse(null);
 
@@ -180,9 +163,7 @@ public class OrderServiceImpl implements OrderService {
 
         // (0) Validate Variant Inventory - Kiểm tra tồn kho trước khi tạo đơn hàng
         for (CartVariant cartVariant : cart.getCartVariants()) {
-            int inventory = InventoryUtils
-                    .calculateInventoryIndices(docketVariantRepository.findByVariantId(cartVariant.getCartVariantKey().getVariantId()))
-                    .get("canBeSold");
+            int inventory = cartVariant.getVariant().getQuantity();
             if (cartVariant.getQuantity() > inventory) {
                 throw new RuntimeException(
                         String.format("Sản phẩm %s không đủ số lượng trong kho. Số lượng có thể bán: %d, số lượng yêu cầu: %d",
@@ -194,7 +175,7 @@ public class OrderServiceImpl implements OrderService {
         // (1) Tạo đơn hàng
         Order order = new Order();
 
-        order.setCode(RandomString.make(12).toUpperCase());
+        order.setCode(RandomStringUtils.randomAlphanumeric(12).toUpperCase());
         order.setStatus(1); // Status 1: Đơn hàng mới
         order.setToName(user.getFullname());
         order.setToPhone(user.getPhone());
@@ -202,7 +183,7 @@ public class OrderServiceImpl implements OrderService {
         order.setToWardName(user.getAddress().getWard().getName());
         order.setToDistrictName(user.getAddress().getDistrict().getName());
         order.setToProvinceName(user.getAddress().getProvince().getName());
-        order.setOrderResource((OrderResource) new OrderResource().setId(1L)); // Default OrderResource
+        order.setOrderResource((OrderResource) new OrderResource().setId(1L));
         order.setUser(user);
 
         order.setOrderVariants(cart.getCartVariants().stream()
@@ -297,9 +278,11 @@ public class OrderServiceImpl implements OrderService {
         } else if (request.getPaymentMethodType() == PaymentMethodType.VNPAY) {
             // Convert BigDecimal to long (VNPay requires amount in VND, will be converted to cents)
             long totalPayVND = order.getTotalPay().longValue();
+            log.info("Creating VNPay transaction for order: {} with amount: {} VND", order.getCode(), totalPayVND);
             var url = vNpayService.getPayUrl(order.getCode(), totalPayVND, null);
 
             if (StringUtils.isBlank(url)) {
+                log.error("Failed to create VNPay URL for order: {}. Total pay: {} VND", order.getCode(), totalPayVND);
                 throw new RuntimeException("Cannot create VNPay transaction request!");
             }
             order.setPaypalOrderId(order.getCode());
@@ -313,8 +296,12 @@ public class OrderServiceImpl implements OrderService {
         cart.setStatus(2); // Status 2: Vô hiệu lực
         cartRepository.save(cart);
 
-        // (5) Tạo phiếu xuất kho ngay khi đặt hàng (status = 1) để trừ tồn kho
-        createExportDocketForOrder(order);
+        // (5) Trừ tồn kho
+        for (OrderVariant orderVariant : order.getOrderVariants()) {
+            com.hnh.entity.product.Variant variant = orderVariant.getVariant();
+            variant.setQuantity(variant.getQuantity() - orderVariant.getQuantity());
+            variantRepository.save(variant);
+        }
 
         return response;
     }
@@ -391,56 +378,7 @@ public class OrderServiceImpl implements OrderService {
         return price * (100 - discount) / 100;
     }
 
-    /**
-     * Tạo phiếu xuất kho (docket type = 2, status = 1) ngay khi đặt hàng để trừ tồn kho.
-     * Khi đơn hàng giao thành công, phiếu xuất sẽ được cập nhật lên status = 3.
-     */
-    private void createExportDocketForOrder(Order order) {
-        // Đơn hàng không có chi tiết thì bỏ qua
-        if (order.getOrderVariants() == null || order.getOrderVariants().isEmpty()) {
-            return;
-        }
 
-        // Nếu đã có docket xuất (type = 2) gắn với đơn này rồi thì không tạo lại (idempotent)
-        if (docketRepository.existsByOrder_IdAndType(order.getId(), 2)) {
-            return;
-        }
-
-        // Lấy kho và lý do xuất kho mặc định
-        Warehouse warehouse = warehouseRepository.findById(defaultWarehouseId)
-                .orElseThrow(() -> new ResourceNotFoundException(ResourceName.WAREHOUSE, FieldName.ID, defaultWarehouseId));
-
-        DocketReason docketReason = docketReasonRepository.findById(defaultExportDocketReasonId)
-                .orElseThrow(() -> new ResourceNotFoundException(ResourceName.DOCKET_REASON, FieldName.ID, defaultExportDocketReasonId));
-
-        // (1) Tạo phiếu xuất kho với status = 1 (Mới)
-        Docket docket = new Docket();
-        docket.setType(2); // 2 = Phiếu Xuất
-        docket.setCode("EXP-" + order.getCode()); // Code duy nhất dựa trên mã đơn hàng
-        docket.setReason(docketReason);
-        docket.setWarehouse(warehouse);
-        docket.setOrder(order);
-        docket.setStatus(1); // Status 1: Mới (sẽ được cập nhật lên 3 khi giao thành công)
-
-        Docket savedDocket = docketRepository.save(docket);
-
-        // (2) Tạo chi tiết phiếu xuất từ các order_variant
-        List<DocketVariant> docketVariants = new ArrayList<>();
-
-        for (OrderVariant orderVariant : order.getOrderVariants()) {
-            DocketVariantKey key = new DocketVariantKey(savedDocket.getId(), orderVariant.getVariant().getId());
-
-            DocketVariant docketVariant = new DocketVariant();
-            docketVariant.setDocketVariantKey(key);
-            docketVariant.setDocket(savedDocket);
-            docketVariant.setVariant(orderVariant.getVariant());
-            docketVariant.setQuantity(orderVariant.getQuantity());
-
-            docketVariants.add(docketVariant);
-        }
-
-        docketVariantRepository.saveAll(docketVariants);
-    }
 
 }
 

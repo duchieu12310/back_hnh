@@ -1,8 +1,7 @@
-﻿package com.hnh.entity.product;
+package com.hnh.entity.product;
 
 import com.hnh.entity.BaseEntity;
 import com.hnh.entity.address.Address;
-import com.hnh.entity.inventory.PurchaseOrder;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -79,8 +78,5 @@ public class Supplier extends BaseEntity {
     @JsonManagedReference
     private List<Product> products = new ArrayList<>();
 
-    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<PurchaseOrder> purchaseOrders = new ArrayList<>();
 }
 

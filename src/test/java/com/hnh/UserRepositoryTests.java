@@ -1,4 +1,4 @@
-﻿package com.hnh;
+package com.hnh;
 
 import com.hnh.config.security.UserDetailsImpl;
 import com.hnh.entity.authentication.Role;
@@ -13,6 +13,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -23,9 +25,12 @@ public class UserRepositoryTests {
 
     @Test
     public void testGetUserByUsername() {
-        User user = userRepository.findByUsername("dnucator0").orElseThrow(() -> new RuntimeException("User not found"));
-        Set<Role> roles = user.getRoles();
-        UserDetailsImpl test = UserDetailsImpl.build(user);
+        User user = userRepository.findByUsername("dnucator0").orElse(null);
+        assertThat(user).isNotNull();
+        assertThat(user.getRoles()).isNotEmpty();
+        
+        UserDetailsImpl userDetails = UserDetailsImpl.build(user);
+        assertThat(userDetails.getUsername()).isEqualTo(user.getUsername());
     }
 
 }

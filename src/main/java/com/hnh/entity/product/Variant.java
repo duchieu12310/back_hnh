@@ -1,10 +1,7 @@
-﻿package com.hnh.entity.product;
+package com.hnh.entity.product;
 
 import com.hnh.entity.BaseEntity;
 import com.hnh.entity.cart.CartVariant;
-import com.hnh.entity.inventory.CountVariant;
-import com.hnh.entity.inventory.DocketVariant;
-import com.hnh.entity.inventory.PurchaseOrderVariant;
 import com.hnh.entity.order.OrderVariant;
 import com.hnh.utils.JsonNodeConverter;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -69,15 +66,6 @@ public class Variant extends BaseEntity {
 //
 //    @OneToOne(mappedBy = "variant", cascade = CascadeType.ALL)
 //    private VariantInventoryLimit variantInventoryLimit;
-
-    @OneToMany(mappedBy = "variant", cascade = CascadeType.ALL)
-    private Set<CountVariant> countVariants = new HashSet<>();
-
-    @OneToMany(mappedBy = "variant", cascade = CascadeType.ALL)
-    private Set<DocketVariant> docketVariants = new HashSet<>();
-
-    @OneToMany(mappedBy = "variant", cascade = CascadeType.ALL)
-    private Set<PurchaseOrderVariant> purchaseOrderVariants = new HashSet<>();
 
     @OneToMany(mappedBy = "variant", cascade = CascadeType.ALL)
     private Set<OrderVariant> orderVariants = new HashSet<>();

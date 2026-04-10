@@ -1,4 +1,4 @@
-﻿package com.hnh.repository.client;
+package com.hnh.repository.client;
 
 import com.hnh.entity.client.Wish;
 import io.github.perplexhub.rsql.RSQLJPASupport;
@@ -15,8 +15,8 @@ public interface WishRepository extends JpaRepository<Wish, Long>, JpaSpecificat
     default Page<Wish> findAllByUsername(String username, String sort, String filter, Pageable pageable) {
         Specification<Wish> sortable = RSQLJPASupport.toSort(sort);
         Specification<Wish> filterable = RSQLJPASupport.toSpecification(filter);
-        Specification<Wish> usernameSpec = RSQLJPASupport.toSpecification("user.username==" + username);
-        return findAll(sortable.and(filterable).and(usernameSpec), pageable);
+        Specification<Wish> usernameSpec = RSQLJPASupport.toSpecification("user.username=='" + username + "'");
+        return findAll(Specification.where(sortable).and(filterable).and(usernameSpec), pageable);
     }
 
     Optional<Wish> findByUser_IdAndProduct_Id(Long userId, Long productId);

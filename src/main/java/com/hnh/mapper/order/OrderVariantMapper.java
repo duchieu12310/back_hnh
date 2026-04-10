@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper.order;
+package com.hnh.mapper.order;
 
 import com.hnh.dto.order.OrderVariantRequest;
 import com.hnh.dto.order.OrderVariantResponse;
@@ -28,11 +28,11 @@ public interface OrderVariantMapper extends GenericMapper<OrderVariant, OrderVar
     }
 
     @Override
-    @Mapping(source = "variantId", target = "variant")
+    @Mapping(source = "variantId", target = "variant", qualifiedByName = "mapToVariant")
     OrderVariant requestToEntity(OrderVariantRequest request);
 
     @Override
-    @Mapping(source = "variantId", target = "variant")
+    @Mapping(source = "variantId", target = "variant", qualifiedByName = "mapToVariant")
     OrderVariant partialUpdate(@MappingTarget OrderVariant entity, OrderVariantRequest request);
 
 }

@@ -1,4 +1,4 @@
-﻿package com.hnh.repository.order;
+package com.hnh.repository.order;
 
 import com.hnh.entity.order.Order;
 import io.github.perplexhub.rsql.RSQLJPASupport;
@@ -17,7 +17,7 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
         Specification<Order> sortable = RSQLJPASupport.toSort(sort);
         Specification<Order> filterable = RSQLJPASupport.toSpecification(filter);
         Specification<Order> usernameSpec = RSQLJPASupport.toSpecification("user.username==" + username);
-        return findAll(sortable.and(filterable).and(usernameSpec), pageable);
+        return findAll(Specification.where(sortable).and(filterable).and(usernameSpec), pageable);
     }
 
     Optional<Order> findByCode(String code);

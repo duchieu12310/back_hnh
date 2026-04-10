@@ -1,9 +1,10 @@
-﻿package com.hnh.controller.client;
+package com.hnh.controller.client;
 
 import com.hnh.constant.AppConstants;
 import com.hnh.service.order.OrderService;
 import com.hnh.utils.VNpayService;
-import lombok.AllArgsConstructor;
+import com.hnh.dto.VNpayResult;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/client-api/vnpay")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ClientVNPay {
 
     private final VNpayService vnpayService;

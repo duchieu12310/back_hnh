@@ -15,11 +15,6 @@ import com.hnh.dto.waybill.WaybillResponse;
 import com.hnh.entity.cashbook.PaymentMethodType;
 import com.hnh.entity.general.Notification;
 import com.hnh.entity.general.NotificationType;
-import com.hnh.entity.inventory.Docket;
-import com.hnh.entity.inventory.DocketReason;
-import com.hnh.entity.inventory.DocketVariant;
-import com.hnh.entity.inventory.DocketVariantKey;
-import com.hnh.entity.inventory.Warehouse;
 import com.hnh.entity.order.Order;
 import com.hnh.entity.order.OrderVariant;
 import com.hnh.entity.waybill.Waybill;
@@ -28,10 +23,6 @@ import com.hnh.exception.ResourceNotFoundException;
 import com.hnh.mapper.general.NotificationMapper;
 import com.hnh.mapper.waybill.WaybillMapper;
 import com.hnh.repository.general.NotificationRepository;
-import com.hnh.repository.inventory.DocketReasonRepository;
-import com.hnh.repository.inventory.DocketRepository;
-import com.hnh.repository.inventory.DocketVariantRepository;
-import com.hnh.repository.inventory.WarehouseRepository;
 import com.hnh.repository.order.OrderRepository;
 import com.hnh.repository.waybill.WaybillLogRepository;
 import com.hnh.repository.waybill.WaybillRepository;
@@ -75,12 +66,6 @@ public class WaybillServiceImpl implements WaybillService {
     @Value("${app.shipping.ghnApiPath}")
     private String ghnApiPath;
 
-    // Kho và lý do xuất kho mặc định khi đơn hàng giao thành công
-    @Value("${app.inventory.default-warehouse-id:1}")
-    private Long defaultWarehouseId;
-
-    @Value("${app.inventory.default-export-docket-reason-id:1}")
-    private Long defaultExportDocketReasonId;
 
     private final OrderRepository orderRepository;
     private final WaybillRepository waybillRepository;
@@ -89,10 +74,6 @@ public class WaybillServiceImpl implements WaybillService {
     private final NotificationRepository notificationRepository;
     private final NotificationMapper notificationMapper;
     private final WaybillLogRepository waybillLogRepository;
-    private final DocketRepository docketRepository;
-    private final DocketVariantRepository docketVariantRepository;
-    private final DocketReasonRepository docketReasonRepository;
-    private final WarehouseRepository warehouseRepository;
     // TODO: TẠM THỜI COMMENT - FLOW ĐIỂM THƯỞNG
     // private final RewardUtils rewardUtils;
 
@@ -424,8 +405,6 @@ public class WaybillServiceImpl implements WaybillService {
                         // TODO: TẠM THỜI COMMENT - FLOW ĐIỂM THƯỞNG
                         // Tích điểm
                         // rewardUtils.successOrderHook(order);
-                        // Tự động tạo phiếu xuất kho khi đơn hàng giao thành công
-                        createExportDocketForDeliveredOrder(order);
                         break;
                     case WaybillCallbackConstants.FAILED:
                     case WaybillCallbackConstants.RETURN:
@@ -453,55 +432,6 @@ public class WaybillServiceImpl implements WaybillService {
         }
     }
 
-    /**
-     * Cập nhật phiếu xuất kho lên status = 3 (Hoàn thành) khi đơn hàng giao thành công.
-     * Phiếu xuất kho đã được tạo ngay khi đặt hàng (status = 1) để trừ tồn kho.
-     */
-    private void createExportDocketForDeliveredOrder(Order order) {
-        // Đơn hàng không có chi tiết thì bỏ qua
-        if (order.getOrderVariants() == null || order.getOrderVariants().isEmpty()) {
-            return;
-        }
-
-        // Tìm phiếu xuất kho đã được tạo khi đặt hàng
-        Docket docket = docketRepository.findByOrder_IdAndType(order.getId(), 2)
-                .orElse(null);
-
-        if (docket != null) {
-            // Cập nhật phiếu xuất kho lên status = 3 (Hoàn thành)
-            docket.setStatus(3);
-            docketRepository.save(docket);
-        } else {
-            // Nếu không tìm thấy (trường hợp đơn hàng cũ), tạo mới như cũ
-            Warehouse warehouse = warehouseRepository.findById(defaultWarehouseId)
-                    .orElseThrow(() -> new ResourceNotFoundException(ResourceName.WAREHOUSE, FieldName.ID, defaultWarehouseId));
-
-            DocketReason docketReason = docketReasonRepository.findById(defaultExportDocketReasonId)
-                    .orElseThrow(() -> new ResourceNotFoundException(ResourceName.DOCKET_REASON, FieldName.ID, defaultExportDocketReasonId));
-
-            Docket newDocket = new Docket();
-            newDocket.setType(2);
-            newDocket.setCode("EXP-" + order.getCode());
-            newDocket.setReason(docketReason);
-            newDocket.setWarehouse(warehouse);
-            newDocket.setOrder(order);
-            newDocket.setStatus(3);
-
-            Docket savedDocket = docketRepository.save(newDocket);
-
-            List<DocketVariant> docketVariants = new ArrayList<>();
-            for (OrderVariant orderVariant : order.getOrderVariants()) {
-                DocketVariantKey key = new DocketVariantKey(savedDocket.getId(), orderVariant.getVariant().getId());
-                DocketVariant docketVariant = new DocketVariant();
-                docketVariant.setDocketVariantKey(key);
-                docketVariant.setDocket(savedDocket);
-                docketVariant.setVariant(orderVariant.getVariant());
-                docketVariant.setQuantity(orderVariant.getQuantity());
-                docketVariants.add(docketVariant);
-            }
-            docketVariantRepository.saveAll(docketVariants);
-        }
-    }
 
     private void createNotification(Notification notification) {
         notificationRepository.save(notification);
@@ -512,17 +442,11 @@ public class WaybillServiceImpl implements WaybillService {
 
     @Override
     public WaybillResponse updateStatus(Long id, Integer status) {
-        Waybill entity = waybillRepository.findById(id)
+        Waybill waybill = waybillRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceName.WAYBILL, FieldName.ID, id));
-        try {
-            java.lang.reflect.Field statusField = entity.getClass().getDeclaredField("status");
-            statusField.setAccessible(true);
-            statusField.set(entity, status);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException("Entity " + ResourceName.WAYBILL + " does not have a 'status' field or it's not accessible", e);
-        }
-        entity = waybillRepository.save(entity);
-        return waybillMapper.entityToResponse(entity);
+        waybill.setStatus(status);
+        waybill = waybillRepository.save(waybill);
+        return waybillMapper.entityToResponse(waybill);
     }
 
 }

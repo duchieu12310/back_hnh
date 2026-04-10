@@ -1,9 +1,8 @@
-﻿package com.hnh.entity.order;
+package com.hnh.entity.order;
 
 import com.hnh.entity.BaseEntity;
 import com.hnh.entity.authentication.User;
 import com.hnh.entity.cashbook.PaymentMethodType;
-import com.hnh.entity.inventory.Docket;
 import com.hnh.entity.waybill.Waybill;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -97,10 +96,6 @@ public class Order extends BaseEntity {
 
     @OneToOne(mappedBy = "order")
     private Waybill waybill;
-
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Docket> dockets = new ArrayList<>();
 
     @Column(name = "payment_method_type", nullable = false)
     @Enumerated(EnumType.STRING)

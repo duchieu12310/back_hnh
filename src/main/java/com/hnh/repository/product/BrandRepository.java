@@ -1,6 +1,5 @@
-﻿package com.hnh.repository.product;
+package com.hnh.repository.product;
 
-import com.hnh.entity.inventory.DocketVariant;
 import com.hnh.entity.product.Brand;
 import com.hnh.entity.product.Category;
 import com.hnh.entity.product.Product;
@@ -34,8 +33,6 @@ public interface BrandRepository extends JpaRepository<Brand, Long>, JpaSpecific
         Specification<Brand> spec = (root, query, cb) -> {
             Join<Brand, Product> product = root.join("products");
             Join<Product, Category> category = product.join("category");
-            Join<Product, Variant> variant = product.join("variants");
-            Join<Variant, DocketVariant> docketVariant = variant.join("docketVariants");
 
             query.distinct(true);
             query.where(cb.or(

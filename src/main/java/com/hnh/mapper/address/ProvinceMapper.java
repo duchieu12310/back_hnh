@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper.address;
+package com.hnh.mapper.address;
 
 import com.hnh.dto.address.ProvinceRequest;
 import com.hnh.dto.address.ProvinceResponse;
@@ -10,4 +10,3 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ProvinceMapper extends GenericMapper<Province, ProvinceRequest, ProvinceResponse> {
 }
-

@@ -16,9 +16,8 @@ import java.util.List;
 @AllArgsConstructor
 public class ProvinceServiceImpl implements ProvinceService {
 
-    private ProvinceRepository provinceRepository;
-
-    private ProvinceMapper provinceMapper;
+    private final ProvinceRepository provinceRepository;
+    private final ProvinceMapper provinceMapper;
 
     @Override
     public ListResponse<ProvinceResponse> findAll(int page, int size, String sort, String filter, String search, boolean all) {
@@ -54,16 +53,19 @@ public class ProvinceServiceImpl implements ProvinceService {
     public ProvinceResponse updateStatus(Long id, Integer status) {
         com.hnh.entity.address.Province entity = provinceRepository.findById(id)
                 .orElseThrow(() -> new com.hnh.exception.ResourceNotFoundException(ResourceName.PROVINCE, com.hnh.constant.FieldName.ID, id));
+        
+        // Dùng reflection để update status vì entity base không có field này hoặc logic thay đổi
         try {
             java.lang.reflect.Field statusField = entity.getClass().getDeclaredField("status");
             statusField.setAccessible(true);
             statusField.set(entity, status);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException("Entity " + ResourceName.PROVINCE + " does not have a 'status' field or it's not accessible", e);
+            // Nếu không có field status thì bỏ qua hoặc log error tùy business
+            throw new RuntimeException("Entity " + ResourceName.PROVINCE + " does not have a 'status' field", e);
         }
+        
         entity = provinceRepository.save(entity);
         return provinceMapper.entityToResponse(entity);
     }
 
 }
-

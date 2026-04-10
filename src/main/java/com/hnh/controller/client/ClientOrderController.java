@@ -1,4 +1,4 @@
-﻿package com.hnh.controller.client;
+package com.hnh.controller.client;
 
 import com.hnh.constant.AppConstants;
 import com.hnh.constant.FieldName;
@@ -20,7 +20,7 @@ import com.hnh.service.general.NotificationService;
 import com.hnh.service.order.OrderService;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -43,16 +43,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/client-api/orders")
-@AllArgsConstructor
+@RequiredArgsConstructor
 @CrossOrigin(AppConstants.FRONTEND_HOST)
 public class ClientOrderController {
 
-    private OrderRepository orderRepository;
-    private ClientOrderMapper clientOrderMapper;
-    private OrderService orderService;
-    private NotificationRepository notificationRepository;
-    private NotificationService notificationService;
-    private NotificationMapper notificationMapper;
+    private final OrderRepository orderRepository;
+    private final ClientOrderMapper clientOrderMapper;
+    private final OrderService orderService;
+    private final NotificationRepository notificationRepository;
+    private final NotificationService notificationService;
+    private final NotificationMapper notificationMapper;
 
     @GetMapping
     public ResponseEntity<ListResponse<ClientSimpleOrderResponse>> getAllOrders(

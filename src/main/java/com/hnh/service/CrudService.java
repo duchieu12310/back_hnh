@@ -31,9 +31,7 @@ public interface CrudService<ID, I, O> {
 
     void delete(List<ID> ids);
 
-    default O updateStatus(ID id, Integer status) {
-        throw new UnsupportedOperationException("updateStatus is not supported for this entity");
-    }
+    O updateStatus(ID id, Integer status);
 
     default O save(JsonNode request, Class<I> requestType) {
         ObjectMapper mapper = new ObjectMapper();
@@ -57,7 +55,7 @@ public interface CrudService<ID, I, O> {
         Specification<E> filterable = RSQLJPASupport.toSpecification(filter);
         Specification<E> searchable = SearchUtils.parse(search, searchFields);
         Pageable pageable = all ? Pageable.unpaged() : PageRequest.of(page - 1, size);
-        Page<E> entities = repository.findAll(sortable.and(filterable).and(searchable), pageable);
+        Page<E> entities = repository.findAll(Specification.where(sortable).and(filterable).and(searchable), pageable);
         List<O> entityResponses = mapper.entityToResponse(entities.getContent());
         return new ListResponse<>(entityResponses, entities);
     }

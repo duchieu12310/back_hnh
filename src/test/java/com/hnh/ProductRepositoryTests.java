@@ -1,4 +1,4 @@
-﻿package com.hnh;
+package com.hnh;
 
 import com.hnh.entity.product.Product;
 import com.hnh.repository.product.ProductRepository;
@@ -40,12 +40,11 @@ public class ProductRepositoryTests {
     }
 
     @Test
-    void findDocketedProduct() {
+    void findSaleableProducts() {
         int page = 1;
         int size = 5;
-        Page<Product> products = productRepository.findDocketedProducts(PageRequest.of(page - 1, size));
+        Page<Product> products = productRepository.findByParams(null, null, null, true, false, false, PageRequest.of(page - 1, size));
         assertThat(products).isNotNull();
-        // Kiểm tra kết quả không null thay vì chỉ in ra console
     }
 
 }

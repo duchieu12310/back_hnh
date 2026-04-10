@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper.chat;
+package com.hnh.mapper.chat;
 
 import com.hnh.dto.chat.RoomRequest;
 import com.hnh.dto.chat.RoomResponse;
@@ -13,8 +13,7 @@ import org.mapstruct.ReportingPolicy;
 public interface RoomMapper extends GenericMapper<Room, RoomRequest, RoomResponse> {
 
     @Override
-    @Mapping(source = "userId", target = "user")
+    @Mapping(source = "userId", target = "user", qualifiedByName = "mapToUser")
     Room requestToEntity(RoomRequest request);
 
 }
-

@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper.client;
+package com.hnh.mapper.client;
 
 import com.hnh.dto.client.ClientListedProductResponse;
 import com.hnh.dto.client.ClientProductResponse;
@@ -7,10 +7,8 @@ import com.hnh.entity.product.Product;
 import com.hnh.entity.product.Variant;
 import com.hnh.mapper.general.ImageMapper;
 import com.hnh.mapper.promotion.PromotionMapper;
-import com.hnh.projection.inventory.SimpleProductInventory;
-import com.hnh.repository.inventory.DocketVariantRepository;
+import com.hnh.projection.product.SimpleProductInventory;
 import com.hnh.repository.promotion.PromotionRepository;
-import com.hnh.utils.InventoryUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +22,6 @@ public class ClientProductMapper {
 
     private ImageMapper imageMapper;
     private ClientCategoryMapper clientCategoryMapper;
-    private DocketVariantRepository docketVariantRepository;
     private PromotionRepository promotionRepository;
     private PromotionMapper promotionMapper;
 

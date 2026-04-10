@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper.product;
+package com.hnh.mapper.product;
 
 import com.hnh.dto.product.CategoryRequest;
 import com.hnh.dto.product.CategoryResponse;
@@ -14,11 +14,11 @@ import org.mapstruct.ReportingPolicy;
 public interface CategoryMapper extends GenericMapper<Category, CategoryRequest, CategoryResponse> {
 
     @Override
-    @Mapping(source = "parentCategoryId", target = "parentCategory")
+    @Mapping(source = "parentCategoryId", target = "parentCategory", qualifiedByName = "mapToCategory")
     Category requestToEntity(CategoryRequest request);
 
     @Override
-    @Mapping(source = "parentCategoryId", target = "parentCategory")
+    @Mapping(source = "parentCategoryId", target = "parentCategory", qualifiedByName = "mapToCategory")
     Category partialUpdate(@MappingTarget Category entity, CategoryRequest request);
 
 }

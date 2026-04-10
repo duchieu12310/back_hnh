@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper.client;
+package com.hnh.mapper.client;
 
 import com.hnh.dto.client.ClientOrderDetailResponse;
 import com.hnh.dto.client.ClientOrderRequest;
@@ -80,7 +80,6 @@ public abstract class ClientOrderMapper {
     public ClientOrderDetailResponse entityToDetailResponseCallback(@MappingTarget ClientOrderDetailResponse clientOrderDetailResponse) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         
-        // Kiểm tra authentication và username trước khi sử dụng
         if (authentication != null && authentication.getName() != null && !authentication.getName().equals("anonymousUser")) {
             String username = authentication.getName();
 
@@ -90,7 +89,6 @@ public abstract class ClientOrderMapper {
                 clientOrderVariantResponse.getOrderItemVariant().getVariantProduct().setProductIsReviewed(productIsReviewed);
             }
         } else {
-            // Nếu không có authentication, set tất cả productIsReviewed = false
             for (var clientOrderVariantResponse : clientOrderDetailResponse.getOrderItems()) {
                 clientOrderVariantResponse.getOrderItemVariant().getVariantProduct().setProductIsReviewed(false);
             }
@@ -100,15 +98,15 @@ public abstract class ClientOrderMapper {
     }
 
     @BeanMapping(qualifiedByName = "attachOrder")
-    @Mapping(source = "orderResourceId", target = "orderResource")
-    @Mapping(source = "orderCancellationReasonId", target = "orderCancellationReason")
-    @Mapping(source = "userId", target = "user")
+    @Mapping(source = "orderResourceId", target = "orderResource", qualifiedByName = "mapToOrderResource")
+    @Mapping(source = "orderCancellationReasonId", target = "orderCancellationReason", qualifiedByName = "mapToOrderCancellationReason")
+    @Mapping(source = "userId", target = "user", qualifiedByName = "mapToUser")
     public abstract Order requestToEntity(ClientOrderRequest request);
 
     @BeanMapping(qualifiedByName = "attachOrder")
-    @Mapping(source = "orderResourceId", target = "orderResource")
-    @Mapping(source = "orderCancellationReasonId", target = "orderCancellationReason")
-    @Mapping(source = "userId", target = "user")
+    @Mapping(source = "orderResourceId", target = "orderResource", qualifiedByName = "mapToOrderResource")
+    @Mapping(source = "orderCancellationReasonId", target = "orderCancellationReason", qualifiedByName = "mapToOrderCancellationReason")
+    @Mapping(source = "userId", target = "user", qualifiedByName = "mapToUser")
     public abstract Order partialUpdate(@MappingTarget Order entity, ClientOrderRequest request);
 
     @Mapping(source = "id", target = "waybillLogId")
@@ -118,4 +116,3 @@ public abstract class ClientOrderMapper {
     public abstract ClientWaybillResponse.ClientWaybillLogResponse entityToResponse(WaybillLog waybillLog);
 
 }
-

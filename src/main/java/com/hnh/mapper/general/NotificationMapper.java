@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper.general;
+package com.hnh.mapper.general;
 
 import com.hnh.dto.general.NotificationRequest;
 import com.hnh.dto.general.NotificationResponse;
@@ -14,11 +14,11 @@ import org.mapstruct.ReportingPolicy;
 public interface NotificationMapper extends GenericMapper<Notification, NotificationRequest, NotificationResponse> {
 
     @Override
-    @Mapping(source = "userId", target = "user")
+    @Mapping(source = "userId", target = "user", qualifiedByName = "mapToUser")
     Notification requestToEntity(NotificationRequest request);
 
     @Override
-    @Mapping(source = "userId", target = "user")
+    @Mapping(source = "userId", target = "user", qualifiedByName = "mapToUser")
     Notification partialUpdate(@MappingTarget Notification entity, NotificationRequest request);
 
 }

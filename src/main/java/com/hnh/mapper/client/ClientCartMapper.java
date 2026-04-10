@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper.client;
+package com.hnh.mapper.client;
 
 import com.hnh.dto.client.ClientCartRequest;
 import com.hnh.dto.client.ClientCartResponse;
@@ -13,10 +13,8 @@ import com.hnh.entity.product.Product;
 import com.hnh.entity.product.Variant;
 import com.hnh.mapper.promotion.PromotionMapper;
 import com.hnh.repository.authentication.UserRepository;
-import com.hnh.repository.inventory.DocketVariantRepository;
 import com.hnh.repository.product.VariantRepository;
 import com.hnh.repository.promotion.PromotionRepository;
-import com.hnh.utils.InventoryUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +32,6 @@ public class ClientCartMapper {
 
     private UserRepository userRepository;
     private VariantRepository variantRepository;
-    private DocketVariantRepository docketVariantRepository;
     private PromotionRepository promotionRepository;
     private PromotionMapper promotionMapper;
 

@@ -1,4 +1,4 @@
-﻿package com.hnh.controller.client;
+package com.hnh.controller.client;
 
 import com.hnh.constant.AppConstants;
 import com.hnh.constant.FieldName;
@@ -13,8 +13,6 @@ import com.hnh.exception.ResourceNotFoundException;
 import com.hnh.mapper.client.ClientCartMapper;
 import com.hnh.repository.cart.CartRepository;
 import com.hnh.repository.cart.CartVariantRepository;
-import com.hnh.repository.inventory.DocketVariantRepository;
-import com.hnh.utils.InventoryUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.AllArgsConstructor;
@@ -41,7 +39,6 @@ public class ClientCartController {
     private CartRepository cartRepository;
     private CartVariantRepository cartVariantRepository;
     private ClientCartMapper clientCartMapper;
-    private DocketVariantRepository docketVariantRepository;
 
     @GetMapping
     public ResponseEntity<ObjectNode> getCart(Authentication authentication) {

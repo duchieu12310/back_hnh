@@ -1,11 +1,15 @@
-﻿package com.hnh.dto.address;
+package com.hnh.dto.address;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
 import java.time.Instant;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AddressResponse {
     private Long id;
     private Instant createdAt;
@@ -15,26 +19,7 @@ public class AddressResponse {
     @Nullable
     private ProvinceResponse province;
     @Nullable
-    private AddressResponse.DistrictResponse district;
+    private DistrictResponse district;
     @Nullable
-    private AddressResponse.WardResponse ward;
-
-    @Data
-    public static class DistrictResponse {
-        private Long id;
-        private Instant createdAt;
-        private Instant updatedAt;
-        private String name;
-        private String code;
-    }
-
-    @Data
-    public static class WardResponse {
-        private Long id;
-        private Instant createdAt;
-        private Instant updatedAt;
-        private String name;
-        private String code;
-    }
+    private WardResponse ward;
 }
-

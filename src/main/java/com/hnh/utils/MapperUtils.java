@@ -1,4 +1,4 @@
-﻿package com.hnh.utils;
+package com.hnh.utils;
 
 import com.hnh.entity.BaseEntity;
 import com.hnh.entity.address.District;
@@ -15,15 +15,6 @@ import com.hnh.entity.employee.JobLevel;
 import com.hnh.entity.employee.JobTitle;
 import com.hnh.entity.employee.JobType;
 import com.hnh.entity.employee.Office;
-import com.hnh.entity.inventory.Count;
-import com.hnh.entity.inventory.CountVariantKey;
-import com.hnh.entity.inventory.Destination;
-import com.hnh.entity.inventory.Docket;
-import com.hnh.entity.inventory.DocketReason;
-import com.hnh.entity.inventory.DocketVariantKey;
-import com.hnh.entity.inventory.PurchaseOrder;
-import com.hnh.entity.inventory.PurchaseOrderVariantKey;
-import com.hnh.entity.inventory.Warehouse;
 import com.hnh.entity.order.Order;
 import com.hnh.entity.order.OrderCancellationReason;
 import com.hnh.entity.order.OrderResource;
@@ -79,70 +70,96 @@ public abstract class MapperUtils {
     @Autowired
     private UserRepository userRepository;
 
+    @Named("mapToProvince")
     public Province mapToProvince(@Nullable Long id) {
         return id == null ? null : provinceRepository.getById(id);
     }
 
+    @Named("mapToDistrict")
     public District mapToDistrict(@Nullable Long id) {
         return id == null ? null : districtRepository.getById(id);
     }
 
+    @Named("mapToWard")
     public Ward mapToWard(@Nullable Long id) {
         return id == null ? null : wardRepository.getById(id);
     }
 
+    @Named("mapToOffice")
     public abstract Office mapToOffice(Long id);
 
+    @Named("mapToDepartment")
     public abstract Department mapToDepartment(Long id);
 
+    @Named("mapToJobType")
     public abstract JobType mapToJobType(Long id);
 
+    @Named("mapToJobLevel")
     public abstract JobLevel mapToJobLevel(Long id);
 
+    @Named("mapToJobTitle")
     public abstract JobTitle mapToJobTitle(Long id);
 
+    @Named("mapToCustomerGroup")
     public abstract CustomerGroup mapToCustomerGroup(Long id);
 
+    @Named("mapToCustomerResource")
     public abstract CustomerResource mapToCustomerResource(Long id);
 
+    @Named("mapToCustomerStatus")
     public abstract CustomerStatus mapToCustomerStatus(Long id);
 
+    @Named("mapToCategory")
     public abstract Category mapToCategory(Long id);
 
+    @Named("mapToBrand")
     public abstract Brand mapToBrand(Long id);
 
+    @Named("mapToSupplier")
     public abstract Supplier mapToSupplier(Long id);
 
+    @Named("mapToUnit")
     public abstract Unit mapToUnit(Long id);
 
+    @Named("mapToGuarantee")
     public abstract Guarantee mapToGuarantee(Long id);
 
-    public abstract Warehouse mapToWarehouse(Long id);
-
-    public abstract DocketReason mapToDocketReason(Long id);
-
-    public abstract Destination mapToDestination(Long id);
-
-    public abstract PurchaseOrder mapToPurchaseOrder(Long id);
-
+    @Named("mapToOrderResource")
     public abstract OrderResource mapToOrderResource(Long id);
 
+    @Named("mapToOrderCancellationReason")
     public abstract OrderCancellationReason mapToOrderCancellationReason(Long id);
 
+    @Named("mapToCustomer")
     public abstract Customer mapToCustomer(Long id);
 
+    @Named("mapToOrder")
     public abstract Order mapToOrder(Long id);
 
+    @Named("mapToRoom")
     public abstract Room mapToRoom(Long id);
 
+    @Named("mapToVariant")
     public Variant mapToVariant(Long id) {
         return variantRepository.getById(id);
     }
 
+    @Named("mapToProduct")
     public Product mapToProduct(Long id) {
         return productRepository.getById(id);
     }
 
+    @Named("mapToProducts")
+    public Set<Product> mapToProducts(Set<Long> productIds) {
+        if (productIds == null) {
+            return null;
+        }
+        return productIds.stream()
+                .map(this::mapToProduct)
+                .collect(java.util.stream.Collectors.toSet());
+    }
+
+    @Named("mapToUser")
     public User mapToUser(Long id) {
         return userRepository.getById(id);
     }
@@ -166,17 +183,6 @@ public abstract class MapperUtils {
         product.getVariants().forEach(variant -> variant.setProduct(product));
         return product;
     }
-
-    @AfterMapping
-    @Named("attachCount")
-    public Count attachCount(@MappingTarget Count count) {
-        count.getCountVariants().forEach(countVariant -> {
-            countVariant.setCountVariantKey(new CountVariantKey(count.getId(), countVariant.getVariant().getId()));
-            countVariant.setCount(count);
-        });
-        return count;
-    }
-
     @AfterMapping
     @Named("attachOrder")
     public Order attachOrder(@MappingTarget Order order) {
@@ -187,26 +193,6 @@ public abstract class MapperUtils {
         return order;
     }
 
-    @AfterMapping
-    @Named("attachDocket")
-    public Docket attachDocket(@MappingTarget Docket docket) {
-        docket.getDocketVariants().forEach(docketVariant -> {
-            docketVariant.setDocketVariantKey(new DocketVariantKey(docket.getId(), docketVariant.getVariant().getId()));
-            docketVariant.setDocket(docket);
-        });
-        return docket;
-    }
-
-    @AfterMapping
-    @Named("attachPurchaseOrder")
-    public PurchaseOrder attachPurchaseOrder(@MappingTarget PurchaseOrder purchaseOrder) {
-        purchaseOrder.getPurchaseOrderVariants().forEach(purchaseOrderVariant -> {
-            purchaseOrderVariant.setPurchaseOrderVariantKey(
-                    new PurchaseOrderVariantKey(purchaseOrder.getId(), purchaseOrderVariant.getVariant().getId()));
-            purchaseOrderVariant.setPurchaseOrder(purchaseOrder);
-        });
-        return purchaseOrder;
-    }
 
     private <E extends BaseEntity> Set<E> attachSet(Set<E> entities, JpaRepository<E, Long> repository) {
         Set<E> detachedSet = Optional.ofNullable(entities).orElseGet(HashSet::new);
@@ -224,4 +210,3 @@ public abstract class MapperUtils {
     }
 
 }
-

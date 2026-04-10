@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper.order;
+package com.hnh.mapper.order;
 
 
 import com.hnh.dto.order.OrderResourceRequest;
@@ -17,11 +17,11 @@ import org.mapstruct.ReportingPolicy;
 public interface OrderResourceMapper extends GenericMapper<OrderResource, OrderResourceRequest, OrderResourceResponse> {
 
     @Override
-    @Mapping(source = "customerResourceId", target = "customerResource")
+    @Mapping(source = "customerResourceId", target = "customerResource", qualifiedByName = "mapToCustomerResource")
     OrderResource requestToEntity(OrderResourceRequest request);
 
     @Override
-    @Mapping(source = "customerResourceId", target = "customerResource")
+    @Mapping(source = "customerResourceId", target = "customerResource", qualifiedByName = "mapToCustomerResource")
     OrderResource partialUpdate(@MappingTarget OrderResource entity, OrderResourceRequest request);
 
 }

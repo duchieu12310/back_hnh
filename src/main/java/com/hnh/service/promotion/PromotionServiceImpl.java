@@ -1,4 +1,4 @@
-﻿package com.hnh.service.promotion;
+package com.hnh.service.promotion;
 
 import com.hnh.constant.FieldName;
 import com.hnh.constant.ResourceName;
@@ -80,6 +80,15 @@ public class PromotionServiceImpl implements PromotionService {
     public boolean checkCanCreatePromotionForProduct(Long productId, Instant startDate, Instant endDate) {
         List<Promotion> promotions = promotionRepository.findByProductId(productId, startDate, endDate);
         return promotions.size() == 0;
+    }
+
+    @Override
+    public PromotionResponse updateStatus(Long id, Integer status) {
+        Promotion promotion = promotionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(ResourceName.PROMOTION, FieldName.ID, id));
+        promotion.setStatus(status);
+        promotion = promotionRepository.save(promotion);
+        return promotionMapper.entityToResponse(promotion);
     }
 
 }

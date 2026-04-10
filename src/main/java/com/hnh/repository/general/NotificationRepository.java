@@ -1,4 +1,4 @@
-﻿package com.hnh.repository.general;
+package com.hnh.repository.general;
 
 import com.hnh.entity.general.Notification;
 import io.github.perplexhub.rsql.RSQLJPASupport;
@@ -13,8 +13,8 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     default Page<Notification> findAllByUsername(String username, String sort, String filter, Pageable pageable) {
         Specification<Notification> sortable = RSQLJPASupport.toSort(sort);
         Specification<Notification> filterable = RSQLJPASupport.toSpecification(filter);
-        Specification<Notification> usernameSpec = RSQLJPASupport.toSpecification("user.username==" + username);
-        return findAll(sortable.and(filterable).and(usernameSpec), pageable);
+        Specification<Notification> usernameSpec = RSQLJPASupport.toSpecification("user.username=='" + username + "'");
+        return findAll(Specification.where(sortable).and(filterable).and(usernameSpec), pageable);
     }
 
 }

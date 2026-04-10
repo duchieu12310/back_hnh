@@ -1,9 +1,9 @@
-﻿package com.hnh.controller.order;
+package com.hnh.controller.order;
 
 import com.hnh.constant.AppConstants;
 import com.hnh.dto.order.OrderVariantKeyRequest;
 import com.hnh.entity.order.OrderVariantKey;
-import com.hnh.service.inventory.OrderVariantService;
+import com.hnh.service.order.OrderVariantService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,23 +1,5 @@
-﻿package com.hnh.controller.client;
+package com.hnh.controller.client;
 
-import com.hnh.constant.AppConstants;
-import com.hnh.dto.client.ClientRewardLogResponse;
-import com.hnh.dto.client.ClientRewardResponse;
-import com.hnh.entity.reward.RewardLog;
-import com.hnh.mapper.client.ClientRewardLogMapper;
-import com.hnh.repository.reward.RewardLogRepository;
-import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 // TODO: TẠM THỜI COMMENT - FLOW ĐIỂM THƯỞNG
 /*

@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper.address;
+package com.hnh.mapper.address;
 
 import com.hnh.dto.address.AddressRequest;
 import com.hnh.dto.address.AddressResponse;
@@ -14,16 +14,15 @@ import org.mapstruct.ReportingPolicy;
 public interface AddressMapper extends GenericMapper<Address, AddressRequest, AddressResponse> {
 
     @Override
-    @Mapping(source = "provinceId", target = "province")
-    @Mapping(source = "districtId", target = "district")
-    @Mapping(source = "wardId", target = "ward")
+    @Mapping(source = "provinceId", target = "province", qualifiedByName = "mapToProvince")
+    @Mapping(source = "districtId", target = "district", qualifiedByName = "mapToDistrict")
+    @Mapping(source = "wardId", target = "ward", qualifiedByName = "mapToWard")
     Address requestToEntity(AddressRequest request);
 
     @Override
-    @Mapping(source = "provinceId", target = "province")
-    @Mapping(source = "districtId", target = "district")
-    @Mapping(source = "wardId", target = "ward")
+    @Mapping(source = "provinceId", target = "province", qualifiedByName = "mapToProvince")
+    @Mapping(source = "districtId", target = "district", qualifiedByName = "mapToDistrict")
+    @Mapping(source = "wardId", target = "ward", qualifiedByName = "mapToWard")
     Address partialUpdate(@MappingTarget Address entity, AddressRequest request);
 
 }
-

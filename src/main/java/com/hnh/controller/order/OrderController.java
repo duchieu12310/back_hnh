@@ -1,10 +1,10 @@
-﻿package com.hnh.controller.order;
+package com.hnh.controller.order;
 
 import com.hnh.constant.AppConstants;
 import com.hnh.service.order.OrderService;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/orders")
-@AllArgsConstructor
+@RequiredArgsConstructor
 @CrossOrigin(AppConstants.FRONTEND_HOST)
 public class OrderController {
 
-    private OrderService orderService;
+    private final OrderService orderService;
 
     @PutMapping("/cancel/{code}")
     public ResponseEntity<ObjectNode> cancelOrder(@PathVariable String code) {

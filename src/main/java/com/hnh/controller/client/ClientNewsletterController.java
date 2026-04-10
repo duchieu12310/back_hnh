@@ -1,25 +1,5 @@
-﻿package com.hnh.controller.client;
+package com.hnh.controller.client;
 
-import com.hnh.constant.AppConstants;
-import com.hnh.dto.client.ClientNewsletterSubscriptionRequest;
-import com.hnh.dto.client.ClientNewsletterSubscriptionResponse;
-import com.hnh.entity.client.NewsletterSubscription;
-import com.hnh.exception.ConflictException;
-import com.hnh.mapper.client.ClientNewsletterSubscriptionMapper;
-import com.hnh.repository.client.NewsletterSubscriptionRepository;
-import com.hnh.service.email.EmailSenderService;
-import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-import java.util.Map;
-import java.util.Optional;
 
 // TODO: TẠM THỜI COMMENT - ĐĂNG KÝ NHẬN KM
 /*@RestController

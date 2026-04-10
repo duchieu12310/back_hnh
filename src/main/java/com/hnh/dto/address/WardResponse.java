@@ -1,10 +1,14 @@
-﻿package com.hnh.dto.address;
+package com.hnh.dto.address;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class WardResponse {
     private Long id;
     private Instant createdAt;
@@ -13,4 +17,3 @@ public class WardResponse {
     private String code;
     private DistrictResponse district;
 }
-

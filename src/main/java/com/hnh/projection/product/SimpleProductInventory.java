@@ -1,4 +1,4 @@
-﻿package com.hnh.projection.inventory;
+package com.hnh.projection.product;
 
 import lombok.Data;
 
@@ -24,4 +24,3 @@ public class SimpleProductInventory {
         this.areComing = Math.toIntExact(areComing);
     }
 }
-

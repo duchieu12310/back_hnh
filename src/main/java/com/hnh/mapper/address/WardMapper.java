@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper.address;
+package com.hnh.mapper.address;
 
 import com.hnh.dto.address.WardRequest;
 import com.hnh.dto.address.WardResponse;
@@ -14,12 +14,11 @@ import org.mapstruct.ReportingPolicy;
 public interface WardMapper extends GenericMapper<Ward, WardRequest, WardResponse> {
 
     @Override
-    @Mapping(source = "districtId", target = "district")
+    @Mapping(source = "districtId", target = "district", qualifiedByName = "mapToDistrict")
     Ward requestToEntity(WardRequest request);
 
     @Override
-    @Mapping(source = "districtId", target = "district")
+    @Mapping(source = "districtId", target = "district", qualifiedByName = "mapToDistrict")
     Ward partialUpdate(@MappingTarget Ward entity, WardRequest request);
 
 }
-

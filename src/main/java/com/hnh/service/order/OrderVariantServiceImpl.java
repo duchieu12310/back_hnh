@@ -1,4 +1,4 @@
-﻿package com.hnh.service.inventory;
+package com.hnh.service.order;
 
 import com.hnh.constant.ResourceName;
 import com.hnh.constant.SearchFields;
@@ -51,5 +51,9 @@ public class OrderVariantServiceImpl implements OrderVariantService {
         orderVariantRepository.deleteAllById(ids);
     }
 
-}
+    @Override
+    public OrderVariantResponse updateStatus(OrderVariantKey id, Integer status) {
+        throw new RuntimeException("Entity " + ResourceName.ORDER_VARIANT + " does not have a 'status' field");
+    }
 
+}

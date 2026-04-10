@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper.chat;
+package com.hnh.mapper.chat;
 
 import com.hnh.dto.chat.MessageRequest;
 import com.hnh.dto.chat.MessageResponse;
@@ -13,8 +13,8 @@ import org.mapstruct.ReportingPolicy;
 public interface MessageMapper extends GenericMapper<Message, MessageRequest, MessageResponse> {
 
     @Override
-    @Mapping(source = "userId", target = "user")
-    @Mapping(source = "roomId", target = "room")
+    @Mapping(source = "userId", target = "user", qualifiedByName = "mapToUser")
+    @Mapping(source = "roomId", target = "room", qualifiedByName = "mapToRoom")
     Message requestToEntity(MessageRequest request);
 
 }

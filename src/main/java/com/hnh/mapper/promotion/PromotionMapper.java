@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper.promotion;
+package com.hnh.mapper.promotion;
 
 import com.hnh.dto.client.ClientPromotionResponse;
 import com.hnh.dto.promotion.PromotionRequest;
@@ -33,11 +33,11 @@ public abstract class PromotionMapper implements GenericMapper<Promotion, Promot
 
     @Override
     @BeanMapping(qualifiedByName = "addProductsFromCategories")
-    @Mapping(source = "productIds", target = "products")
+    @Mapping(source = "productIds", target = "products", qualifiedByName = "mapToProducts")
     public abstract Promotion requestToEntity(PromotionRequest request);
 
     @Override
-    @Mapping(source = "productIds", target = "products")
+    @Mapping(source = "productIds", target = "products", qualifiedByName = "mapToProducts")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     public abstract Promotion partialUpdate(@MappingTarget Promotion entity, PromotionRequest request);
 

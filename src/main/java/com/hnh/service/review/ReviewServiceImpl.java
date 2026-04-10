@@ -64,5 +64,14 @@ public class ReviewServiceImpl implements ReviewService {
         reviewRepository.deleteAllById(ids);
     }
 
+    @Override
+    public ReviewResponse updateStatus(Long id, Integer status) {
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(ResourceName.REVIEW, FieldName.ID, id));
+        review.setStatus(status);
+        review = reviewRepository.save(review);
+        return reviewMapper.entityToResponse(review);
+    }
+
 }
 

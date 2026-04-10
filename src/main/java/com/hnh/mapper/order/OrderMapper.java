@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper.order;
+package com.hnh.mapper.order;
 
 
 import com.hnh.dto.order.OrderRequest;
@@ -20,17 +20,16 @@ public interface OrderMapper extends GenericMapper<Order, OrderRequest, OrderRes
 
     @Override
     @BeanMapping(qualifiedByName = "attachOrder")
-    @Mapping(source = "orderResourceId", target = "orderResource")
-    @Mapping(source = "orderCancellationReasonId", target = "orderCancellationReason")
-    @Mapping(source = "userId", target = "user")
+    @Mapping(source = "orderResourceId", target = "orderResource", qualifiedByName = "mapToOrderResource")
+    @Mapping(source = "orderCancellationReasonId", target = "orderCancellationReason", qualifiedByName = "mapToOrderCancellationReason")
+    @Mapping(source = "userId", target = "user", qualifiedByName = "mapToUser")
     Order requestToEntity(OrderRequest request);
 
     @Override
     @BeanMapping(qualifiedByName = "attachOrder")
-    @Mapping(source = "orderResourceId", target = "orderResource")
-    @Mapping(source = "orderCancellationReasonId", target = "orderCancellationReason")
-    @Mapping(source = "userId", target = "user")
+    @Mapping(source = "orderResourceId", target = "orderResource", qualifiedByName = "mapToOrderResource")
+    @Mapping(source = "orderCancellationReasonId", target = "orderCancellationReason", qualifiedByName = "mapToOrderCancellationReason")
+    @Mapping(source = "userId", target = "user", qualifiedByName = "mapToUser")
     Order partialUpdate(@MappingTarget Order entity, OrderRequest request);
 
 }
-

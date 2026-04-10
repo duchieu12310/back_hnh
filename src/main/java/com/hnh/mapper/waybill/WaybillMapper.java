@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper.waybill;
+package com.hnh.mapper.waybill;
 
 import com.hnh.dto.waybill.WaybillRequest;
 import com.hnh.dto.waybill.WaybillResponse;
@@ -15,12 +15,11 @@ import org.mapstruct.ReportingPolicy;
 public interface WaybillMapper extends GenericMapper<Waybill, WaybillRequest, WaybillResponse> {
 
     @Override
-    @Mapping(source = "orderId", target = "order")
+    @Mapping(source = "orderId", target = "order", qualifiedByName = "mapToOrder")
     Waybill requestToEntity(WaybillRequest request);
 
     @Override
-    @Mapping(source = "orderId", target = "order")
+    @Mapping(source = "orderId", target = "order", qualifiedByName = "mapToOrder")
     Waybill partialUpdate(@MappingTarget Waybill entity, WaybillRequest request);
 
 }
-

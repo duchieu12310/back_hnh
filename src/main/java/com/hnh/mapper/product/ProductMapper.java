@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper.product;
+package com.hnh.mapper.product;
 
 import com.hnh.dto.product.ProductRequest;
 import com.hnh.dto.product.ProductResponse;
@@ -33,21 +33,20 @@ public interface ProductMapper extends GenericMapper<Product, ProductRequest, Pr
 
     @Override
     @BeanMapping(qualifiedByName = "attachProduct")
-    @Mapping(source = "categoryId", target = "category")
-    @Mapping(source = "brandId", target = "brand")
-    @Mapping(source = "supplierId", target = "supplier")
-    @Mapping(source = "unitId", target = "unit")
-    @Mapping(source = "guaranteeId", target = "guarantee")
+    @Mapping(source = "categoryId", target = "category", qualifiedByName = "mapToCategory")
+    @Mapping(source = "brandId", target = "brand", qualifiedByName = "mapToBrand")
+    @Mapping(source = "supplierId", target = "supplier", qualifiedByName = "mapToSupplier")
+    @Mapping(source = "unitId", target = "unit", qualifiedByName = "mapToUnit")
+    @Mapping(source = "guaranteeId", target = "guarantee", qualifiedByName = "mapToGuarantee")
     Product requestToEntity(ProductRequest request);
 
     @Override
     @BeanMapping(qualifiedByName = "attachProduct")
-    @Mapping(source = "categoryId", target = "category")
-    @Mapping(source = "brandId", target = "brand")
-    @Mapping(source = "supplierId", target = "supplier")
-    @Mapping(source = "unitId", target = "unit")
-    @Mapping(source = "guaranteeId", target = "guarantee")
+    @Mapping(source = "categoryId", target = "category", qualifiedByName = "mapToCategory")
+    @Mapping(source = "brandId", target = "brand", qualifiedByName = "mapToBrand")
+    @Mapping(source = "supplierId", target = "supplier", qualifiedByName = "mapToSupplier")
+    @Mapping(source = "unitId", target = "unit", qualifiedByName = "mapToUnit")
+    @Mapping(source = "guaranteeId", target = "guarantee", qualifiedByName = "mapToGuarantee")
     Product partialUpdate(@MappingTarget Product entity, ProductRequest request);
 
 }
-

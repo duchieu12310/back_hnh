@@ -1,4 +1,4 @@
-﻿package com.hnh.config;
+package com.hnh.config;
 
 import com.hnh.controller.GenericController;
 import org.springdoc.core.fn.builders.operation.Builder;
@@ -48,16 +48,6 @@ public class GenericControllerDocumentationConfig {
                 .and(generateRoute("products"))
                 .and(generateRoute("variants"))
                 .and(generateRoute("images"))
-                .and(generateRoute("product-inventory-limits"))
-                .and(generateRoute("variant-inventory-limits"))
-                .and(generateRoute("warehouses"))
-                .and(generateRoute("counts"))
-                .and(generateRoute("destinations"))
-                .and(generateRoute("docket-reasons"))
-                .and(generateRoute("transfers"))
-                .and(generateRoute("dockets"))
-                .and(generateRoute("storage-locations"))
-                .and(generateRoute("purchase-orders"))
                 .and(generateRoute("order-resources"))
                 .and(generateRoute("order-cancellation-reasons"))
                 .and(generateRoute("orders"))

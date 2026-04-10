@@ -1,8 +1,8 @@
-﻿package com.hnh.repository.product;
+package com.hnh.repository.product;
 
 import com.hnh.constant.SearchFields;
-import com.hnh.entity.inventory.Docket;
-import com.hnh.entity.inventory.DocketVariant;
+
+
 import com.hnh.entity.order.Order;
 import com.hnh.entity.order.OrderVariant;
 import com.hnh.entity.product.Product;
@@ -30,19 +30,7 @@ import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
 
-    default Page<Product> findDocketedProducts(Pageable pageable) {
-        Specification<Product> spec = (root, query, cb) -> {
-            Join<Product, Variant> variant = root.join("variants");
-            Join<Variant, DocketVariant> docketVariant = variant.join("docketVariants");
 
-            query.distinct(true);
-            query.orderBy(cb.desc(docketVariant.get("docket").get("id")));
-
-            return query.getRestriction();
-        };
-
-        return findAll(spec, pageable);
-    }
 
     default Page<Product> findByParams(String filter,
                                        String sort,
@@ -85,39 +73,16 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             List<javax.persistence.criteria.Order> orders = new ArrayList<>();
 
             Join<Product, Variant> variant = root.join("variants", javax.persistence.criteria.JoinType.LEFT);
-            Join<Variant, DocketVariant> docketVariant = variant.join("docketVariants", javax.persistence.criteria.JoinType.LEFT);
-            Join<DocketVariant, Docket> docket = docketVariant.join("docket", javax.persistence.criteria.JoinType.LEFT);
 
             if (saleable) {
                 Subquery<Integer> subquery = query.subquery(Integer.class);
                 Root<Variant> variantSq = subquery.from(Variant.class);
-                Join<Variant, DocketVariant> docketVariantSq = variantSq.join("docketVariants");
-                Join<DocketVariant, Docket> docketSq = docketVariantSq.join("docket");
+                
+                subquery.select(cb.sum(variantSq.get("quantity")));
+                subquery.where(cb.equal(variantSq.get("product"), root));
+                subquery.groupBy(variantSq.get("product"));
 
-                subquery.select(cb.diff(
-                        cb.sum(
-                                cb.<Integer>selectCase()
-                                        .when(cb.and(cb.equal(docketSq.get("type"), 1),
-                                                        cb.equal(docketSq.get("status"), 3)),
-                                                docketVariantSq.get("quantity"))
-                                        .when(cb.and(cb.equal(docketSq.get("type"), 2),
-                                                        cb.equal(docketSq.get("status"), 3)),
-                                                cb.prod(docketVariantSq.get("quantity"), -1))
-                                        .otherwise(0)
-                        ),
-                        cb.sum(
-                                cb.<Integer>selectCase()
-                                        .when(cb.and(cb.equal(docketSq.get("type"), 2),
-                                                        docketSq.get("status").in(1, 2)),
-                                                docketVariantSq.get("quantity"))
-                                        .otherwise(0)
-                        )
-                ));
-
-                subquery.where(cb.equal(variantSq.get("product").get("id"), root.get("id")));
-                subquery.groupBy(variantSq.get("product").get("id"));
-
-                wheres.add(cb.greaterThan(subquery, 0));
+                wheres.add(cb.greaterThan(cb.coalesce(subquery, 0), 0));
             }
 
             if ("lowest-price".equals(sort)) {
@@ -133,11 +98,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             }
 
             if (newable) {
-                wheres.add(cb.equal(docket.get("type"), 1));
-                wheres.add(cb.equal(docket.get("status"), 3));
 
-                orders.add(cb.desc(cb.max(docket.get("createdAt"))));
-                orders.add(cb.asc(root.get("id")));
             }
 
             if (slowSelling) {

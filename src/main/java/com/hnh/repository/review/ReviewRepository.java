@@ -1,4 +1,4 @@
-﻿package com.hnh.repository.review;
+package com.hnh.repository.review;
 
 import com.hnh.entity.review.Review;
 import io.github.perplexhub.rsql.RSQLJPASupport;
@@ -15,15 +15,15 @@ public interface ReviewRepository extends JpaRepository<Review, Long>, JpaSpecif
     default Page<Review> findAllByProductSlug(String productSlug, String sort, String filter, Pageable pageable) {
         Specification<Review> sortable = RSQLJPASupport.toSort(sort);
         Specification<Review> filterable = RSQLJPASupport.toSpecification(filter);
-        Specification<Review> productIdSpec = RSQLJPASupport.toSpecification("product.slug==" + productSlug);
-        return findAll(sortable.and(filterable).and(productIdSpec), pageable);
+        Specification<Review> productIdSpec = RSQLJPASupport.toSpecification("product.slug=='" + productSlug + "'");
+        return findAll(Specification.where(sortable).and(filterable).and(productIdSpec), pageable);
     }
 
     default Page<Review> findAllByUsername(String username, String sort, String filter, Pageable pageable) {
         Specification<Review> sortable = RSQLJPASupport.toSort(sort);
         Specification<Review> filterable = RSQLJPASupport.toSpecification(filter);
-        Specification<Review> usernameSpec = RSQLJPASupport.toSpecification("user.username==" + username);
-        return findAll(sortable.and(filterable).and(usernameSpec), pageable);
+        Specification<Review> usernameSpec = RSQLJPASupport.toSpecification("user.username=='" + username + "'");
+        return findAll(Specification.where(sortable).and(filterable).and(usernameSpec), pageable);
     }
 
     @Query(value = "SELECT COALESCE(CEILING(AVG(r.rating_score)), 0) FROM review r WHERE r.product_id = :productId", nativeQuery = true)

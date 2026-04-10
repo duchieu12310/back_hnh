@@ -1,4 +1,4 @@
-﻿package com.hnh.repository.client;
+package com.hnh.repository.client;
 
 import com.hnh.entity.client.Preorder;
 import io.github.perplexhub.rsql.RSQLJPASupport;
@@ -16,8 +16,8 @@ public interface PreorderRepository extends JpaRepository<Preorder, Long>, JpaSp
     default Page<Preorder> findAllByUsername(String username, String sort, String filter, Pageable pageable) {
         Specification<Preorder> sortable = RSQLJPASupport.toSort(sort);
         Specification<Preorder> filterable = RSQLJPASupport.toSpecification(filter);
-        Specification<Preorder> usernameSpec = RSQLJPASupport.toSpecification("user.username==" + username);
-        return findAll(sortable.and(filterable).and(usernameSpec), pageable);
+        Specification<Preorder> usernameSpec = RSQLJPASupport.toSpecification("user.username=='" + username + "'");
+        return findAll(Specification.where(sortable).and(filterable).and(usernameSpec), pageable);
     }
 
     Optional<Preorder> findByUser_IdAndProduct_Id(Long userId, Long productId);

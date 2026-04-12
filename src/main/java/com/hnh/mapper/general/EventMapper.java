@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper.general;
+package com.hnh.mapper.general;
 
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;

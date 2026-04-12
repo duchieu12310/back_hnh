@@ -1,4 +1,4 @@
-﻿package com.hnh.constant;
+package com.hnh.constant;
 
 public interface AppConstants {
     String DEFAULT_PAGE_NUMBER = "1";

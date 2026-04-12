@@ -1,4 +1,4 @@
-﻿package com.hnh.entity;
+package com.hnh.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -42,4 +42,3 @@ public abstract class BaseEntity {
     private Long updatedBy;
 
 }
-

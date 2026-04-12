@@ -1,4 +1,4 @@
-﻿package com.hnh.repository.general;
+package com.hnh.repository.general;
 
 import com.hnh.entity.general.Image;
 import org.springframework.data.jpa.repository.JpaRepository;

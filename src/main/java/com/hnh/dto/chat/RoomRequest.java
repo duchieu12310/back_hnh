@@ -1,4 +1,4 @@
-﻿package com.hnh.dto.chat;
+package com.hnh.dto.chat;
 
 import lombok.Data;
 

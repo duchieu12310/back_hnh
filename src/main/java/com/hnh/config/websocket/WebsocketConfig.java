@@ -1,4 +1,4 @@
-﻿package com.hnh.config.websocket;
+package com.hnh.config.websocket;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

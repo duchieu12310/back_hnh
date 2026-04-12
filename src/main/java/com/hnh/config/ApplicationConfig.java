@@ -1,4 +1,4 @@
-﻿package com.hnh.config;
+package com.hnh.config;
 
 import io.github.perplexhub.rsql.RSQLCommonSupport;
 import org.springframework.context.annotation.Bean;

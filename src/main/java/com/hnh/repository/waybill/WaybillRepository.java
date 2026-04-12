@@ -1,4 +1,4 @@
-﻿package com.hnh.repository.waybill;
+package com.hnh.repository.waybill;
 
 import com.hnh.entity.waybill.Waybill;
 import org.springframework.data.jpa.repository.JpaRepository;

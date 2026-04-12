@@ -1,4 +1,4 @@
-﻿package com.hnh.repository.client;
+package com.hnh.repository.client;
 
 import com.hnh.entity.client.NewsletterSubscription;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,4 +1,4 @@
-﻿package com.hnh.entity.cart;
+package com.hnh.entity.cart;
 
 import com.hnh.entity.product.Variant;
 import lombok.AllArgsConstructor;

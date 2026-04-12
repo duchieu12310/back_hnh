@@ -1,4 +1,4 @@
-﻿package com.hnh.utils;
+package com.hnh.utils;
 
 // TODO: TẠM THỜI COMMENT - FLOW ĐIỂM THƯỞNG
 /*import com.hnh.entity.general.Notification;

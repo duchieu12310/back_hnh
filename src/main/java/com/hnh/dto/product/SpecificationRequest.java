@@ -1,4 +1,4 @@
-﻿package com.hnh.dto.product;
+package com.hnh.dto.product;
 
 import lombok.Data;
 

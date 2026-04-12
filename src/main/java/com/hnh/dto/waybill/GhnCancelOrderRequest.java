@@ -1,4 +1,4 @@
-﻿package com.hnh.dto.waybill;
+package com.hnh.dto.waybill;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

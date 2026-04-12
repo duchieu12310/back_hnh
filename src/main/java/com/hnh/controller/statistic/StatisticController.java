@@ -1,4 +1,4 @@
-﻿package com.hnh.controller.statistic;
+package com.hnh.controller.statistic;
 
 import com.hnh.constant.AppConstants;
 import com.hnh.dto.statistic.StatisticResponse;

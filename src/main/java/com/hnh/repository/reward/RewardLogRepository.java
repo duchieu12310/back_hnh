@@ -1,4 +1,4 @@
-﻿package com.hnh.repository.reward;
+package com.hnh.repository.reward;
 
 import com.hnh.entity.reward.RewardLog;
 import org.springframework.data.jpa.repository.JpaRepository;

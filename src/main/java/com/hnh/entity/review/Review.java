@@ -1,4 +1,4 @@
-﻿package com.hnh.entity.review;
+package com.hnh.entity.review;
 
 import com.hnh.entity.BaseEntity;
 import com.hnh.entity.authentication.User;

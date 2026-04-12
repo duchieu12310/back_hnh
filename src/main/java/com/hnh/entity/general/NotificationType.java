@@ -1,4 +1,4 @@
-﻿package com.hnh.entity.general;
+package com.hnh.entity.general;
 
 public enum NotificationType {
     GENERAL,

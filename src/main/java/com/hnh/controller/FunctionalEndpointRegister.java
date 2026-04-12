@@ -1,4 +1,4 @@
-﻿package com.hnh.controller;
+package com.hnh.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;

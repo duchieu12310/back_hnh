@@ -1,4 +1,4 @@
-﻿package com.hnh.exception;
+package com.hnh.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;

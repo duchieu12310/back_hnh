@@ -1,4 +1,4 @@
-﻿package com.hnh.entity.address;
+package com.hnh.entity.address;
 
 import com.hnh.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;

@@ -1,4 +1,4 @@
-﻿package com.hnh.entity.authentication;
+package com.hnh.entity.authentication;
 
 import com.hnh.entity.BaseEntity;
 import com.hnh.entity.address.Address;

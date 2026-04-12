@@ -1,4 +1,4 @@
-﻿package com.hnh.repository.chat;
+package com.hnh.repository.chat;
 
 import com.hnh.entity.chat.Room;
 import org.springframework.data.jpa.repository.JpaRepository;

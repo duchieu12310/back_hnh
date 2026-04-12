@@ -1,4 +1,4 @@
-﻿package com.hnh.dto.authentication;
+package com.hnh.dto.authentication;
 
 import lombok.Data;
 

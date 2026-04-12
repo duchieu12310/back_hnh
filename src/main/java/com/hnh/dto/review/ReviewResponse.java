@@ -1,4 +1,4 @@
-﻿package com.hnh.dto.review;
+package com.hnh.dto.review;
 
 import lombok.Data;
 import org.springframework.lang.Nullable;

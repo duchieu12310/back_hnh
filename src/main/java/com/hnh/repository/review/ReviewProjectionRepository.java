@@ -1,4 +1,4 @@
-﻿package com.hnh.repository.review;
+package com.hnh.repository.review;
 
 import com.hnh.dto.statistic.StatisticResource;
 import com.hnh.entity.review.Review;

@@ -1,4 +1,4 @@
-﻿package com.hnh.entity.cashbook;
+package com.hnh.entity.cashbook;
 
 import com.hnh.entity.BaseEntity;
 import lombok.AllArgsConstructor;

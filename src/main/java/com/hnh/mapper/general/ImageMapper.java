@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper.general;
+package com.hnh.mapper.general;
 
 import com.hnh.dto.general.ImageRequest;
 import com.hnh.dto.general.ImageResponse;

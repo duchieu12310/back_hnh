@@ -1,4 +1,4 @@
-﻿package com.hnh.entity.order;
+package com.hnh.entity.order;
 
 import com.hnh.entity.BaseEntity;
 import com.hnh.entity.customer.CustomerResource;

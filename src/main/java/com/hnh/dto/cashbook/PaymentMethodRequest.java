@@ -1,4 +1,4 @@
-﻿package com.hnh.dto.cashbook;
+package com.hnh.dto.cashbook;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-﻿package com.hnh.repository.authentication;
+package com.hnh.repository.authentication;
 
 import com.hnh.entity.authentication.User;
 import org.springframework.data.jpa.repository.JpaRepository;

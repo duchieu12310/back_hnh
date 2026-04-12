@@ -1,4 +1,4 @@
-﻿package com.hnh.dto.reward;
+package com.hnh.dto.reward;
 
 import lombok.Data;
 import org.springframework.lang.Nullable;

@@ -1,4 +1,4 @@
-﻿package com.hnh.exception;
+package com.hnh.exception;
 
 public class FileStorageException extends RuntimeException {
 

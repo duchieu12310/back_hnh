@@ -1,4 +1,4 @@
-﻿package com.hnh.controller;
+package com.hnh.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.MediaType;

@@ -1,4 +1,4 @@
-﻿package com.hnh.config.payment.paypal;
+package com.hnh.config.payment.paypal;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

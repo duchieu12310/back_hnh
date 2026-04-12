@@ -1,4 +1,4 @@
-﻿package com.hnh.dto.waybill;
+package com.hnh.dto.waybill;
 
 import com.hnh.entity.waybill.RequiredNote;
 import com.hnh.utils.DefaultInstantDeserializer;

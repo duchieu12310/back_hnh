@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper.client;
+package com.hnh.mapper.client;
 
 import com.hnh.dto.client.ClientRewardLogResponse;
 import com.hnh.entity.reward.RewardLog;

@@ -1,4 +1,4 @@
-﻿package com.hnh.entity.waybill;
+package com.hnh.entity.waybill;
 
 import com.hnh.entity.BaseEntity;
 import com.hnh.entity.order.Order;

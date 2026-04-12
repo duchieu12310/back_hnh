@@ -1,4 +1,4 @@
-﻿package com.hnh.entity.order;
+package com.hnh.entity.order;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

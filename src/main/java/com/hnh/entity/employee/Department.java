@@ -1,4 +1,4 @@
-﻿package com.hnh.entity.employee;
+package com.hnh.entity.employee;
 
 import com.hnh.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;

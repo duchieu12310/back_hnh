@@ -1,4 +1,4 @@
-﻿package com.hnh.repository.chat;
+package com.hnh.repository.chat;
 
 import com.hnh.entity.chat.Message;
 import org.springframework.data.domain.Page;

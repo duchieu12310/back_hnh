@@ -1,4 +1,4 @@
-﻿package com.hnh.dto.payment;
+package com.hnh.dto.payment;
 
 public enum OrderStatus {
     CREATED,

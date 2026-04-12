@@ -1,4 +1,4 @@
-﻿package com.hnh.service.waybill;
+package com.hnh.service.waybill;
 
 import com.hnh.dto.waybill.GhnCallbackOrderRequest;
 import com.hnh.dto.waybill.WaybillRequest;

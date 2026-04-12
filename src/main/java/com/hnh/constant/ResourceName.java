@@ -42,5 +42,7 @@ public interface ResourceName {
     String ROOM = "Room";
     String MESSAGE = "Message";
     String REWARD_STRATEGY = "RewardStrategy";
+    String WAREHOUSE = "Warehouse";
+    String STORAGE_LOCATION = "StorageLocation";
 }
 

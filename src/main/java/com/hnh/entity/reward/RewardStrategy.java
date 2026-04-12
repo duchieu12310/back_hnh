@@ -1,4 +1,4 @@
-﻿package com.hnh.entity.reward;
+package com.hnh.entity.reward;
 
 import com.hnh.entity.BaseEntity;
 import lombok.AllArgsConstructor;

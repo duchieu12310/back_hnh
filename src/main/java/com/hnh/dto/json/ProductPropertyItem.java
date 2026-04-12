@@ -1,4 +1,4 @@
-﻿package com.hnh.dto.json;
+package com.hnh.dto.json;
 
 import lombok.Data;
 

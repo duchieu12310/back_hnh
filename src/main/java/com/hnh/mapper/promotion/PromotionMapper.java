@@ -20,6 +20,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,7 +33,6 @@ public abstract class PromotionMapper implements GenericMapper<Promotion, Promot
     private CategoryRepository categoryRepository;
 
     @Override
-    @BeanMapping(qualifiedByName = "addProductsFromCategories")
     @Mapping(source = "productIds", target = "products", qualifiedByName = "mapToProducts")
     public abstract Promotion requestToEntity(PromotionRequest request);
 
@@ -44,14 +44,17 @@ public abstract class PromotionMapper implements GenericMapper<Promotion, Promot
     @AfterMapping
     @Named("addProductsFromCategories")
     protected void addProductsFromCategories(@MappingTarget Promotion promotion, PromotionRequest request) {
-        if (request.getCategoryIds().size() != 0) {
+        if (request.getCategoryIds() != null && !request.getCategoryIds().isEmpty()) {
             Set<Product> productsFromCategories = request.getCategoryIds().stream()
                     .map(categoryRepository::getById)
                     .map(Category::getProducts)
                     .flatMap(List::stream)
                     .collect(Collectors.toSet());
 
-            promotion.setProducts(productsFromCategories);
+            if (promotion.getProducts() == null) {
+                promotion.setProducts(new HashSet<>());
+            }
+            promotion.getProducts().addAll(productsFromCategories);
         }
     }
 

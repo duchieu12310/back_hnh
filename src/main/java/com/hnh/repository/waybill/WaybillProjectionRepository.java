@@ -1,4 +1,4 @@
-﻿package com.hnh.repository.waybill;
+package com.hnh.repository.waybill;
 
 import com.hnh.dto.statistic.StatisticResource;
 import com.hnh.entity.waybill.Waybill;

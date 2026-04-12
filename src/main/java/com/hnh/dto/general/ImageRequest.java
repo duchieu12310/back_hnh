@@ -1,4 +1,4 @@
-﻿package com.hnh.dto.general;
+package com.hnh.dto.general;
 
 import lombok.Data;
 import org.springframework.lang.Nullable;

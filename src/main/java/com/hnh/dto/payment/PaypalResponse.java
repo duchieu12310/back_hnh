@@ -1,4 +1,4 @@
-﻿package com.hnh.dto.payment;
+package com.hnh.dto.payment;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

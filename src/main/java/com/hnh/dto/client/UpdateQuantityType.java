@@ -1,4 +1,4 @@
-﻿package com.hnh.dto.client;
+package com.hnh.dto.client;
 
 public enum UpdateQuantityType {
     OVERRIDE,

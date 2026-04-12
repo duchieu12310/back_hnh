@@ -1,4 +1,4 @@
-﻿package com.hnh.entity.product;
+package com.hnh.entity.product;
 
 import com.hnh.entity.BaseEntity;
 import com.hnh.entity.client.Preorder;
@@ -7,6 +7,7 @@ import com.hnh.entity.general.Image;
 import com.hnh.entity.promotion.Promotion;
 import com.hnh.entity.review.Review;
 import com.hnh.utils.JsonNodeConverter;
+import com.hnh.entity.warehouse.Warehouse;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -121,6 +122,9 @@ public class Product extends BaseEntity {
 
     @OneToMany(mappedBy = "product")
     private List<Review> reviews = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "products")
+    private Set<Warehouse> warehouses = new HashSet<>();
 
     @ManyToMany(mappedBy = "products")
     private Set<Promotion> promotions = new HashSet<>();

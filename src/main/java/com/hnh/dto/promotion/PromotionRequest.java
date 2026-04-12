@@ -1,4 +1,4 @@
-﻿package com.hnh.dto.promotion;
+package com.hnh.dto.promotion;
 
 import com.hnh.utils.DefaultInstantDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

@@ -1,4 +1,4 @@
-﻿package com.hnh.entity.product;
+package com.hnh.entity.product;
 
 import com.hnh.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -18,7 +18,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import javax.persistence.ManyToMany;
+import com.hnh.entity.warehouse.Warehouse;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -52,5 +56,8 @@ public class Category extends BaseEntity {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Product> products = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "categories")
+    private Set<Warehouse> warehouses = new HashSet<>();
 }
 

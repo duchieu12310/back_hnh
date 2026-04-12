@@ -1,4 +1,4 @@
-﻿package com.hnh.dto.cashbook;
+package com.hnh.dto.cashbook;
 
 import com.hnh.entity.cashbook.PaymentMethodType;
 import lombok.Data;

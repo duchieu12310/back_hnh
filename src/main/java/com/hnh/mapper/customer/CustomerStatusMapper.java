@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper.customer;
+package com.hnh.mapper.customer;
 
 import com.hnh.dto.customer.CustomerStatusRequest;
 import com.hnh.dto.customer.CustomerStatusResponse;

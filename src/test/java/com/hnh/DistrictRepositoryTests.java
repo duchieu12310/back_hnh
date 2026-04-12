@@ -1,4 +1,4 @@
-﻿package com.hnh;
+package com.hnh;
 
 import com.hnh.entity.address.District;
 import com.hnh.entity.address.Province;

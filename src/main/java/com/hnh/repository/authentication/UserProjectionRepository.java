@@ -1,4 +1,4 @@
-﻿package com.hnh.repository.authentication;
+package com.hnh.repository.authentication;
 
 import com.hnh.dto.statistic.StatisticResource;
 import com.hnh.entity.authentication.User;

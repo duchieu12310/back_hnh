@@ -1,4 +1,4 @@
-﻿package com.hnh.constant;
+package com.hnh.constant;
 
 public interface SecurityConstants {
     String[] ADMIN_API_PATHS = {

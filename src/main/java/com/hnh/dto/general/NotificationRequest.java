@@ -1,4 +1,4 @@
-﻿package com.hnh.dto.general;
+package com.hnh.dto.general;
 
 import com.hnh.entity.general.NotificationType;
 import lombok.Data;

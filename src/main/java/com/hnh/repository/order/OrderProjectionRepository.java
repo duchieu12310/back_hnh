@@ -1,4 +1,4 @@
-﻿package com.hnh.repository.order;
+package com.hnh.repository.order;
 
 import com.hnh.dto.statistic.ProductSalesStatistic;
 import com.hnh.dto.statistic.StatisticResource;

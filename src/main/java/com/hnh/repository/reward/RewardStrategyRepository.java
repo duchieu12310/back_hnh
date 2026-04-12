@@ -1,4 +1,4 @@
-﻿package com.hnh.repository.reward;
+package com.hnh.repository.reward;
 
 import com.hnh.entity.reward.RewardStrategy;
 import com.hnh.entity.reward.RewardType;

@@ -1,4 +1,4 @@
-﻿package com.hnh.config.security;
+package com.hnh.config.security;
 
 import com.hnh.constant.SecurityConstants;
 import lombok.AllArgsConstructor;

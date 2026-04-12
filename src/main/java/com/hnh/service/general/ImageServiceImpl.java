@@ -1,4 +1,4 @@
-﻿package com.hnh.service.general;
+package com.hnh.service.general;
 
 import com.hnh.dto.general.UploadedImageResponse;
 import com.hnh.exception.FileStorageException;

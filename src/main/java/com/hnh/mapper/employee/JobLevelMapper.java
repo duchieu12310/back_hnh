@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper.employee;
+package com.hnh.mapper.employee;
 
 import com.hnh.dto.employee.JobLevelRequest;
 import com.hnh.dto.employee.JobLevelResponse;

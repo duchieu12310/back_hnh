@@ -1,4 +1,4 @@
-﻿package com.hnh.service.chat;
+package com.hnh.service.chat;
 
 import com.hnh.dto.chat.MessageRequest;
 import com.hnh.dto.chat.MessageResponse;

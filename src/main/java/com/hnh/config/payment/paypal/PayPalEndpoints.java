@@ -1,4 +1,4 @@
-﻿package com.hnh.config.payment.paypal;
+package com.hnh.config.payment.paypal;
 
 public enum PayPalEndpoints {
     GET_ACCESS_TOKEN("/v1/oauth2/token"),

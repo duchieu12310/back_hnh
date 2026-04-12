@@ -1,4 +1,4 @@
-﻿package com.hnh.dto.client;
+package com.hnh.dto.client;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;

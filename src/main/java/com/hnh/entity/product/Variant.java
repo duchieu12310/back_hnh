@@ -3,6 +3,8 @@ package com.hnh.entity.product;
 import com.hnh.entity.BaseEntity;
 import com.hnh.entity.cart.CartVariant;
 import com.hnh.entity.order.OrderVariant;
+import com.hnh.entity.warehouse.StorageLocation;
+import com.hnh.entity.warehouse.InventoryItem;
 import com.hnh.utils.JsonNodeConverter;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -60,6 +62,10 @@ public class Variant extends BaseEntity {
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
+
+    @OneToMany(mappedBy = "variant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<InventoryItem> inventoryItems = new java.util.ArrayList<>();
+
 
 //    @OneToOne(mappedBy = "variant", cascade = CascadeType.ALL)
 //    private StorageLocation storageLocation;

@@ -1,4 +1,4 @@
-﻿package com.hnh.dto;
+package com.hnh.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

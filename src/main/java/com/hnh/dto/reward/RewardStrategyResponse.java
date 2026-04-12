@@ -1,4 +1,4 @@
-﻿package com.hnh.dto.reward;
+package com.hnh.dto.reward;
 
 import com.hnh.entity.reward.RewardType;
 import lombok.Data;

@@ -1,4 +1,4 @@
-﻿package com.hnh.entity.client;
+package com.hnh.entity.client;
 
 import com.hnh.entity.BaseEntity;
 import lombok.AllArgsConstructor;

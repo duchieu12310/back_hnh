@@ -305,5 +305,18 @@ public interface SearchFields {
             "code",
             "formula"
     );
+
+    List<String> WAREHOUSE = List.of(
+            "name",
+            "code",
+            "address.line"
+    );
+
+    List<String> STORAGE_LOCATION = List.of(
+            "aisle",
+            "shelf",
+            "bin",
+            "warehouse.name"
+    );
 }
 

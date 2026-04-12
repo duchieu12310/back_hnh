@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper.product;
+package com.hnh.mapper.product;
 
 import com.hnh.dto.product.PropertyRequest;
 import com.hnh.dto.product.PropertyResponse;

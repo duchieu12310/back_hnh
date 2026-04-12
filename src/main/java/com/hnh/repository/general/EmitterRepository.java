@@ -1,4 +1,4 @@
-﻿package com.hnh.repository.general;
+package com.hnh.repository.general;
 
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 

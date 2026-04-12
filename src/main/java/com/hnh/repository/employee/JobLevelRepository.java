@@ -1,4 +1,4 @@
-﻿package com.hnh.repository.employee;
+package com.hnh.repository.employee;
 
 import com.hnh.entity.employee.JobLevel;
 import org.springframework.data.jpa.repository.JpaRepository;

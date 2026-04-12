@@ -1,4 +1,4 @@
-﻿package com.hnh.controller.waybill;
+package com.hnh.controller.waybill;
 
 import com.hnh.constant.AppConstants;
 import com.hnh.dto.waybill.GhnCallbackOrderRequest;

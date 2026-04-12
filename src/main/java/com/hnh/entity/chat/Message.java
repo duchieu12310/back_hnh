@@ -1,4 +1,4 @@
-﻿package com.hnh.entity.chat;
+package com.hnh.entity.chat;
 
 import com.hnh.entity.BaseEntity;
 import com.hnh.entity.authentication.User;

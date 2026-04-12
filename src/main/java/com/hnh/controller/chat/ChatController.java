@@ -1,4 +1,4 @@
-﻿package com.hnh.controller.chat;
+package com.hnh.controller.chat;
 
 import com.hnh.constant.AppConstants;
 import com.hnh.dto.ListResponse;

@@ -1,4 +1,4 @@
-﻿package com.hnh.entity.reward;
+package com.hnh.entity.reward;
 
 public enum RewardType {
     SUCCESS_ORDER,

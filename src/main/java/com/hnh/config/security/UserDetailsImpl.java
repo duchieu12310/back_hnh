@@ -1,4 +1,4 @@
-﻿package com.hnh.config.security;
+package com.hnh.config.security;
 
 import com.hnh.entity.authentication.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;

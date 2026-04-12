@@ -1,4 +1,4 @@
-﻿package com.hnh.service.statistic;
+package com.hnh.service.statistic;
 
 import com.hnh.dto.statistic.ProductSalesStatistic;
 import com.hnh.dto.statistic.StatisticResource;

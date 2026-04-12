@@ -1,4 +1,4 @@
-﻿package com.hnh.repository.address;
+package com.hnh.repository.address;
 
 import com.hnh.entity.address.Ward;
 import org.springframework.data.jpa.repository.JpaRepository;

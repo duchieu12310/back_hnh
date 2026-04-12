@@ -1,4 +1,4 @@
-﻿package com.hnh.dto.client;
+package com.hnh.dto.client;
 
 import lombok.Data;
 import org.springframework.lang.Nullable;

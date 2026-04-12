@@ -1,4 +1,4 @@
-﻿package com.hnh.dto.promotion;
+package com.hnh.dto.promotion;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

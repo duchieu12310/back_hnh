@@ -1,4 +1,4 @@
-﻿package com.hnh.entity.authentication;
+package com.hnh.entity.authentication;
 
 public enum VerificationType {
     REGISTRATION,

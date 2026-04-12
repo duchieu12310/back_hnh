@@ -1,4 +1,4 @@
-﻿package com.hnh.dto.product;
+package com.hnh.dto.product;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;

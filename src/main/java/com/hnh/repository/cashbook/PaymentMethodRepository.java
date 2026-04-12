@@ -1,4 +1,4 @@
-﻿package com.hnh.repository.cashbook;
+package com.hnh.repository.cashbook;
 
 import com.hnh.entity.cashbook.PaymentMethod;
 import org.springframework.data.jpa.repository.JpaRepository;

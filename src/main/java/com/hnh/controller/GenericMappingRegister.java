@@ -13,6 +13,7 @@ import com.hnh.dto.promotion.*;
 import com.hnh.dto.review.*;
 import com.hnh.dto.reward.*;
 import com.hnh.dto.waybill.*;
+import com.hnh.dto.warehouse.*;
 import com.hnh.entity.address.*;
 import com.hnh.entity.authentication.*;
 import com.hnh.entity.cashbook.*;
@@ -20,6 +21,7 @@ import com.hnh.entity.chat.*;
 import com.hnh.entity.general.*;
 import com.hnh.entity.order.*;
 import com.hnh.entity.product.*;
+import com.hnh.entity.warehouse.*;
 import com.hnh.entity.reward.*;
 import com.hnh.mapper.address.*;
 import com.hnh.mapper.authentication.*;
@@ -28,6 +30,7 @@ import com.hnh.mapper.chat.*;
 import com.hnh.mapper.general.*;
 import com.hnh.mapper.order.*;
 import com.hnh.mapper.product.*;
+import com.hnh.mapper.warehouse.*;
 import com.hnh.mapper.reward.*;
 import com.hnh.repository.address.*;
 import com.hnh.repository.authentication.*;
@@ -36,12 +39,14 @@ import com.hnh.repository.chat.*;
 import com.hnh.repository.general.*;
 import com.hnh.repository.order.*;
 import com.hnh.repository.product.*;
+import com.hnh.repository.warehouse.*;
 import com.hnh.repository.reward.*;
 import com.hnh.service.*;
 import com.hnh.service.address.ProvinceService;
 import com.hnh.service.promotion.PromotionService;
 import com.hnh.service.review.ReviewService;
 import com.hnh.service.waybill.WaybillService;
+import com.hnh.service.warehouse.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -90,6 +95,8 @@ public class GenericMappingRegister {
     @Autowired private GenericController<PromotionRequest, PromotionResponse> promotionController;
     @Autowired private GenericController<RoomRequest, RoomResponse> roomController;
     @Autowired private GenericController<RewardStrategyRequest, RewardStrategyResponse> rewardStrategyController;
+    @Autowired private GenericController<WarehouseRequest, WarehouseResponse> warehouseController;
+    @Autowired private GenericController<StorageLocationRequest, StorageLocationResponse> storageLocationController;
 
     // Services
     @Autowired private ProvinceService provinceService;
@@ -115,6 +122,8 @@ public class GenericMappingRegister {
     @Autowired private GenericService<PaymentMethod, PaymentMethodRequest, PaymentMethodResponse> paymentMethodService;
     @Autowired private GenericService<Room, RoomRequest, RoomResponse> roomService;
     @Autowired private GenericService<RewardStrategy, RewardStrategyRequest, RewardStrategyResponse> rewardStrategyService;
+    @Autowired private WarehouseService warehouseService;
+    @Autowired private StorageLocationService storageLocationService;
 
     @PostConstruct
     public void registerControllers() throws NoSuchMethodException {
@@ -281,6 +290,7 @@ public class GenericMappingRegister {
                 SearchFields.REWARD_STRATEGY,
                 ResourceName.REWARD_STRATEGY
         ), RewardStrategyRequest.class);
+
 
     }
 

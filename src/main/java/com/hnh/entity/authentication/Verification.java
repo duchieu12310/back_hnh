@@ -1,4 +1,4 @@
-﻿package com.hnh.entity.authentication;
+package com.hnh.entity.authentication;
 
 import com.hnh.entity.BaseEntity;
 import lombok.AllArgsConstructor;

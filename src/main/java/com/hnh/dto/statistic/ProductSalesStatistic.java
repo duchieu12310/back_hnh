@@ -1,4 +1,4 @@
-﻿package com.hnh.dto.statistic;
+package com.hnh.dto.statistic;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

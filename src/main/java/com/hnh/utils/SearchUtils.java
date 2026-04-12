@@ -1,4 +1,4 @@
-﻿package com.hnh.utils;
+package com.hnh.utils;
 
 import io.github.perplexhub.rsql.RSQLJPASupport;
 import org.springframework.data.jpa.domain.Specification;

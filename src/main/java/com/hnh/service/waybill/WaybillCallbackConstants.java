@@ -1,4 +1,4 @@
-﻿package com.hnh.service.waybill;
+package com.hnh.service.waybill;
 
 import java.util.Map;
 

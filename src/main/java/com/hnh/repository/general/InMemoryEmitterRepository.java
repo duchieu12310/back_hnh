@@ -1,4 +1,4 @@
-﻿package com.hnh.repository.general;
+package com.hnh.repository.general;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

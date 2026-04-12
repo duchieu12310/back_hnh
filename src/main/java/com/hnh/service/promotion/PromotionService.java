@@ -1,4 +1,4 @@
-﻿package com.hnh.service.promotion;
+package com.hnh.service.promotion;
 
 import com.hnh.dto.promotion.PromotionRequest;
 import com.hnh.dto.promotion.PromotionResponse;

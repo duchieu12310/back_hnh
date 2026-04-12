@@ -1,4 +1,4 @@
-﻿package com.hnh.controller.promotion;
+package com.hnh.controller.promotion;
 
 import com.hnh.constant.AppConstants;
 import com.hnh.dto.promotion.PromotionCheckingResponse;

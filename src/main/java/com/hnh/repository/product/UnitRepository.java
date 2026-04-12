@@ -1,4 +1,4 @@
-﻿package com.hnh.repository.product;
+package com.hnh.repository.product;
 
 import com.hnh.entity.product.Unit;
 import org.springframework.data.jpa.repository.JpaRepository;

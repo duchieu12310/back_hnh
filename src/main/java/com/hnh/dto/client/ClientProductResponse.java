@@ -1,4 +1,4 @@
-﻿package com.hnh.dto.client;
+package com.hnh.dto.client;
 
 import com.hnh.dto.general.ImageResponse;
 import com.fasterxml.jackson.databind.JsonNode;

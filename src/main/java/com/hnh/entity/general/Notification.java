@@ -1,4 +1,4 @@
-﻿package com.hnh.entity.general;
+package com.hnh.entity.general;
 
 import com.hnh.entity.BaseEntity;
 import com.hnh.entity.authentication.User;

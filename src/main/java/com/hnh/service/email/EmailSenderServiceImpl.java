@@ -1,4 +1,4 @@
-﻿package com.hnh.service.email;
+package com.hnh.service.email;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;

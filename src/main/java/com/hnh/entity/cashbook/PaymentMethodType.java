@@ -1,4 +1,4 @@
-﻿package com.hnh.entity.cashbook;
+package com.hnh.entity.cashbook;
 
 public enum PaymentMethodType {
     CASH,

@@ -1,4 +1,4 @@
-﻿package com.hnh.mapper;
+package com.hnh.mapper;
 
 import org.mapstruct.MappingTarget;
 

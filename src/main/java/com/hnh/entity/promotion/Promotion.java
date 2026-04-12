@@ -1,4 +1,4 @@
-﻿package com.hnh.entity.promotion;
+package com.hnh.entity.promotion;
 
 import com.hnh.entity.BaseEntity;
 import com.hnh.entity.product.Product;

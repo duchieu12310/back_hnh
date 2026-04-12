@@ -1,4 +1,4 @@
-﻿package com.hnh.entity.cart;
+package com.hnh.entity.cart;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

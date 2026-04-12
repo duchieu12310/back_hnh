@@ -1,4 +1,4 @@
-﻿package com.hnh.config.security;
+package com.hnh.config.security;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

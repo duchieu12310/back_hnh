@@ -1,4 +1,4 @@
-﻿package com.hnh.entity.cart;
+package com.hnh.entity.cart;
 
 import com.hnh.entity.BaseEntity;
 import com.hnh.entity.authentication.User;

@@ -188,5 +188,13 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
            "GROUP BY v.product.id")
     List<Object[]> findTotalSalesByProductIds(List<Long> productIds);
 
+    boolean existsByCode(String code);
+
+    boolean existsBySlug(String slug);
+
+    boolean existsByCodeAndIdNot(String code, Long id);
+
+    boolean existsBySlugAndIdNot(String slug, Long id);
+
 }
 

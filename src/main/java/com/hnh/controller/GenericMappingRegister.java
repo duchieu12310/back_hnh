@@ -47,6 +47,7 @@ import com.hnh.service.promotion.PromotionService;
 import com.hnh.service.review.ReviewService;
 import com.hnh.service.waybill.WaybillService;
 import com.hnh.service.warehouse.*;
+import com.hnh.service.product.ProductService;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -113,7 +114,7 @@ public class GenericMappingRegister {
     @Autowired private GenericService<Supplier, SupplierRequest, SupplierResponse> supplierService;
     @Autowired private GenericService<Brand, BrandRequest, BrandResponse> brandService;
     @Autowired private GenericService<Specification, SpecificationRequest, SpecificationResponse> specificationService;
-    @Autowired private GenericService<Product, ProductRequest, ProductResponse> productService;
+    @Autowired private ProductService productService;
     @Autowired private GenericService<Variant, VariantRequest, VariantResponse> variantService;
     @Autowired private GenericService<Image, ImageRequest, ImageResponse> imageService;
     @Autowired private GenericService<OrderResource, OrderResourceRequest, OrderResourceResponse> orderResourceService;
@@ -221,12 +222,7 @@ public class GenericMappingRegister {
                 ResourceName.SPECIFICATION
         ), SpecificationRequest.class);
 
-        register("products", productController, productService.init(
-                context.getBean(ProductRepository.class),
-                context.getBean(ProductMapper.class),
-                SearchFields.PRODUCT,
-                ResourceName.PRODUCT
-        ), ProductRequest.class);
+        register("products", productController, productService, ProductRequest.class);
 
         register("variants", variantController, variantService.init(
                 context.getBean(VariantRepository.class),

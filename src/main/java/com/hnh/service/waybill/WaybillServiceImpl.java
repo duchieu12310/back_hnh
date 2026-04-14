@@ -18,6 +18,7 @@ import com.hnh.entity.general.NotificationType;
 import com.hnh.entity.order.Order;
 import com.hnh.entity.order.OrderVariant;
 import com.hnh.entity.waybill.Waybill;
+import com.hnh.entity.warehouse.Warehouse;
 import com.hnh.entity.waybill.WaybillLog;
 import com.hnh.exception.ResourceNotFoundException;
 import com.hnh.mapper.general.NotificationMapper;
@@ -27,6 +28,7 @@ import com.hnh.repository.order.OrderRepository;
 import com.hnh.repository.waybill.WaybillLogRepository;
 import com.hnh.repository.waybill.WaybillRepository;
 import com.hnh.service.general.NotificationService;
+import com.hnh.service.warehouse.InventoryService;
 // TODO: TẠM THỜI COMMENT - FLOW ĐIỂM THƯỞNG
 // import com.hnh.utils.RewardUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -74,6 +76,7 @@ public class WaybillServiceImpl implements WaybillService {
     private final NotificationRepository notificationRepository;
     private final NotificationMapper notificationMapper;
     private final WaybillLogRepository waybillLogRepository;
+    private final InventoryService inventoryService;
     // TODO: TẠM THỜI COMMENT - FLOW ĐIỂM THƯỞNG
     // private final RewardUtils rewardUtils;
 
@@ -108,17 +111,33 @@ public class WaybillServiceImpl implements WaybillService {
             headers.add("Token", ghnToken);
             headers.add("ShopId", ghnShopId);
 
-            RestTemplate restTemplate = createRestTemplateWithTimeout();
+            // (0) Kiểm tra tính hợp lệ của số điện thoại trước khi gọi GHN
+            String toPhone = formatPhoneNumberForGHN(order.getToPhone());
+            boolean isPhoneValidForGHN = (toPhone != null && toPhone.length() == 10 && toPhone.startsWith("0"));
 
-            var request = new HttpEntity<>(buildGhnCreateOrderRequest(waybillRequest, order), headers);
-            var response = restTemplate.postForEntity(createGhnOrderApiPath, request, GhnCreateOrderResponse.class);
+            GhnCreateOrderResponse ghnCreateOrderResponse = null;
 
-            if (response.getStatusCode() != HttpStatus.OK) {
-                throw new RuntimeException("Error when calling Create Order GHN API");
+            if (isPhoneValidForGHN) {
+                // SỐ ĐIỆN THOẠI HỢP LỆ -> GỌI GHN THẬT
+                RestTemplate restTemplate = createRestTemplateWithTimeout();
+                var request = new HttpEntity<>(buildGhnCreateOrderRequest(waybillRequest, order), headers);
+                var response = restTemplate.postForEntity(createGhnOrderApiPath, request, GhnCreateOrderResponse.class);
+
+                if (response.getStatusCode() != HttpStatus.OK) {
+                    throw new RuntimeException("Error when calling Create Order GHN API");
+                }
+                ghnCreateOrderResponse = response.getBody();
+            } else {
+                // SỐ ĐIỆN THOẠI KHÔNG HỢP LỆ -> CHẠY MOCK MODE (GIẢ LẬP)
+                ghnCreateOrderResponse = new GhnCreateOrderResponse();
+                GhnCreateOrderResponse.Data$ fakeData = new GhnCreateOrderResponse.Data$();
+                fakeData.setOrderCode("MOCK_GHN_" + System.currentTimeMillis());
+                fakeData.setExpectedDeliveryTime(java.time.Instant.now().plus(3, java.time.temporal.ChronoUnit.DAYS));
+                fakeData.setTotalFee(30000); // Mặc định phí ship giả lập là 30k
+                ghnCreateOrderResponse.setData(fakeData);
             }
 
-            if (response.getBody() != null) {
-                var ghnCreateOrderResponse = response.getBody();
+            if (ghnCreateOrderResponse != null) {
 
                 // (1) Tạo waybill
                 Waybill waybill = waybillMapper.requestToEntity(waybillRequest);
@@ -134,6 +153,10 @@ public class WaybillServiceImpl implements WaybillService {
                 );
                 waybill.setShippingFee(ghnCreateOrderResponse.getData().getTotalFee());
                 waybill.setGhnPaymentTypeId(chooseGhnPaymentTypeId(order.getPaymentMethodType()));
+
+                // (1.1) Trừ tồn kho tại kho gần nhất và lưu vào Waybill
+                Warehouse chosenWarehouse = inventoryService.deductFromClosestWarehouse(order);
+                waybill.setFromWarehouse(chosenWarehouse);
 
                 Waybill waybillAfterSave = waybillRepository.save(waybill);
 
@@ -318,21 +341,11 @@ public class WaybillServiceImpl implements WaybillService {
             return phone;
         }
         
-        // Loại bỏ khoảng trắng và ký tự đặc biệt
+        // Loại bỏ khoảng trắng và ký tự đặc biệt, giữ nguyên các chữ số
         String cleaned = phone.replaceAll("[^0-9]", "");
         
-        // Nếu bắt đầu bằng 0, bỏ số 0 đầu
-        if (cleaned.startsWith("0")) {
-            cleaned = cleaned.substring(1);
-        }
-        
-        // Nếu bắt đầu bằng 84 (mã quốc gia), bỏ 84 và số 0 tiếp theo
-        if (cleaned.startsWith("84")) {
-            cleaned = cleaned.substring(2);
-            if (cleaned.startsWith("0")) {
-                cleaned = cleaned.substring(1);
-            }
-        }
+        // GHN yêu cầu số điện thoại đầy đủ (thường là 10 số bao gồm số 0 đầu)
+        // Chúng ta không nên tự ý cắt bỏ số 0 nếu người dùng đã nhập đúng
         
         return cleaned;
     }

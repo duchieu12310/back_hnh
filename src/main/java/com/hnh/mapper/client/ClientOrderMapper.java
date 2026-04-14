@@ -97,13 +97,11 @@ public abstract class ClientOrderMapper {
         return clientOrderDetailResponse;
     }
 
-    @BeanMapping(qualifiedByName = "attachOrder")
     @Mapping(source = "orderResourceId", target = "orderResource", qualifiedByName = "mapToOrderResource")
     @Mapping(source = "orderCancellationReasonId", target = "orderCancellationReason", qualifiedByName = "mapToOrderCancellationReason")
     @Mapping(source = "userId", target = "user", qualifiedByName = "mapToUser")
     public abstract Order requestToEntity(ClientOrderRequest request);
 
-    @BeanMapping(qualifiedByName = "attachOrder")
     @Mapping(source = "orderResourceId", target = "orderResource", qualifiedByName = "mapToOrderResource")
     @Mapping(source = "orderCancellationReasonId", target = "orderCancellationReason", qualifiedByName = "mapToOrderCancellationReason")
     @Mapping(source = "userId", target = "user", qualifiedByName = "mapToUser")

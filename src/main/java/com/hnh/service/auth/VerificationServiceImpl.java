@@ -60,7 +60,7 @@ public class VerificationServiceImpl implements VerificationService {
         // (3) Create user entity with status 2 (non-verified) and set role Customer
         User user = userMapper.requestToEntity(userRequest);
         user.setStatus(2); // Non-verified
-        user.setRoles(Set.of((Role) new Role().setId(3L)));
+        user.setRoles(Set.of((Role) new Role().setId(4L)));
 
         userRepository.save(user);
 
@@ -86,6 +86,7 @@ public class VerificationServiceImpl implements VerificationService {
 
     @Override
     public void resendRegistrationToken(Long userId) {
+        User user = ensureUserIsUnverified(userId);
         Optional<Verification> verifyOpt = verificationRepository.findByUserId(userId);
 
         if (verifyOpt.isPresent()) {
@@ -100,14 +101,15 @@ public class VerificationServiceImpl implements VerificationService {
             Map<String, Object> attributes = Map.of(
                     "token", token,
                     "link", MessageFormat.format("{0}/signup?userId={1}", AppConstants.FRONTEND_HOST, userId));
-            emailSenderService.sendVerificationToken(verification.getUser().getEmail(), attributes);
+            emailSenderService.sendVerificationToken(user.getEmail(), attributes);
         } else {
-            throw new VerificationException("User ID is invalid. Please try again!");
+            throw new VerificationException("Verification record missing for User ID: " + userId + ". Please contact support.");
         }
     }
 
     @Override
     public void confirmRegistration(RegistrationRequest registration) {
+        ensureUserIsUnverified(registration.getUserId());
         Optional<Verification> verifyOpt = verificationRepository.findByUserId(registration.getUserId());
 
         if (verifyOpt.isPresent()) {
@@ -157,18 +159,27 @@ public class VerificationServiceImpl implements VerificationService {
                 throw new VerificationException("Invalid token");
             }
         } else {
-            throw new VerificationException("User does not exist");
+            throw new VerificationException("Verification record missing for the provided User ID.");
         }
     }
 
     @Override
     public void changeRegistrationEmail(Long userId, String emailUpdate) {
+        ensureUserIsUnverified(userId);
         Optional<Verification> verifyOpt = verificationRepository.findByUserId(userId);
 
         if (verifyOpt.isPresent()) {
             Verification verification = verifyOpt.get();
 
             User user = verification.getUser();
+
+            // Check if updated email is already in use by another user
+            userRepository.findByEmail(emailUpdate).ifPresent(existingUser -> {
+                if (!existingUser.getId().equals(userId)) {
+                    throw new VerificationException("Email is already in use by another account");
+                }
+            });
+
             user.setEmail(emailUpdate);
             userRepository.save(user);
 
@@ -180,10 +191,21 @@ public class VerificationServiceImpl implements VerificationService {
             Map<String, Object> attributes = Map.of(
                     "token", token,
                     "link", MessageFormat.format("{0}/signup?userId={1}", AppConstants.FRONTEND_HOST, userId));
-            emailSenderService.sendVerificationToken(verification.getUser().getEmail(), attributes);
+            emailSenderService.sendVerificationToken(user.getEmail(), attributes);
         } else {
-            throw new VerificationException("User does not exist");
+            throw new VerificationException("Verification record missing for User ID: " + userId);
         }
+    }
+
+    private User ensureUserIsUnverified(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new VerificationException("User ID " + userId + " does not exist"));
+
+        if (user.getStatus() == 1) {
+            throw new VerificationException("Account associated with email " + user.getEmail() + " is already active");
+        }
+
+        return user;
     }
 
     @Override

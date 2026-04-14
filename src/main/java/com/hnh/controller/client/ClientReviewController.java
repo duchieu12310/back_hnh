@@ -10,6 +10,7 @@ import com.hnh.dto.client.ClientSimpleReviewResponse;
 import com.hnh.entity.review.Review;
 import com.hnh.exception.ResourceNotFoundException;
 import com.hnh.mapper.client.ClientReviewMapper;
+import com.hnh.repository.authentication.UserRepository;
 import com.hnh.repository.review.ReviewRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,8 +38,9 @@ import java.util.List;
 @CrossOrigin(AppConstants.FRONTEND_HOST)
 public class ClientReviewController {
 
-    private ReviewRepository reviewRepository;
-    private ClientReviewMapper clientReviewMapper;
+    private final ReviewRepository reviewRepository;
+    private final ClientReviewMapper clientReviewMapper;
+    private final UserRepository userRepository;
 
     @GetMapping("/products/{productSlug}")
     public ResponseEntity<ListResponse<ClientSimpleReviewResponse>> getAllReviewsByProduct(
@@ -68,10 +70,16 @@ public class ClientReviewController {
     }
 
     @PostMapping
-    public ResponseEntity<ClientReviewResponse> createReview(@RequestBody ClientReviewRequest request) {
+    public ResponseEntity<ClientReviewResponse> createReview(Authentication authentication, @RequestBody ClientReviewRequest request) {
+        String username = authentication.getName();
+        com.hnh.entity.authentication.User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new org.springframework.security.core.userdetails.UsernameNotFoundException(username));
+        
+        request.setUserId(user.getId());
+
         // Kiểm tra xem đã có review cho sản phẩm này chưa
         // Nếu có thì update, không thì tạo mới
-        Review entity = reviewRepository.findByProductIdAndUserId(request.getProductId(), request.getUserId())
+        Review entity = reviewRepository.findByProductIdAndUserId(request.getProductId(), user.getId())
                 .map(existingReview -> {
                     // Update review cũ
                     clientReviewMapper.partialUpdate(existingReview, request);
@@ -79,7 +87,9 @@ public class ClientReviewController {
                 })
                 .orElseGet(() -> {
                     // Tạo review mới
-                    return reviewRepository.save(clientReviewMapper.requestToEntity(request));
+                    Review newReview = clientReviewMapper.requestToEntity(request);
+                    newReview.setUser(user);
+                    return reviewRepository.save(newReview);
                 });
         
         return ResponseEntity.status(HttpStatus.CREATED).body(clientReviewMapper.entityToResponse(entity));

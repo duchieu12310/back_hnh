@@ -18,9 +18,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import com.hnh.entity.warehouse.Warehouse;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.ManyToOne;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -74,6 +76,10 @@ public class Waybill extends BaseEntity {
     @Column(name = "ghn_required_note", nullable = false)
     @Enumerated(EnumType.STRING)
     private RequiredNote ghnRequiredNote;
+
+    @ManyToOne
+    @JoinColumn(name = "from_warehouse_id", referencedColumnName = "id")
+    private Warehouse fromWarehouse;
 
     @OneToMany(mappedBy = "waybill", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

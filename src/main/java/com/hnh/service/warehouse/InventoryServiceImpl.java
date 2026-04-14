@@ -228,5 +228,98 @@ public class InventoryServiceImpl implements InventoryService {
 
         }
     }
+
+    @Override
+    public Warehouse deductFromClosestWarehouse(com.hnh.entity.order.Order order) {
+        // 1. Tìm tất cả các kho có liên quan đến các sản phẩm trong đơn hàng
+        List<Warehouse> allWarehouses = warehouseRepository.findAll();
+
+        // 2. Lọc ra những kho có ĐỦ tất cả các mặt hàng trong đơn hàng
+        List<Warehouse> capableWarehouses = allWarehouses.stream()
+                .filter(w -> canFulfillOrder(w, order))
+                .collect(Collectors.toList());
+
+        if (capableWarehouses.isEmpty()) {
+            throw new RuntimeException("Không tìm thấy kho nào có đủ tất cả sản phẩm trong đơn hàng này.");
+        }
+
+        // 3. Chọn kho gần nhất
+        Warehouse closestWarehouse = capableWarehouses.stream()
+                .min(Comparator.comparingInt(w -> calculateProximityScore(w, order)))
+                .orElse(capableWarehouses.get(0));
+
+        // 4. Thực hiện trừ kho tại kho đã chọn
+        for (com.hnh.entity.order.OrderVariant ov : order.getOrderVariants()) {
+            List<InventoryItem> itemsInWarehouse = inventoryItemRepository.findByVariantIdAndWarehouseId(ov.getVariant().getId(), closestWarehouse.getId());
+            
+            if (itemsInWarehouse.isEmpty()) {
+                throw new RuntimeException("Lỗi logic: Không tìm thấy vật phẩm trong kho đã chọn");
+            }
+
+            // Để đơn giản, trừ tại vị trí đầu tiên tìm thấy trong kho này
+            // (Trong thực tế có thể chia nhỏ nếu vị trí 1 không đủ, nhưng logic check canFulfillOrder 
+            // đảm bảo tổng kho có đủ)
+            InventoryItem item = itemsInWarehouse.get(0);
+            item.setQuantity(item.getQuantity() - ov.getQuantity());
+            inventoryItemRepository.save(item);
+
+            // Cập nhật tổng số lượng biến thể
+            Variant v = ov.getVariant();
+            v.setQuantity((v.getQuantity() != null ? v.getQuantity() : 0) - ov.getQuantity());
+            variantRepository.save(v);
+        }
+
+        return closestWarehouse;
+    }
+
+    private boolean canFulfillOrder(Warehouse warehouse, com.hnh.entity.order.Order order) {
+        for (com.hnh.entity.order.OrderVariant ov : order.getOrderVariants()) {
+            int totalStockInWarehouse = inventoryItemRepository.findByVariantIdAndWarehouseId(ov.getVariant().getId(), warehouse.getId())
+                    .stream()
+                    .mapToInt(ii -> ii.getQuantity() != null ? ii.getQuantity() : 0)
+                    .sum();
+            if (totalStockInWarehouse < ov.getQuantity()) return false;
+        }
+        return true;
+    }
+
+    private int calculateProximityScore(Warehouse warehouse, com.hnh.entity.order.Order order) {
+        if (warehouse.getAddress() == null) return 100;
+
+        String wProvince = warehouse.getAddress().getProvince().getName();
+        String wDistrict = warehouse.getAddress().getDistrict().getName();
+
+        if (wProvince.equalsIgnoreCase(order.getToProvinceName())) {
+            if (wDistrict.equalsIgnoreCase(order.getToDistrictName())) {
+                return 0; // Ưu tiên nhất: Cùng Quận/Huyện
+            }
+            return 10; // Ưu tiên nhì: Cùng Tỉnh
+        }
+        return 100; // Tỉnh khác
+    }
+
+    @Override
+    public void restoreStockToWarehouse(com.hnh.entity.order.Order order, Warehouse warehouse) {
+        for (com.hnh.entity.order.OrderVariant ov : order.getOrderVariants()) {
+            List<InventoryItem> itemsInWarehouse = inventoryItemRepository.findByVariantIdAndWarehouseId(ov.getVariant().getId(), warehouse.getId());
+            
+            InventoryItem item;
+            if (itemsInWarehouse.isEmpty()) {
+                // Nếu item không còn tồn tại trong kho (hy hữu), tạo mới tại vị trí đầu tiên của kho
+                StorageLocation firstLoc = warehouse.getLocations().isEmpty() ? null : warehouse.getLocations().get(0);
+                item = new InventoryItem().setVariant(ov.getVariant()).setStorageLocation(firstLoc).setQuantity(0);
+            } else {
+                item = itemsInWarehouse.get(0);
+            }
+
+            item.setQuantity((item.getQuantity() != null ? item.getQuantity() : 0) + ov.getQuantity());
+            inventoryItemRepository.save(item);
+
+            // Hoàn lại tổng số lượng biến thể
+            Variant v = ov.getVariant();
+            v.setQuantity((v.getQuantity() != null ? v.getQuantity() : 0) + ov.getQuantity());
+            variantRepository.save(v);
+        }
+    }
 }
 

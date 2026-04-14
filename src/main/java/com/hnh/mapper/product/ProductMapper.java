@@ -7,13 +7,14 @@ import com.hnh.mapper.GenericMapper;
 import com.hnh.mapper.general.ImageMapper;
 import com.hnh.utils.MapperUtils;
 import org.mapstruct.AfterMapping;
-import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         uses = {MapperUtils.class, ImageMapper.class, BrandMapper.class, SupplierMapper.class, UnitMapper.class,
                 GuaranteeMapper.class})
 public interface ProductMapper extends GenericMapper<Product, ProductRequest, ProductResponse> {
@@ -31,8 +32,17 @@ public interface ProductMapper extends GenericMapper<Product, ProductRequest, Pr
         }
     }
 
+    @AfterMapping
+    default void syncRelationships(@MappingTarget Product entity) {
+        if (entity.getVariants() != null) {
+            entity.getVariants().forEach(variant -> variant.setProduct(entity));
+        }
+        if (entity.getImages() != null) {
+            entity.getImages().forEach(image -> image.setProduct(entity));
+        }
+    }
+
     @Override
-    @BeanMapping(qualifiedByName = "attachProduct")
     @Mapping(source = "categoryId", target = "category", qualifiedByName = "mapToCategory")
     @Mapping(source = "brandId", target = "brand", qualifiedByName = "mapToBrand")
     @Mapping(source = "supplierId", target = "supplier", qualifiedByName = "mapToSupplier")
@@ -41,7 +51,6 @@ public interface ProductMapper extends GenericMapper<Product, ProductRequest, Pr
     Product requestToEntity(ProductRequest request);
 
     @Override
-    @BeanMapping(qualifiedByName = "attachProduct")
     @Mapping(source = "categoryId", target = "category", qualifiedByName = "mapToCategory")
     @Mapping(source = "brandId", target = "brand", qualifiedByName = "mapToBrand")
     @Mapping(source = "supplierId", target = "supplier", qualifiedByName = "mapToSupplier")

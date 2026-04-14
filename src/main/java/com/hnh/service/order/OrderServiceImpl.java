@@ -36,6 +36,7 @@ import com.hnh.repository.waybill.WaybillLogRepository;
 import com.hnh.repository.waybill.WaybillRepository;
 import com.hnh.repository.product.VariantRepository;
 import com.hnh.service.general.NotificationService;
+import com.hnh.service.warehouse.InventoryService;
 import com.hnh.utils.VNpayService;
 import com.hnh.entity.cart.CartVariant;
 import java.util.ArrayList;
@@ -88,6 +89,7 @@ public class OrderServiceImpl implements OrderService {
     private final NotificationRepository notificationRepository;
     private final NotificationService notificationService;
     private final NotificationMapper notificationMapper;
+    private final InventoryService inventoryService;
 
     private static final int USD_VND_RATE = 25_000;
 
@@ -101,15 +103,12 @@ public class OrderServiceImpl implements OrderService {
             order.setStatus(5); // Status 5 là trạng thái Hủy
             orderRepository.save(order);
 
-            // Hoàn lại tồn kho
-            for (OrderVariant orderVariant : order.getOrderVariants()) {
-                com.hnh.entity.product.Variant variant = orderVariant.getVariant();
-                variant.setQuantity(variant.getQuantity() + orderVariant.getQuantity());
-                variantRepository.save(variant);
-            }
-
-
             Waybill waybill = waybillRepository.findByOrderId(order.getId()).orElse(null);
+
+            // Hoàn lại tồn kho nếu đã tạo vận đơn (đã trừ kho)
+            if (waybill != null && waybill.getFromWarehouse() != null) {
+                inventoryService.restoreStockToWarehouse(order, waybill.getFromWarehouse());
+            }
 
             // Status 1 là Vận đơn đang chờ lấy hàng
             if (waybill != null && waybill.getStatus() == 1) {
@@ -296,12 +295,7 @@ public class OrderServiceImpl implements OrderService {
         cart.setStatus(2); // Status 2: Vô hiệu lực
         cartRepository.save(cart);
 
-        // (5) Trừ tồn kho
-        for (OrderVariant orderVariant : order.getOrderVariants()) {
-            com.hnh.entity.product.Variant variant = orderVariant.getVariant();
-            variant.setQuantity(variant.getQuantity() - orderVariant.getQuantity());
-            variantRepository.save(variant);
-        }
+        // (5) Trừ tồn kho: Đã được chuyển sang bước tạo Vận đơn (Waybill)
 
         return response;
     }

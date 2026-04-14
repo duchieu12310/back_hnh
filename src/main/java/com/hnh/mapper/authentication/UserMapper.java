@@ -20,12 +20,10 @@ import org.mapstruct.ReportingPolicy;
 public interface UserMapper extends GenericMapper<User, UserRequest, UserResponse> {
 
     @Override
-    @BeanMapping(qualifiedByName = "attachUser")
     @Mapping(source = "password", target = "password", qualifiedByName = "hashPassword")
     User requestToEntity(UserRequest request);
 
     @Override
-    @BeanMapping(qualifiedByName = "attachUser")
     @Mapping(source = "password", target = "password", qualifiedByName = "hashPassword",
             nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     User partialUpdate(@MappingTarget User entity, UserRequest request);

@@ -15,7 +15,7 @@ public class ApplicationExceptionHandler {
 
     @ExceptionHandler({AccessDeniedException.class, RefreshTokenException.class})
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
-    public ErrorMessage accessDeniedException(AccessDeniedException ex, WebRequest request) {
+    public ErrorMessage accessDeniedException(Exception ex, WebRequest request) {
         return new ErrorMessage(
                 HttpStatus.FORBIDDEN.value(),
                 Instant.now(),
@@ -25,7 +25,7 @@ public class ApplicationExceptionHandler {
 
     @ExceptionHandler({AuthenticationException.class, VerificationException.class, ExpiredTokenException.class})
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    public ErrorMessage authenticationException(AuthenticationException ex, WebRequest request) {
+    public ErrorMessage authenticationException(Exception ex, WebRequest request) {
         return new ErrorMessage(
                 HttpStatus.UNAUTHORIZED.value(),
                 Instant.now(),

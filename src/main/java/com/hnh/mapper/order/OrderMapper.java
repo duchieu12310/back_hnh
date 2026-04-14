@@ -19,14 +19,12 @@ import org.mapstruct.ReportingPolicy;
 public interface OrderMapper extends GenericMapper<Order, OrderRequest, OrderResponse> {
 
     @Override
-    @BeanMapping(qualifiedByName = "attachOrder")
     @Mapping(source = "orderResourceId", target = "orderResource", qualifiedByName = "mapToOrderResource")
     @Mapping(source = "orderCancellationReasonId", target = "orderCancellationReason", qualifiedByName = "mapToOrderCancellationReason")
     @Mapping(source = "userId", target = "user", qualifiedByName = "mapToUser")
     Order requestToEntity(OrderRequest request);
 
     @Override
-    @BeanMapping(qualifiedByName = "attachOrder")
     @Mapping(source = "orderResourceId", target = "orderResource", qualifiedByName = "mapToOrderResource")
     @Mapping(source = "orderCancellationReasonId", target = "orderCancellationReason", qualifiedByName = "mapToOrderCancellationReason")
     @Mapping(source = "userId", target = "user", qualifiedByName = "mapToUser")

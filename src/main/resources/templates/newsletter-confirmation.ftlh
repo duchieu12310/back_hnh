@@ -14,7 +14,7 @@
         <p style="font-size: 16px;">Xin chào,</p>
         
         <p style="font-size: 16px;">
-            Cảm ơn bạn đã đăng ký nhận tin từ <strong>Thất An Nhiên</strong>!
+            Cảm ơn bạn đã đăng ký nhận tin từ <strong>Hiếu Store</strong>!
         </p>
         
         <p style="font-size: 16px;">
@@ -39,7 +39,7 @@
         
         <p style="font-size: 14px; color: #6b7280; margin-top: 30px; border-top: 1px solid #e5e7eb; padding-top: 20px;">
             Trân trọng,<br>
-            <strong>Đội ngũ Thất An Nhiên</strong>
+            <strong>Đội ngũ Hiếu Store</strong>
         </p>
     </div>
 </body>

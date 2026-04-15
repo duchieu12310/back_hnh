@@ -24,22 +24,26 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     @Override
     public void sendVerificationToken(String toEmail, Map<String, Object> attributes) {
         String text = getEmailContent("verify-email.ftlh", attributes);
-        sendEmail(toEmail, "[Thất An Nhiên] Xác thực email", text);
+        sendEmail(toEmail, "[Hiếu Store] Xác thực email", text);
     }
 
     @Override
     public void sendForgetPasswordToken(String toEmail, Map<String, Object> attributes) {
         String text = getEmailContent("forget-password-email.ftlh", attributes);
-        sendEmail(toEmail, "[Thất An Nhiên]  Yêu cầu cấp lại mật khẩu", text);
+        sendEmail(toEmail, "[Hiếu Store]  Yêu cầu cấp lại mật khẩu", text);
     }
 
     // TODO: TẠM THỜI COMMENT - ĐĂNG KÝ NHẬN KM
-    /*@Override
-    @Async
-    public void sendNewsletterConfirmation(String toEmail, Map<String, Object> attributes) {
-        String text = getEmailContent("newsletter-confirmation.ftlh", attributes);
-        sendEmail(toEmail, "[Thất An Nhiên]  Đăng ký nhận tin thành công", text);
-    }*/
+    /*
+     * @Override
+     * 
+     * @Async
+     * public void sendNewsletterConfirmation(String toEmail, Map<String, Object>
+     * attributes) {
+     * String text = getEmailContent("newsletter-confirmation.ftlh", attributes);
+     * sendEmail(toEmail, "[Hiếu Store]  Đăng ký nhận tin thành công", text);
+     * }
+     */
 
     private String getEmailContent(String template, Map<String, Object> model) {
         try {
@@ -67,4 +71,3 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     }
 
 }
-

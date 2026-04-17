@@ -109,83 +109,71 @@ public class InventoryServiceImpl implements InventoryService {
         Map<Long, CategoryLevel3Node> l3Nodes = new HashMap<>();
 
         for (Product product : productsToInclude) {
-            for (Category l3 : product.getCategories()) {
-                Category l2 = l3.getParentCategory();
-                Category l1 = (l2 != null) ? l2.getParentCategory() : null;
-                
-                // If filters are active, ensure this specific category path matches the filter
-                if (request.getCategoryL3Ids() != null && !request.getCategoryL3Ids().isEmpty() && !request.getCategoryL3Ids().contains(l3.getId())) continue;
-                if (request.getCategoryL2Ids() != null && !request.getCategoryL2Ids().isEmpty() && (l2 == null || !request.getCategoryL2Ids().contains(l2.getId()))) continue;
-                if (request.getCategoryL1Ids() != null && !request.getCategoryL1Ids().isEmpty() && (l1 == null || !request.getCategoryL1Ids().contains(l1.getId()))) continue;
+            for (Category leafCat : product.getCategories()) {
+                // Determine full ancestry path
+                List<Category> path = new ArrayList<>();
+                Category curr = leafCat;
+                while (curr != null) {
+                    path.add(0, curr);
+                    curr = curr.getParentCategory();
+                }
 
-            // Ensure L3 node exists
-            CategoryLevel3Node node3 = l3Nodes.computeIfAbsent(l3.getId(), id -> {
-                CategoryLevel3Node n = new CategoryLevel3Node();
-                n.setId(l3.getId());
-                n.setName(l3.getName());
-                n.setProducts(new ArrayList<>());
-                return n;
-            });
+                Category l1Cat = path.size() >= 1 ? path.get(0) : null;
+                Category l2Cat = path.size() >= 2 ? path.get(1) : null;
+                Category l3Cat = path.size() >= 3 ? path.get(2) : null;
 
-            // Group variants of this product by their storage location within this warehouse
-            Map<Long, List<InventoryItem>> itemsByLocation = new HashMap<>();
-            if (warehouse != null) {
-                for (Variant variant : product.getVariants()) {
-                    List<InventoryItem> varItems = itemsByVariantId.getOrDefault(variant.getId(), Collections.emptyList());
-                    for (InventoryItem item : varItems) {
-                        itemsByLocation.computeIfAbsent(item.getStorageLocation().getId(), id -> new ArrayList<>()).add(item);
+                // Filters (Apply to the specific category path of this product)
+                if (request.getCategoryL3Ids() != null && !request.getCategoryL3Ids().isEmpty() && (l3Cat == null || !request.getCategoryL3Ids().contains(l3Cat.getId()))) continue;
+                if (request.getCategoryL2Ids() != null && !request.getCategoryL2Ids().isEmpty() && (l2Cat == null || !request.getCategoryL2Ids().contains(l2Cat.getId()))) continue;
+                if (request.getCategoryL1Ids() != null && !request.getCategoryL1Ids().isEmpty() && (l1Cat == null || !request.getCategoryL1Ids().contains(l1Cat.getId()))) continue;
+
+                // 1. Prepare Product Storage Responses for this product
+                List<ProductStorageResponse> pResponses = new ArrayList<>();
+                Map<Long, List<InventoryItem>> itemsByLocation = new HashMap<>();
+                if (warehouse != null) {
+                    for (Variant variant : product.getVariants()) {
+                        List<InventoryItem> varItems = itemsByVariantId.getOrDefault(variant.getId(), Collections.emptyList());
+                        for (InventoryItem item : varItems) {
+                            itemsByLocation.computeIfAbsent(item.getStorageLocation().getId(), id -> new ArrayList<>()).add(item);
+                        }
                     }
                 }
-            }
 
-            // For each location where the product exists in this warehouse
-            if (!itemsByLocation.isEmpty()) {
-                for (Map.Entry<Long, List<InventoryItem>> entry : itemsByLocation.entrySet()) {
-                    StorageLocation loc = entry.getValue().get(0).getStorageLocation();
-                    node3.getProducts().add(mapToProductStorageResponse(product, loc, entry.getValue()));
-                }
-            } else if (warehouse != null) {
-                // If no inventory records exist for THIS location filter but it's assigned to warehouse, 
-                // we should show it in the default/first location if no coordinate filtering is active
-                if (request.getAisle() == null && request.getShelf() == null && request.getBin() == null) {
-                    StorageLocation defaultLoc = warehouse.getLocations().isEmpty() ? null : warehouse.getLocations().get(0);
-                    if (defaultLoc != null) {
-                        node3.getProducts().add(mapToProductStorageResponse(product, defaultLoc, Collections.emptyList()));
+                if (!itemsByLocation.isEmpty()) {
+                    for (Map.Entry<Long, List<InventoryItem>> entry : itemsByLocation.entrySet()) {
+                        StorageLocation loc = entry.getValue().get(0).getStorageLocation();
+                        pResponses.add(mapToProductStorageResponse(product, loc, entry.getValue()));
                     }
-                }
-            } else {
-                // Global Catalog Mode: No warehouse/location context, return product with 0 quantities
-                node3.getProducts().add(mapToProductStorageResponse(product, null, Collections.emptyList()));
-            }
-
-            // Build hierarchy upward
-            if (l2 != null) {
-                CategoryLevel2Node node2 = l2Nodes.computeIfAbsent(l2.getId(), id -> {
-                    CategoryLevel2Node n = new CategoryLevel2Node();
-                    n.setId(l2.getId());
-                    n.setName(l2.getName());
-                    n.setChildren(new ArrayList<>());
-                    return n;
-                });
-                if (node2.getChildren().stream().noneMatch(c -> c.getId().equals(node3.getId()))) node2.getChildren().add(node3);
-
-                if (l1 != null) {
-                    CategoryLevel1Node node1 = l1Nodes.computeIfAbsent(l1.getId(), id -> {
-                        CategoryLevel1Node n = new CategoryLevel1Node();
-                        n.setId(l1.getId());
-                        n.setName(l1.getName());
-                        n.setChildren(new ArrayList<>());
-                        return n;
-                    });
-                    if (node1.getChildren().stream().noneMatch(c -> c.getId().equals(node2.getId()))) node1.getChildren().add(node2);
+                } else if (warehouse != null) {
+                    if (request.getAisle() == null && request.getShelf() == null && request.getBin() == null) {
+                        StorageLocation defaultLoc = warehouse.getLocations().isEmpty() ? null : warehouse.getLocations().get(0);
+                        if (defaultLoc != null) pResponses.add(mapToProductStorageResponse(product, defaultLoc, Collections.emptyList()));
+                    }
                 } else {
-                    // L2 is actually Top Level (Unlikely in a 3-level system but for safety)
-                    l1Nodes.computeIfAbsent(l2.getId(), id -> new CategoryLevel1Node().setId(l2.getId()).setName(l2.getName()).setChildren(new ArrayList<>()));
+                    pResponses.add(mapToProductStorageResponse(product, null, Collections.emptyList()));
                 }
-            } else {
-                // L3 is Top Level
-                l1Nodes.computeIfAbsent(l3.getId(), id -> new CategoryLevel1Node().setId(l3.getId()).setName(l3.getName()).setChildren(new ArrayList<>()));
-            }
+
+                // 2. Attach to Tree at correct level
+                if (leafCat.getLevel() == 1) {
+                    CategoryLevel1Node node1 = l1Nodes.computeIfAbsent(leafCat.getId(), id -> new CategoryLevel1Node().setId(leafCat.getId()).setName(leafCat.getName()).setChildren(new ArrayList<>()).setProducts(new ArrayList<>()));
+                    if (node1.getProducts() == null) node1.setProducts(new ArrayList<>());
+                    node1.getProducts().addAll(pResponses);
+                } else if (leafCat.getLevel() == 2) {
+                    CategoryLevel1Node node1 = l1Nodes.computeIfAbsent(l1Cat.getId(), id -> new CategoryLevel1Node().setId(l1Cat.getId()).setName(l1Cat.getName()).setChildren(new ArrayList<>()).setProducts(new ArrayList<>()));
+                    CategoryLevel2Node node2 = l2Nodes.computeIfAbsent(leafCat.getId(), id -> new CategoryLevel2Node().setId(leafCat.getId()).setName(leafCat.getName()).setChildren(new ArrayList<>()).setProducts(new ArrayList<>()));
+                    if (node1.getChildren().stream().noneMatch(c -> c.getId().equals(node2.getId()))) node1.getChildren().add(node2);
+                    if (node2.getProducts() == null) node2.setProducts(new ArrayList<>());
+                    node2.getProducts().addAll(pResponses);
+                } else {
+                    // Level 3 (or deeper, capped at 3 DTOs)
+                    CategoryLevel1Node node1 = l1Nodes.computeIfAbsent(l1Cat.getId(), id -> new CategoryLevel1Node().setId(l1Cat.getId()).setName(l1Cat.getName()).setChildren(new ArrayList<>()).setProducts(new ArrayList<>()));
+                    CategoryLevel2Node node2 = l2Nodes.computeIfAbsent(l2Cat.getId(), id -> new CategoryLevel2Node().setId(l2Cat.getId()).setName(l2Cat.getName()).setChildren(new ArrayList<>()).setProducts(new ArrayList<>()));
+                    CategoryLevel3Node node3 = l3Nodes.computeIfAbsent(leafCat.getId(), id -> new CategoryLevel3Node().setId(leafCat.getId()).setName(leafCat.getName()).setProducts(new ArrayList<>()));
+                    
+                    if (node1.getChildren().stream().noneMatch(c -> c.getId().equals(node2.getId()))) node1.getChildren().add(node2);
+                    if (node2.getChildren().stream().noneMatch(c -> c.getId().equals(node3.getId()))) node2.getChildren().add(node3);
+                    node3.getProducts().addAll(pResponses);
+                }
             }
         }
 

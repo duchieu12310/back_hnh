@@ -9,4 +9,5 @@ public class CategoryLevel2Node {
     private Long id;
     private String name;
     private List<CategoryLevel3Node> children;
+    private List<ProductStorageResponse> products;
 }

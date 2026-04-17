@@ -17,7 +17,7 @@ public interface BrandRepository extends JpaRepository<Brand, Long>, JpaSpecific
     default List<Brand> findByCategorySlug(String slug) {
         Specification<Brand> spec = (root, query, cb) -> {
             Join<Brand, Product> product = root.join("products");
-            Join<Product, Category> category = product.join("category");
+            Join<Product, Category> category = product.join("categories");
 
             query.distinct(true);
             query.where(cb.equal(category.get("slug"), slug));
@@ -32,7 +32,7 @@ public interface BrandRepository extends JpaRepository<Brand, Long>, JpaSpecific
     default List<Brand> findBySearchQuery(String searchQuery) {
         Specification<Brand> spec = (root, query, cb) -> {
             Join<Brand, Product> product = root.join("products");
-            Join<Product, Category> category = product.join("category");
+            Join<Product, Category> category = product.join("categories");
 
             query.distinct(true);
             query.where(cb.or(

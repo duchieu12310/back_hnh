@@ -108,6 +108,30 @@ public class VerificationServiceImpl implements VerificationService {
     }
 
     @Override
+    public void resendRegistrationToken(String email) {
+        User user = ensureUserIsUnverifiedByEmail(email);
+        Long userId = user.getId();
+        Optional<Verification> verifyOpt = verificationRepository.findByUserId(userId);
+
+        if (verifyOpt.isPresent()) {
+            Verification verification = verifyOpt.get();
+            String token = generateVerificationToken();
+
+            verification.setToken(token);
+            verification.setExpiredAt(Instant.now().plus(5, ChronoUnit.MINUTES));
+
+            verificationRepository.save(verification);
+
+            Map<String, Object> attributes = Map.of(
+                    "token", token,
+                    "link", MessageFormat.format("{0}/signup?userId={1}", AppConstants.FRONTEND_HOST, userId));
+            emailSenderService.sendVerificationToken(user.getEmail(), attributes);
+        } else {
+            throw new VerificationException("Verification record missing for Email: " + email + ". Please contact support.");
+        }
+    }
+
+    @Override
     public void confirmRegistration(RegistrationRequest registration) {
         ensureUserIsUnverified(registration.getUserId());
         Optional<Verification> verifyOpt = verificationRepository.findByUserId(registration.getUserId());
@@ -198,8 +222,24 @@ public class VerificationServiceImpl implements VerificationService {
     }
 
     private User ensureUserIsUnverified(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new VerificationException("User ID " + userId + " does not exist"));
+        Optional<User> userOpt = userRepository.findById(userId);
+
+        if (userOpt.isEmpty()) {
+            verificationRepository.findByUserId(userId).ifPresent(verificationRepository::delete);
+            throw new VerificationException("User ID " + userId + " does not exist");
+        }
+
+        User user = userOpt.get();
+        if (user.getStatus() == 1) {
+            throw new VerificationException("Account associated with email " + user.getEmail() + " is already active");
+        }
+
+        return user;
+    }
+
+    private User ensureUserIsUnverifiedByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new VerificationException("User with email " + email + " does not exist"));
 
         if (user.getStatus() == 1) {
             throw new VerificationException("Account associated with email " + user.getEmail() + " is already active");

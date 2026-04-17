@@ -43,7 +43,7 @@ public interface ProductMapper extends GenericMapper<Product, ProductRequest, Pr
     }
 
     @Override
-    @Mapping(source = "categoryId", target = "category", qualifiedByName = "mapToCategory")
+    @Mapping(source = "categoryIds", target = "categories", qualifiedByName = "mapToCategories")
     @Mapping(source = "brandId", target = "brand", qualifiedByName = "mapToBrand")
     @Mapping(source = "supplierId", target = "supplier", qualifiedByName = "mapToSupplier")
     @Mapping(source = "unitId", target = "unit", qualifiedByName = "mapToUnit")
@@ -51,7 +51,7 @@ public interface ProductMapper extends GenericMapper<Product, ProductRequest, Pr
     Product requestToEntity(ProductRequest request);
 
     @Override
-    @Mapping(source = "categoryId", target = "category", qualifiedByName = "mapToCategory")
+    @Mapping(source = "categoryIds", target = "categories", qualifiedByName = "mapToCategories")
     @Mapping(source = "brandId", target = "brand", qualifiedByName = "mapToBrand")
     @Mapping(source = "supplierId", target = "supplier", qualifiedByName = "mapToSupplier")
     @Mapping(source = "unitId", target = "unit", qualifiedByName = "mapToUnit")

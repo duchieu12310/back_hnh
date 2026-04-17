@@ -20,7 +20,7 @@ public class ProductRequest {
     private List<ImageRequest> images;
     private Integer status;
     @Nullable
-    private Long categoryId;
+    private Set<Long> categoryIds;
     @Nullable
     private Long brandId;
     @Nullable

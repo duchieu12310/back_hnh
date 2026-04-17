@@ -20,7 +20,7 @@ public class ClientProductResponse {
     private String productDescription;
     private List<ImageResponse> productImages;
     @Nullable
-    private ClientCategoryResponse productCategory;
+    private List<ClientCategoryResponse> productCategories;
     @Nullable
     private ClientBrandResponse productBrand;
     @Nullable

@@ -78,18 +78,28 @@ public class InventoryServiceImpl implements InventoryService {
         productsToInclude = productsToInclude.stream()
                 .filter(p -> {
                     if (request.getProductIds() != null && !request.getProductIds().isEmpty() && !request.getProductIds().contains(p.getId())) return false;
-                    if (p.getCategory() == null) return false;
 
-                    Category l3 = p.getCategory();
-                    if (request.getCategoryL3Ids() != null && !request.getCategoryL3Ids().isEmpty() && !request.getCategoryL3Ids().contains(l3.getId())) return false;
+                    if (p.getCategories() == null || p.getCategories().isEmpty()) return false;
 
-                    Category l2 = l3.getParentCategory();
-                    if (request.getCategoryL2Ids() != null && !request.getCategoryL2Ids().isEmpty() && (l2 == null || !request.getCategoryL2Ids().contains(l2.getId()))) return false;
+                    // Check if any associated category matches the requested filters
+                    return p.getCategories().stream().anyMatch(cat -> {
+                        Category l3 = cat;
+                        if (request.getCategoryL3Ids() != null && !request.getCategoryL3Ids().isEmpty() && !request.getCategoryL3Ids().contains(l3.getId())) {
+                            return false;
+                        }
 
-                    Category l1 = (l2 != null) ? l2.getParentCategory() : null;
-                    if (request.getCategoryL1Ids() != null && !request.getCategoryL1Ids().isEmpty() && (l1 == null || !request.getCategoryL1Ids().contains(l1.getId()))) return false;
+                        Category l2 = l3.getParentCategory();
+                        if (request.getCategoryL2Ids() != null && !request.getCategoryL2Ids().isEmpty() && (l2 == null || !request.getCategoryL2Ids().contains(l2.getId()))) {
+                            return false;
+                        }
 
-                    return true;
+                        Category l1 = (l2 != null) ? l2.getParentCategory() : null;
+                        if (request.getCategoryL1Ids() != null && !request.getCategoryL1Ids().isEmpty() && (l1 == null || !request.getCategoryL1Ids().contains(l1.getId()))) {
+                            return false;
+                        }
+
+                        return true;
+                    });
                 })
                 .collect(Collectors.toSet());
 
@@ -99,9 +109,14 @@ public class InventoryServiceImpl implements InventoryService {
         Map<Long, CategoryLevel3Node> l3Nodes = new HashMap<>();
 
         for (Product product : productsToInclude) {
-            Category l3 = product.getCategory();
-            Category l2 = l3.getParentCategory();
-            Category l1 = (l2 != null) ? l2.getParentCategory() : null;
+            for (Category l3 : product.getCategories()) {
+                Category l2 = l3.getParentCategory();
+                Category l1 = (l2 != null) ? l2.getParentCategory() : null;
+                
+                // If filters are active, ensure this specific category path matches the filter
+                if (request.getCategoryL3Ids() != null && !request.getCategoryL3Ids().isEmpty() && !request.getCategoryL3Ids().contains(l3.getId())) continue;
+                if (request.getCategoryL2Ids() != null && !request.getCategoryL2Ids().isEmpty() && (l2 == null || !request.getCategoryL2Ids().contains(l2.getId()))) continue;
+                if (request.getCategoryL1Ids() != null && !request.getCategoryL1Ids().isEmpty() && (l1 == null || !request.getCategoryL1Ids().contains(l1.getId()))) continue;
 
             // Ensure L3 node exists
             CategoryLevel3Node node3 = l3Nodes.computeIfAbsent(l3.getId(), id -> {
@@ -170,6 +185,7 @@ public class InventoryServiceImpl implements InventoryService {
             } else {
                 // L3 is Top Level
                 l1Nodes.computeIfAbsent(l3.getId(), id -> new CategoryLevel1Node().setId(l3.getId()).setName(l3.getName()).setChildren(new ArrayList<>()));
+            }
             }
         }
 

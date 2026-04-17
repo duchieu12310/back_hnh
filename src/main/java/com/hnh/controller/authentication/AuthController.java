@@ -88,6 +88,12 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(new ObjectNode(JsonNodeFactory.instance));
     }
 
+    @GetMapping("/registration/resend-token")
+    public ResponseEntity<ObjectNode> resendRegistrationToken(@RequestParam String email) {
+        verificationService.resendRegistrationToken(email);
+        return ResponseEntity.status(HttpStatus.OK).body(new ObjectNode(JsonNodeFactory.instance));
+    }
+
     @PostMapping("/registration/confirm")
     public ResponseEntity<ObjectNode> confirmRegistration(@RequestBody RegistrationRequest registration) {
         verificationService.confirmRegistration(registration);

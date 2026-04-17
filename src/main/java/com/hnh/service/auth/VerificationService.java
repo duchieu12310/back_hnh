@@ -9,6 +9,7 @@ public interface VerificationService {
     Long generateTokenVerify(UserRequest userRequest);
 
     void resendRegistrationToken(Long userId);
+    void resendRegistrationToken(String email);
 
     void confirmRegistration(RegistrationRequest registration);
 

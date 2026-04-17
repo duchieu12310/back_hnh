@@ -53,9 +53,8 @@ public class Category extends BaseEntity {
     @JsonManagedReference
     private List<Category> children = new ArrayList<>();
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Product> products = new ArrayList<>();
+    @ManyToMany(mappedBy = "categories")
+    private Set<Product> products = new HashSet<>();
 
     @ManyToMany(mappedBy = "categories")
     private Set<Warehouse> warehouses = new HashSet<>();

@@ -24,7 +24,7 @@ public class ProductResponse {
     private List<ImageResponse> images;
     private Integer status;
     @Nullable
-    private ProductResponse.CategoryResponse category;
+    private Set<ProductResponse.CategoryResponse> categories;
     @Nullable
     private BrandResponse brand;
     @Nullable

@@ -194,7 +194,7 @@ public interface SearchFields {
             "slug",
             "shortDescription",
             "description",
-            "category.name",
+            "categories.name",
             "brand.name",
             "brand.code",
             "supplier.displayName",
@@ -262,7 +262,7 @@ public interface SearchFields {
     List<String> CLIENT_PRODUCT = List.of(
             "name",
             "slug",
-            "category.name",
+            "categories.name",
             "brand.name"
     );
 

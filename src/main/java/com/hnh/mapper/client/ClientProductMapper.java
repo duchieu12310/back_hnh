@@ -94,7 +94,7 @@ public class ClientProductMapper {
         clientProductResponse.setProductShortDescription(product.getShortDescription());
         clientProductResponse.setProductDescription(product.getDescription());
         clientProductResponse.setProductImages(imageMapper.entityToResponse(product.getImages()));
-        clientProductResponse.setProductCategory(clientCategoryMapper.entityToResponse(product.getCategory(), false));
+        clientProductResponse.setProductCategories(clientCategoryMapper.entityToResponse(product.getCategories().stream().toList(), 1));
         clientProductResponse.setProductBrand(product.getBrand() == null ? null : new ClientProductResponse.ClientBrandResponse()
                 .setBrandId(product.getBrand().getId())
                 .setBrandName(product.getBrand().getName()));

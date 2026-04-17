@@ -92,7 +92,7 @@ public class ClientProductController {
         List<Long> categoryIds = categoryRepository.findAllDescendantIds(category.getId());
 
         // Xây dựng filter theo danh sách category IDs
-        String categoryFilter = "category.id=in=(" + categoryIds.stream()
+        String categoryFilter = "categories.id=in=(" + categoryIds.stream()
                 .map(Object::toString)
                 .collect(java.util.stream.Collectors.joining(",")) + ")";
         String finalFilter = (filter == null || filter.isBlank()) ? categoryFilter : categoryFilter + ";" + filter;
@@ -120,10 +120,10 @@ public class ClientProductController {
         int averageRatingScore = reviewRepository.findAverageRatingScoreByProductId(product.getId());
         int countReviews = reviewRepository.countByProductId(product.getId());
 
-        // Related Products
         Page<Product> relatedProducts = productRepository.findByParams(
-                String.format("category.id==%s;id!=%s",
-                        Optional.ofNullable(product.getCategory())
+                String.format("categories.id==%s;id!=%s",
+                        product.getCategories().stream()
+                                .findFirst()
                                 .map(BaseEntity::getId)
                                 .map(Object::toString)
                                 .orElse("0"),

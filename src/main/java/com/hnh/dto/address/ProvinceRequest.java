@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class ProvinceRequest {
     private String name;
     private String code;
+    private Integer status;
 }

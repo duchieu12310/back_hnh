@@ -1,3 +1,11 @@
-.idea
+target/
+.mvn/
+mvnw
+mvnw.cmd
+.idea/
 *.iml
 *.iws
+.vscode/
+.git/
+.dockerignore
+node_modules/

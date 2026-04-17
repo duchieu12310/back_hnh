@@ -1,25 +1,20 @@
-# Sử dụng image của OpenJDK có kích thước nhỏ hơn
-FROM openjdk:11-jdk-slim
+# Stage 1: Build stage
+FROM maven:3.8.4-openjdk-17-slim AS build
+WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline
 
-# Cài đặt các gói cần thiết cho MySQL và các gói phụ thuộc cho project Spring
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends netcat \
-    && apt-get clean \
-    && apt-get install -y locales \
-    && locale-gen C.UTF-8
+COPY src ./src
+RUN mvn package -DskipTests
 
-# Đặt thư mục làm việc mặc định
-WORKDIR /electro-server
+# Stage 2: Run stage
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 
-# Sao chép các tệp lưu trữ của project Spring vào trong Dockerfile
-COPY target/electro-0.0.1-SNAPSHOT.jar /electro-server
+# Install netcat for health checks if needed
+RUN apt-get update && apt-get install -y netcat && rm -rf /var/lib/apt/lists/*
 
-# Mở cổng cho MySQL và Spring
 EXPOSE 8085
+ENTRYPOINT ["java", "-jar", "app.jar"]
 
-# Đặt định dạng mã hóa Unicode
-ENV LANG = C.UTF-8
-ENV LC_ALL C.UTF-8
-
-# Chạy ứng dụng Spring
-CMD ["java", "-jar", "electro-0.0.1-SNAPSHOT.jar"]

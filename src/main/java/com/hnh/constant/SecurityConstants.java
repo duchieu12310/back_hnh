@@ -31,6 +31,7 @@ public interface SecurityConstants {
             "/client-api/filters/**",
             "/client-api/payment-methods",
             "/client-api/payment-methods/**",
+            "/client-api/vnpay/**",
             "/ws/**"
     };
 

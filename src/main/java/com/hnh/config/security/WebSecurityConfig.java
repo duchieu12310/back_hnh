@@ -3,6 +3,7 @@ package com.hnh.config.security;
 import com.hnh.constant.SecurityConstants;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -30,12 +31,11 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsServiceImpl userDetailsService;
-    private final HandlerExceptionResolver resolver;
+    private final ApplicationContext context;
 
-    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService,
-                             @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver) {
+    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService, ApplicationContext context) {
         this.userDetailsService = userDetailsService;
-        this.resolver = resolver;
+        this.context = context;
     }
 
     @Bean
@@ -56,12 +56,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
-        return (request, response, exception) -> resolver.resolveException(request, response, null, exception);
+        return (request, response, exception) -> {
+            HandlerExceptionResolver resolver = context.getBean("handlerExceptionResolver", HandlerExceptionResolver.class);
+            resolver.resolveException(request, response, null, exception);
+        };
     }
 
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
-        return (request, response, exception) -> resolver.resolveException(request, response, null, exception);
+        return (request, response, exception) -> {
+            HandlerExceptionResolver resolver = context.getBean("handlerExceptionResolver", HandlerExceptionResolver.class);
+            resolver.resolveException(request, response, null, exception);
+        };
     }
 
     @Override

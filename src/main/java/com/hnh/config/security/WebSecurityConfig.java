@@ -27,13 +27,16 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 //        jsr250Enabled = true,
         prePostEnabled = true)
 @Order(1000)
-@AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final HandlerExceptionResolver resolver;
 
-    @Qualifier("handlerExceptionResolver")
-    private HandlerExceptionResolver resolver;
+    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService,
+                             @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver) {
+        this.userDetailsService = userDetailsService;
+        this.resolver = resolver;
+    }
 
     @Bean
     public AuthTokenFilter authenticationJwAuthTokenFilter() {

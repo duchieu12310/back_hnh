@@ -113,4 +113,3 @@ public class Order extends BaseEntity {
 
     // vouchers: List<Voucher>
 }
-

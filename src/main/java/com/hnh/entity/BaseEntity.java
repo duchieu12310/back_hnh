@@ -40,5 +40,17 @@ public abstract class BaseEntity {
     @LastModifiedBy
     @Column(name = "updated_by")
     private Long updatedBy;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || org.hibernate.Hibernate.getClass(this) != org.hibernate.Hibernate.getClass(o)) return false;
+        BaseEntity that = (BaseEntity) o;
+        return id != null && id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return org.hibernate.Hibernate.getClass(this).hashCode();
+    }
 
 }

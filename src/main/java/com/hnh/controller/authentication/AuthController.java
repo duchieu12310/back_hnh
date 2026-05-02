@@ -106,6 +106,12 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(new ObjectNode(JsonNodeFactory.instance));
     }
 
+    @PostMapping("/registration/{userId}/cancel")
+    public ResponseEntity<ObjectNode> cancelRegistration(@PathVariable Long userId) {
+        verificationService.cancelRegistration(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(new ObjectNode(JsonNodeFactory.instance));
+    }
+
     @GetMapping("/forgot-password")
     public ResponseEntity<ObjectNode> forgotPassword(@RequestParam String email) {
         verificationService.forgetPassword(email);

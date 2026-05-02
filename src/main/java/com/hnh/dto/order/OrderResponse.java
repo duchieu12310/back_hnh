@@ -22,6 +22,7 @@ public class OrderResponse {
     private String toWardName;
     private String toDistrictName;
     private String toProvinceName;
+
     private OrderResourceResponse orderResource;
     @Nullable
     private OrderCancellationReasonResponse orderCancellationReason;
@@ -36,4 +37,3 @@ public class OrderResponse {
     private PaymentMethodType paymentMethodType;
     private Integer paymentStatus;
 }
-

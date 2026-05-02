@@ -178,10 +178,10 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(1); // Status 1: Đơn hàng mới
         order.setToName(user.getFullname());
         order.setToPhone(user.getPhone());
-        order.setToAddress(user.getAddress().getLine());
-        order.setToWardName(user.getAddress().getWard().getName());
-        order.setToDistrictName(user.getAddress().getDistrict().getName());
-        order.setToProvinceName(user.getAddress().getProvince().getName());
+        order.setToAddress(user.getDefaultAddress() != null ? user.getDefaultAddress().getLine() : "");
+        order.setToWardName(user.getDefaultAddress() != null && user.getDefaultAddress().getWard() != null ? user.getDefaultAddress().getWard().getName() : "");
+        order.setToDistrictName(user.getDefaultAddress() != null && user.getDefaultAddress().getDistrict() != null ? user.getDefaultAddress().getDistrict().getName() : "");
+        order.setToProvinceName(user.getDefaultAddress() != null && user.getDefaultAddress().getProvince() != null ? user.getDefaultAddress().getProvince().getName() : "");
         order.setOrderResource((OrderResource) new OrderResource().setId(1L));
         order.setUser(user);
 

@@ -12,4 +12,6 @@ public class AddressRequest {
     private Long provinceId;
     private Long districtId;
     private Long wardId;
+    private Double latitude;
+    private Double longitude;
 }

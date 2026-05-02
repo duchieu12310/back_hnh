@@ -32,7 +32,9 @@ public interface SecurityConstants {
             "/client-api/payment-methods",
             "/client-api/payment-methods/**",
             "/client-api/vnpay/**",
+            "/api/geocode",
             "/ws/**"
+
     };
 
     String[] ADMIN_API_PATHS = {
@@ -100,6 +102,10 @@ public interface SecurityConstants {
             "/api/images/**"
     };
 
+    String[] SHIPPER_API_PATHS = {
+            "/api/shipper/**"
+    };
+
     String[] CLIENT_API_PATHS = {
             "/client-api/users",
             "/client-api/users/**",
@@ -136,6 +142,8 @@ public interface SecurityConstants {
         String OPERATOR = "OPERATOR";
 
         String CUSTOMER = "CUSTOMER";
+
+        String SHIPPER = "SHIPPER";
     }
 }
 

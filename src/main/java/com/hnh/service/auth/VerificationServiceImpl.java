@@ -49,12 +49,12 @@ public class VerificationServiceImpl implements VerificationService {
     public Long generateTokenVerify(UserRequest userRequest) {
         // (1) Check if username exists in database
         if (userRepository.existsUserByUsername(userRequest.getUsername())) {
-            throw new VerificationException("Username is existing");
+            throw new VerificationException("Tên tài khoản này đã tồn tại trong hệ thống.");
         }
 
         // (2) Check if email existing in database
         if (userRepository.existsUserByEmail(userRequest.getEmail())) {
-            throw new VerificationException("Email is existing");
+            throw new VerificationException("Địa chỉ email này đã được sử dụng để đăng ký.");
         }
 
         // (3) Create user entity with status 2 (non-verified) and set role Customer
@@ -176,14 +176,14 @@ public class VerificationServiceImpl implements VerificationService {
                         "link", MessageFormat.format("{0}/signup?userId={1}", AppConstants.FRONTEND_HOST, registration.getUserId()));
                 emailSenderService.sendVerificationToken(verification.getUser().getEmail(), attributes);
 
-                throw new ExpiredTokenException("Token is expired, please check your email to get new token!");
+                throw new ExpiredTokenException("Mã xác nhận đã hết hạn. Chúng tôi đã gửi lại một mã mới vào email của bạn, vui lòng kiểm tra lại!");
             }
 
             if (!verification.getToken().equals(registration.getToken())) {
-                throw new VerificationException("Invalid token");
+                throw new VerificationException("Mã xác nhận không chính xác. Vui lòng kiểm tra kỹ trong email (kể cả thư rác).");
             }
         } else {
-            throw new VerificationException("Verification record missing for the provided User ID.");
+            throw new VerificationException("Thông tin xác nhận không hợp lệ hoặc tài khoản đã được kích hoạt trước đó.");
         }
     }
 
@@ -271,6 +271,22 @@ public class VerificationServiceImpl implements VerificationService {
                 .orElseThrow(() -> new RuntimeException("Email and/or token are invalid"));
         user.setPassword(passwordEncoder.encode(resetPasswordRequest.getPassword()));
         userRepository.save(user);
+    }
+
+    @Override
+    public void cancelRegistration(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new VerificationException("User not found"));
+        
+        if (user.getStatus() == 1) {
+            throw new VerificationException("Cannot cancel an active account");
+        }
+
+        // Xóa Verification trước vì có ràng buộc khóa ngoại
+        verificationRepository.findByUserId(userId).ifPresent(verificationRepository::delete);
+        
+        // Xóa User
+        userRepository.delete(user);
     }
 
     private String generateVerificationToken() {

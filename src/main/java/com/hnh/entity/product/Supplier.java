@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -63,7 +66,9 @@ public class Supplier extends BaseEntity {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id", referencedColumnName = "id", unique = true)
+    @NotFound(action = NotFoundAction.IGNORE)
     private Address address;
+
 
     @Column(name = "description")
     private String description;

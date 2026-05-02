@@ -59,9 +59,9 @@ public class User extends BaseEntity {
     @Column(name = "gender", nullable = false, columnDefinition = "CHAR")
     private String gender;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false, unique = true)
-    private Address address;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Address> addresses = new ArrayList<>();
 
     @Column(name = "avatar")
     private String avatar;
@@ -118,5 +118,15 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user")
     private List<RewardLog> rewardLogs = new ArrayList<>();
+
+    public Address getDefaultAddress() {
+        if (addresses == null || addresses.isEmpty()) {
+            return null;
+        }
+        return addresses.stream()
+                .filter(a -> a.getIsDefault() != null && a.getIsDefault())
+                .findFirst()
+                .orElse(addresses.get(0)); // Trả về địa chỉ đầu tiên nếu chưa có cái nào làm mặc định
+    }
 }
 

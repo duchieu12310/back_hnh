@@ -1,6 +1,8 @@
 package com.hnh.dto.waybill;
 
 import com.hnh.dto.order.OrderResponse;
+import com.hnh.dto.warehouse.WarehouseResponse;
+import com.hnh.dto.authentication.UserResponse;
 import com.hnh.entity.waybill.RequiredNote;
 import lombok.Data;
 import org.springframework.lang.Nullable;
@@ -27,5 +29,7 @@ public class WaybillResponse {
     private String note;
     private Integer ghnPaymentTypeId;
     private RequiredNote ghnRequiredNote;
+    private WarehouseResponse fromWarehouse;
+    private UserResponse shipper;
 }
 

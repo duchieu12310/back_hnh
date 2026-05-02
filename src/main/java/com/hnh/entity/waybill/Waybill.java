@@ -23,6 +23,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.ManyToOne;
+import com.hnh.entity.authentication.User;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -80,6 +81,10 @@ public class Waybill extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "from_warehouse_id", referencedColumnName = "id")
     private Warehouse fromWarehouse;
+
+    @ManyToOne(fetch = javax.persistence.FetchType.LAZY)
+    @JoinColumn(name = "shipper_id", referencedColumnName = "id")
+    private User shipper;
 
     @OneToMany(mappedBy = "waybill", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

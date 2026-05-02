@@ -22,4 +22,9 @@ public class AddressResponse {
     private DistrictResponse district;
     @Nullable
     private WardResponse ward;
+    @Nullable
+    private Double latitude;
+    @Nullable
+    private Double longitude;
+    private Boolean isDefault;
 }

@@ -6,6 +6,7 @@ import com.hnh.dto.client.ClientEmailSettingUserRequest;
 import com.hnh.dto.client.ClientPasswordSettingUserRequest;
 import com.hnh.dto.client.ClientPersonalSettingUserRequest;
 import com.hnh.dto.client.ClientPhoneSettingUserRequest;
+import com.hnh.entity.address.Address;
 import com.hnh.entity.authentication.User;
 import com.hnh.mapper.authentication.UserMapper;
 import com.hnh.repository.authentication.UserRepository;
@@ -47,11 +48,17 @@ public class ClientUserController {
     public ResponseEntity<UserResponse> updatePersonalSetting(Authentication authentication,
                                                               @RequestBody ClientPersonalSettingUserRequest userRequest) {
         String username = authentication.getName();
+        
+        // Tiến hành cập nhật Entity và lưu (Tọa độ tự động lấy trong MapperUtils)
         UserResponse userResponse = userRepository.findByUsername(username)
-                .map(existingUser -> userMapper.partialUpdate(existingUser, userRequest))
+                .map(existingUser -> {
+                    userMapper.partialUpdate(existingUser, userRequest);
+                    return existingUser;
+                })
                 .map(userRepository::save)
                 .map(userMapper::entityToResponse)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
+        
         return ResponseEntity.status(HttpStatus.OK).body(userResponse);
     }
 

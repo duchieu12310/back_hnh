@@ -17,6 +17,7 @@ public class UserResponse {
     private String phone;
     private String gender;
     private AddressResponse address;
+    private java.util.List<AddressResponse> addresses;
     private String avatar;
     private Integer status;
     private Set<RoleResponse> roles;

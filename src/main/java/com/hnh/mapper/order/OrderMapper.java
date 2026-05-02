@@ -1,13 +1,11 @@
 package com.hnh.mapper.order;
 
-
 import com.hnh.dto.order.OrderRequest;
 import com.hnh.dto.order.OrderResponse;
 import com.hnh.entity.order.Order;
 import com.hnh.mapper.GenericMapper;
 import com.hnh.mapper.authentication.UserMapper;
 import com.hnh.utils.MapperUtils;
-import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -29,5 +27,4 @@ public interface OrderMapper extends GenericMapper<Order, OrderRequest, OrderRes
     @Mapping(source = "orderCancellationReasonId", target = "orderCancellationReason", qualifiedByName = "mapToOrderCancellationReason")
     @Mapping(source = "userId", target = "user", qualifiedByName = "mapToUser")
     Order partialUpdate(@MappingTarget Order entity, OrderRequest request);
-
 }

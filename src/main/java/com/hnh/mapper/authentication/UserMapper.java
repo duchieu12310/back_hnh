@@ -133,6 +133,8 @@ public abstract class UserMapper implements GenericMapper<User, UserRequest, Use
     }
 
     private void fetchAndSetCoordinates(Address address, com.hnh.dto.address.AddressRequest request) {
+        // Tạm thời ẩn lấy tọa độ tự động
+        /*
         GeocodeResponse coords = geocodeService.getCoordinates(
             request.getProvinceId(),
             request.getDistrictId(),
@@ -142,5 +144,6 @@ public abstract class UserMapper implements GenericMapper<User, UserRequest, Use
             address.setLatitude(coords.getLatitude());
             address.setLongitude(coords.getLongitude());
         }
+        */
     }
 }

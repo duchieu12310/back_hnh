@@ -122,12 +122,12 @@ public class MapperUtils {
         if (distId != null) address.setDistrict(districtRepository.findById(distId).orElse(null));
         if (wardId != null) address.setWard(wardRepository.findById(wardId).orElse(null));
 
-        // Tự động lấy tọa độ
-        GeocodeResponse coords = geocodeService.getCoordinates(provId, distId, wardId);
-        if (coords != null) {
-            address.setLatitude(coords.getLatitude());
-            address.setLongitude(coords.getLongitude());
-        }
+        // Tự động lấy tọa độ (Tạm thời ẩn)
+        // GeocodeResponse coords = geocodeService.getCoordinates(provId, distId, wardId);
+        // if (coords != null) {
+        //     address.setLatitude(coords.getLatitude());
+        //     address.setLongitude(coords.getLongitude());
+        // }
 
         return addressRepository.save(address);
     }

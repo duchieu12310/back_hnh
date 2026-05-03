@@ -13,6 +13,13 @@ import java.util.Optional;
 public interface WishRepository extends JpaRepository<Wish, Long>, JpaSpecificationExecutor<Wish> {
 
     default Page<Wish> findAllByUsername(String username, String sort, String filter, Pageable pageable) {
+        // Loại bỏ filter status (status=1 hoặc status==1) vì thực thể Wish không có trường này
+        if (filter != null && filter.toLowerCase().contains("status")) {
+            filter = filter.replaceAll("(?i)status[=]{1,2}[0-9]+;*", "")
+                           .replaceAll("(?i);*status[=]{1,2}[0-9]+", "");
+            if (filter.trim().isEmpty()) filter = null;
+        }
+        
         Specification<Wish> sortable = RSQLJPASupport.toSort(sort);
         Specification<Wish> filterable = RSQLJPASupport.toSpecification(filter);
         Specification<Wish> usernameSpec = RSQLJPASupport.toSpecification("user.username=='" + username + "'");

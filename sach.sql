@@ -32,14 +32,20 @@ CREATE TABLE `address` (
   `province_id` bigint DEFAULT NULL,
   `district_id` bigint DEFAULT NULL,
   `ward_id` bigint DEFAULT NULL,
+  `latitude` double DEFAULT NULL,
+  `longitude` double DEFAULT NULL,
+  `is_default` bit(1) DEFAULT NULL,
+  `user_id` bigint DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_ADDRESS_ON_DISTRICT` (`district_id`),
   KEY `FK_ADDRESS_ON_PROVINCE` (`province_id`),
   KEY `FK_ADDRESS_ON_WARD` (`ward_id`),
+  KEY `FKda8tuywtf0gb6sedwk7la1pgi` (`user_id`),
   CONSTRAINT `FK_ADDRESS_ON_DISTRICT` FOREIGN KEY (`district_id`) REFERENCES `district` (`id`),
   CONSTRAINT `FK_ADDRESS_ON_PROVINCE` FOREIGN KEY (`province_id`) REFERENCES `province` (`id`),
-  CONSTRAINT `FK_ADDRESS_ON_WARD` FOREIGN KEY (`ward_id`) REFERENCES `ward` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `FK_ADDRESS_ON_WARD` FOREIGN KEY (`ward_id`) REFERENCES `ward` (`id`),
+  CONSTRAINT `FKda8tuywtf0gb6sedwk7la1pgi` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=120 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -48,7 +54,7 @@ CREATE TABLE `address` (
 
 LOCK TABLES `address` WRITE;
 /*!40000 ALTER TABLE `address` DISABLE KEYS */;
-INSERT INTO `address` VALUES (1,'2024-07-29 21:58:33','2024-07-30 14:27:56',NULL,NULL,'140 Commercial Way',7,28,1),(2,'2024-07-22 21:08:28','2024-07-31 07:42:14',NULL,NULL,'9121 Calypso Street',7,26,2),(3,'2024-07-15 21:35:21','2024-07-08 22:22:57',NULL,NULL,'59 Del Sol Road',10,2,3),(4,'2024-07-20 14:32:29','2024-07-27 23:10:58',NULL,NULL,'3918 Bashford Junction',29,1,8937),(5,'2024-07-01 05:12:07','2024-07-21 06:36:16',NULL,NULL,'18726 Delaware Parkway',1,26,4),(6,'2024-07-26 06:31:10','2024-07-01 07:54:22',NULL,NULL,'83027 Ludington Center',6,25,NULL),(7,'2024-07-13 06:41:51','2024-07-19 08:19:18',NULL,NULL,'85044 Troy Place',2,28,NULL),(8,'2024-07-28 17:20:12','2024-07-22 14:17:25',NULL,NULL,'72 Thackeray Plaza',4,23,NULL),(9,'2024-07-23 15:51:19','2024-07-15 17:31:00',NULL,NULL,'92473 Russell Drive',4,17,NULL),(10,'2024-07-03 09:46:55','2024-07-25 00:13:34',NULL,NULL,'0 Coleman Park',29,6,NULL),(11,'2024-07-09 20:34:48','2024-07-13 17:34:12',NULL,NULL,'7 Mosinee Street',1,22,NULL),(12,'2024-07-19 07:16:28','2024-07-04 11:25:57',NULL,NULL,'8 Farragut Drive',3,26,NULL),(13,'2024-07-27 12:22:55','2024-07-08 09:57:39',NULL,NULL,'07 Miller Place',29,9,NULL),(14,'2024-07-30 04:00:41','2024-07-04 14:46:37',NULL,NULL,'5 Loeprich Crossing',29,6,NULL),(15,'2024-07-07 03:47:45','2024-07-19 06:49:55',NULL,NULL,'65 Londonderry Pass',1,21,NULL),(16,'2024-07-17 22:12:31','2024-07-06 03:02:27',NULL,NULL,'04629 New Castle Avenue',9,8,NULL),(17,'2024-07-12 09:34:29','2024-07-06 17:04:51',NULL,NULL,'6765 Mallard Lane',8,2,NULL),(18,'2024-07-06 22:09:52','2024-07-01 20:25:02',NULL,NULL,'5 South Way',4,1,NULL),(19,'2024-07-21 00:55:56','2024-07-27 21:36:55',NULL,NULL,'04290 Donald Way',4,28,NULL),(20,'2024-07-20 13:38:31','2024-07-13 18:17:15',NULL,NULL,'4 Kings Drive',8,28,NULL),(21,'2024-07-14 03:01:01','2024-07-06 18:06:42',NULL,NULL,'3851 Kinsman Trail',4,18,NULL),(22,'2024-07-23 11:49:42','2024-07-10 03:18:32',NULL,NULL,'551 Ridge Oak Crossing',8,5,NULL),(23,'2024-07-21 14:13:51','2024-07-09 09:31:20',NULL,NULL,'6 Harper Plaza',5,20,NULL),(24,'2024-07-03 09:02:06','2024-07-15 09:32:12',NULL,NULL,'27 7th Alley',10,28,NULL),(25,'2024-07-11 12:01:03','2024-07-12 08:01:05',NULL,NULL,'76 Clarendon Court',10,10,NULL),(26,'2024-07-20 04:35:08','2024-07-22 13:41:17',NULL,NULL,'135 Memorial Junction',10,21,NULL),(27,'2024-07-28 21:00:34','2024-07-17 08:15:04',NULL,NULL,'0763 Elmside Crossing',10,13,NULL),(28,'2024-07-26 21:20:15','2024-07-23 07:47:24',NULL,NULL,'77847 Hanson Hill',5,15,NULL),(29,'2024-07-28 17:13:08','2024-07-28 19:16:21',NULL,NULL,'1706 Carberry Lane',2,10,NULL),(30,'2024-07-06 19:21:11','2024-07-03 08:50:28',NULL,NULL,'02 Moland Court',9,10,NULL),(31,'2024-09-05 16:27:58','2024-09-05 16:27:58',NULL,NULL,'Thu duc -TP HCM',29,705,NULL),(32,'2024-09-05 16:47:17','2024-09-05 16:47:17',NULL,NULL,'Thanh Xuân - Hà Nội',1,20,NULL),(33,'2024-09-05 16:52:15','2024-09-05 16:52:15',NULL,NULL,'Thanh Xuân - Hà Nội',1,20,NULL),(34,'2024-09-05 16:59:52','2024-09-05 16:59:52',NULL,NULL,'Thanh Trì - Hà Nội',1,25,NULL),(35,'2024-09-05 17:21:11','2024-09-05 17:21:11',NULL,NULL,'Triều khúc',1,25,503),(36,'2024-09-16 19:42:06','2024-09-16 19:42:06',NULL,NULL,'ngõ a ',63,692,10477),(37,'2024-09-17 12:23:48','2024-09-17 12:23:48',NULL,NULL,'ngõ b',29,705,NULL),(38,'2024-09-17 12:27:28','2024-09-17 12:27:28',NULL,NULL,'Ngo b',1,20,NULL),(39,'2024-09-17 12:40:09','2024-09-17 12:40:09',NULL,NULL,'Ngõ C',19,83,NULL),(40,'2024-09-17 13:23:32','2024-09-17 13:23:32',NULL,NULL,'Ngõ cv',34,321,NULL),(41,'2024-09-17 13:25:19','2024-09-17 13:25:19',NULL,NULL,'9/8/7 van bac',59,698,NULL),(42,'2024-09-17 20:31:35','2024-09-17 20:31:35',NULL,NULL,'Triều khúc',1,25,NULL),(43,'2024-09-17 20:40:13','2024-09-17 20:40:13',NULL,NULL,'Cầu mộc',19,86,NULL),(44,'2024-09-17 21:07:00','2024-09-17 21:07:00',NULL,NULL,'Triều khúc',1,20,NULL),(45,'2024-09-20 21:42:27','2024-09-20 21:42:27',NULL,NULL,'xóm 2',34,321,5879),(46,'2024-09-22 15:12:43','2024-09-22 15:12:43',NULL,NULL,'sadasd',63,694,10493),(47,'2026-04-14 19:09:57','2026-04-14 19:09:57',NULL,NULL,'tt',46,686,NULL),(50,'2026-04-14 19:30:02','2026-04-14 19:30:02',NULL,NULL,'212',46,686,NULL),(51,'2026-04-14 23:30:39','2026-04-14 23:30:39',NULL,NULL,'ưqe',48,465,7843),(52,'2026-04-15 00:40:38','2026-04-15 00:40:38',NULL,NULL,'qưe',63,704,10599),(53,'2026-04-15 01:06:18','2026-04-15 01:06:18',NULL,NULL,'42424',63,705,10599),(54,'2026-04-15 01:22:12','2026-04-15 01:22:12',NULL,NULL,'rưer',63,705,10599),(55,'2026-04-15 01:23:36','2026-04-15 01:23:36',NULL,NULL,'ưee',63,704,10599),(56,'2026-04-15 01:25:26','2026-04-15 01:25:26',NULL,NULL,'ưee',63,704,10599),(57,'2026-04-15 01:26:55','2026-04-15 01:26:55',NULL,NULL,'ưee',63,704,10599),(58,'2026-04-15 01:27:14','2026-04-15 01:27:14',NULL,NULL,'eqwe',63,704,10599),(59,'2026-04-15 01:28:21','2026-04-15 01:28:21',NULL,NULL,'rưer',63,705,10599),(60,'2026-04-15 01:28:35','2026-04-15 01:28:35',NULL,NULL,'rưer',63,705,10599),(61,'2026-04-15 01:31:54','2026-04-15 01:31:54',NULL,NULL,'rưer',63,705,10599),(62,'2026-04-15 01:36:43','2026-04-15 01:36:43',NULL,NULL,'rưer',63,705,10599),(63,'2026-04-15 01:37:33','2026-04-15 01:37:33',NULL,NULL,'222',63,705,10598),(64,'2026-04-15 01:37:57','2026-04-15 01:37:57',NULL,NULL,'222',63,705,10598),(65,'2026-04-15 01:46:02','2026-04-15 01:46:02',NULL,NULL,'eqwe',63,704,10599),(66,'2026-04-15 01:46:17','2026-04-15 01:46:17',NULL,NULL,'eqwe',63,704,10599),(67,'2026-04-15 01:46:59','2026-04-15 01:46:59',NULL,NULL,'ádasd',63,704,10599),(68,'2026-04-15 01:47:52','2026-04-15 01:47:52',NULL,NULL,'22',63,705,10599),(69,'2026-04-15 01:49:00','2026-04-15 01:49:00',NULL,NULL,'22',63,705,10599),(70,'2026-04-15 01:49:31','2026-04-15 01:49:31',NULL,NULL,'eqwe',63,704,10599),(71,'2026-04-15 01:50:42','2026-04-15 01:50:42',NULL,NULL,'22',63,705,10599),(72,'2026-04-15 01:51:25','2026-04-15 01:51:25',NULL,NULL,'22',63,705,10599),(73,'2026-04-15 01:52:02','2026-04-15 01:52:02',NULL,NULL,'6786',63,704,10598),(74,'2026-04-15 01:53:43','2026-04-15 01:53:43',NULL,NULL,'qưq',63,705,10599);
+INSERT INTO `address` VALUES (93,'2026-04-28 02:32:02','2026-04-28 02:32:02',NULL,NULL,'Số 1 Đại Cồ Việt, Hai Bà Trưng, Hà Nội',1,40,3613,20.7363656,105.7696563,_binary '',1),(94,'2026-04-28 02:32:02','2026-04-28 02:32:02',NULL,NULL,'123 Đường Láng, Đống Đa, Hà Nội',1,2,2,NULL,NULL,_binary '',2),(95,'2026-04-28 02:32:02','2026-04-28 02:32:02',NULL,NULL,'456 Lê Lợi, Quận 1, TP.HCM',2,3,3,NULL,NULL,_binary '',3),(96,'2026-04-28 02:32:02','2026-04-28 02:32:02',NULL,NULL,'789 Nguyễn Huệ, Quận 1, TP.HCM',2,3,4,NULL,NULL,_binary '',4),(97,'2026-04-28 02:32:02','2026-04-28 02:32:02',NULL,NULL,'102 Quang Trung, Hà Đông, Hà Nội',1,40,3616,NULL,NULL,_binary '',5),(98,'2026-04-28 02:32:02','2026-04-28 02:32:02',NULL,NULL,'222 Trần Hưng Đạo, Đà Nẵng',3,5,6,NULL,NULL,_binary '',6),(99,'2026-04-28 02:32:02','2026-04-28 02:32:02',NULL,NULL,'334 Võ Văn Kiệt, Cần Thơ',9,703,10591,9.174632,105.1588991,_binary '',7),(100,'2026-04-28 02:32:02','2026-04-28 02:32:02',NULL,NULL,'444 Hùng Vương, Nha Trang',5,7,8,20.7247649,107.0534731,_binary '',8),(101,'2026-04-28 02:32:02','2026-04-28 02:32:02',NULL,NULL,'555 CMT8, Biên Hòa, Đồng Nai',1,39,3588,20.6941088,105.9899804,_binary '',9),(103,'2026-05-03 02:48:44','2026-05-03 02:48:44',NULL,NULL,'qewqw',46,442,7578,10.9418092,108.0823313,_binary '',11),(104,'2026-05-03 03:11:36','2026-05-03 03:11:36',NULL,NULL,NULL,62,703,10598,NULL,NULL,NULL,NULL),(105,'2026-05-03 03:14:20','2026-05-03 03:14:20',NULL,NULL,NULL,61,703,10597,21.1984859,105.9250156,NULL,NULL),(106,'2026-05-03 04:27:54','2026-05-03 04:27:54',NULL,NULL,NULL,61,704,10597,9.6576458,104.8754446,NULL,NULL),(108,'2026-05-03 04:51:43','2026-05-03 04:51:43',NULL,NULL,'qewqw',46,442,7578,10.9418092,108.0823313,_binary '',11),(109,'2026-05-03 04:52:04','2026-05-03 04:52:04',NULL,NULL,'Số 1 Đại Cồ Việt, Hai Bà Trưng, Hà Nội',1,40,3613,20.7363656,105.7696563,_binary '',1),(110,'2026-05-03 04:58:31','2026-05-03 04:58:31',NULL,NULL,NULL,62,687,10436,25.781344,111.6979977,NULL,NULL),(111,'2026-05-03 04:59:36','2026-05-03 04:59:36',NULL,NULL,NULL,31,266,4733,20.66151,105.8625396,NULL,NULL),(112,'2026-05-03 05:21:47','2026-05-03 05:21:47',NULL,NULL,NULL,34,325,5999,NULL,NULL,NULL,NULL),(113,'2026-05-03 05:52:27','2026-05-03 05:52:27',NULL,NULL,'...',61,676,10344,NULL,NULL,NULL,NULL),(114,'2026-05-03 06:05:50','2026-05-03 06:05:50',NULL,NULL,'as',62,687,10436,NULL,NULL,NULL,NULL),(115,'2026-05-03 06:10:29','2026-05-03 06:10:29',NULL,NULL,'ád',1,40,3616,NULL,NULL,NULL,NULL),(116,'2026-05-03 06:19:13','2026-05-03 06:19:13',NULL,NULL,'qeqw',1,39,3589,NULL,NULL,NULL,NULL),(117,'2026-05-03 06:22:52','2026-05-03 06:22:52',NULL,NULL,'eqw',62,686,10428,NULL,NULL,NULL,NULL),(118,'2026-05-03 06:25:53','2026-05-03 06:25:53',NULL,NULL,'asda',63,694,10496,NULL,NULL,NULL,NULL),(119,'2026-05-03 17:52:28','2026-05-03 17:52:28',NULL,NULL,'102 Quang Trung, Hà Đông, Hà Nội',1,40,3616,NULL,NULL,_binary '',5);
 /*!40000 ALTER TABLE `address` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -71,7 +77,7 @@ CREATE TABLE `brand` (
   `status` tinyint NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_g7ft8mes72rnsk746b7ibyln2` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -80,7 +86,7 @@ CREATE TABLE `brand` (
 
 LOCK TABLES `brand` WRITE;
 /*!40000 ALTER TABLE `brand` DISABLE KEYS */;
-INSERT INTO `brand` VALUES (1,'2026-04-14 23:50:24.124430',NULL,'2026-04-14 23:50:24.124430',NULL,'qưeq','ưeqwe','qưe',1),(2,'2026-04-15 00:27:45.817908',NULL,'2026-04-15 00:27:45.817908',NULL,'qưe','qưe','eqwe',1);
+INSERT INTO `brand` VALUES (1,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'NNA',NULL,'Nguyễn Nhật Ánh',1),(2,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'NC',NULL,'Nam Cao',1),(3,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'HM',NULL,'Haruki Murakami',1),(4,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'DC',NULL,'Dale Carnegie',1),(5,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'RK',NULL,'Robert Kiyosaki',1),(6,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'TBS',NULL,'Tony Buổi Sáng',1);
 /*!40000 ALTER TABLE `brand` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -102,7 +108,7 @@ CREATE TABLE `cart` (
   PRIMARY KEY (`id`),
   KEY `FKl70asp4l4w0jmbm1tqyofho4o` (`user_id`),
   CONSTRAINT `FKl70asp4l4w0jmbm1tqyofho4o` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -111,7 +117,7 @@ CREATE TABLE `cart` (
 
 LOCK TABLES `cart` WRITE;
 /*!40000 ALTER TABLE `cart` DISABLE KEYS */;
-INSERT INTO `cart` VALUES (1,'2026-04-15 00:29:47.318139',NULL,'2026-04-15 00:29:47.318139',NULL,2,6),(2,'2026-04-15 01:05:18.089418',NULL,'2026-04-15 01:05:18.089418',NULL,2,6),(3,'2026-04-15 01:05:46.291740',NULL,'2026-04-15 01:05:46.291740',NULL,2,6);
+INSERT INTO `cart` VALUES (1,'2026-04-15 00:29:47.318139',NULL,'2026-04-15 00:29:47.318139',NULL,2,6),(2,'2026-04-15 01:05:18.089418',NULL,'2026-04-15 01:05:18.089418',NULL,2,6),(3,'2026-04-15 01:05:46.291740',NULL,'2026-04-15 01:05:46.291740',NULL,2,6),(4,'2026-04-17 15:53:08.594108',NULL,'2026-04-17 15:53:08.594108',NULL,2,6),(5,'2026-04-17 15:55:08.908221',NULL,'2026-04-17 15:55:08.908221',NULL,2,6),(6,'2026-04-17 15:59:05.198951',NULL,'2026-04-17 15:59:05.198951',NULL,2,6),(7,'2026-04-17 16:54:06.905050',NULL,'2026-04-17 16:54:06.905050',NULL,2,6),(8,'2026-04-17 16:55:13.446666',NULL,'2026-04-17 16:55:13.446666',NULL,2,6),(9,'2026-04-17 20:37:13.516222',NULL,'2026-04-17 20:37:13.516222',NULL,2,6),(10,'2026-04-17 21:33:14.436432',NULL,'2026-04-17 21:33:14.436432',NULL,2,9),(11,'2026-04-19 17:59:48.044468',NULL,'2026-04-19 17:59:48.044468',NULL,2,9),(12,'2026-04-19 18:02:42.224407',NULL,'2026-04-19 18:02:42.224407',NULL,2,9),(13,'2026-04-19 18:35:29.853310',NULL,'2026-04-19 18:35:29.853310',NULL,2,9),(14,'2026-04-19 20:29:39.478174',NULL,'2026-04-19 20:29:39.478174',NULL,1,9),(15,'2026-04-29 05:38:27.613352',NULL,'2026-04-29 05:38:27.613352',NULL,2,7),(16,'2026-05-03 04:03:28.574020',NULL,'2026-05-03 04:03:28.574020',NULL,2,7),(17,'2026-05-03 18:06:07.696360',NULL,'2026-05-03 18:06:07.696360',NULL,2,7);
 /*!40000 ALTER TABLE `cart` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -140,7 +146,7 @@ CREATE TABLE `cart_variant` (
 
 LOCK TABLES `cart_variant` WRITE;
 /*!40000 ALTER TABLE `cart_variant` DISABLE KEYS */;
-INSERT INTO `cart_variant` VALUES (1,4,'2026-04-15 00:29:47.320455',1),(2,4,'2026-04-15 01:05:18.091750',1),(3,4,'2026-04-15 01:05:46.292743',1);
+INSERT INTO `cart_variant` VALUES (1,4,'2026-04-15 00:29:47.320455',1),(2,4,'2026-04-15 01:05:18.091750',1),(3,4,'2026-04-15 01:05:46.292743',1),(4,4,'2026-04-17 15:53:08.605519',2),(5,4,'2026-04-17 15:55:08.912220',1),(6,3,'2026-04-17 15:59:05.199957',1),(7,3,'2026-04-17 16:54:06.910691',1),(8,3,'2026-04-17 16:55:13.446666',1),(9,3,'2026-04-17 20:37:13.519224',1),(10,3,'2026-04-17 21:33:14.437954',1),(11,3,'2026-04-19 17:59:48.047531',1),(12,3,'2026-04-19 18:02:42.228828',1),(13,3,'2026-04-19 18:35:29.855797',1),(14,3,'2026-04-19 20:29:39.479681',1),(15,3,'2026-04-29 05:38:27.647974',1),(16,3,'2026-05-03 04:03:28.575531',1),(17,2,'2026-05-03 18:06:07.702893',1);
 /*!40000 ALTER TABLE `cart_variant` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -166,7 +172,7 @@ CREATE TABLE `category` (
   UNIQUE KEY `UK_hqknmjh5423vchi4xkyhxlhg2` (`slug`),
   KEY `FK2y94svpmqttx80mshyny85wqr` (`parent_id`),
   CONSTRAINT `FK2y94svpmqttx80mshyny85wqr` FOREIGN KEY (`parent_id`) REFERENCES `category` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -175,7 +181,7 @@ CREATE TABLE `category` (
 
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
-INSERT INTO `category` VALUES (1,'2026-04-14 19:21:42.575559',NULL,'2026-04-14 19:21:42.575559',NULL,1,'01','02',1,NULL),(4,'2026-04-14 23:41:26.990709',NULL,'2026-04-14 23:41:26.990709',NULL,1,'033','03',1,NULL),(5,'2026-04-15 00:12:57.612710',NULL,'2026-04-15 00:12:57.612710',NULL,2,'04','04',1,4),(6,'2026-04-15 01:26:15.265598',NULL,'2026-04-15 01:26:15.265598',NULL,3,'05','05',1,5);
+INSERT INTO `category` VALUES (1,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,1,'Sách Văn Học','sach-van-hoc',1,NULL),(2,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,1,'Sách Kinh Tế','sach-kinh-te',1,NULL),(3,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,1,'Sách Kỹ Năng Sống','sach-ky-nang-song',1,NULL),(4,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,2,'Văn Học Việt Nam','van-hoc-viet-nam',1,1),(5,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,2,'Văn Học Nước Ngoài','van-hoc-nuoc-ngoai',1,1),(6,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,2,'Quản Trị - Lãnh Đạo','quan-tri-lanh-dao',1,2),(7,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,2,'Tài Chính - Đầu Tư','tai-chinh-dau-tu',1,2),(8,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,3,'Tiểu Thuyết Việt Nam','tieu-thuyet-viet-nam',1,4),(9,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,3,'Truyện Ngắn Việt Nam','truyen-ngan-viet-nam',1,4),(10,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,3,'Kinh Điển Thế Giới','kinh-dien-the-gioi',1,5),(11,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,3,'Khởi Nghiệp','khoi-nghiep',1,6),(12,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,3,'Chứng Khoán','chung-khoan',1,7);
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -205,7 +211,7 @@ CREATE TABLE `customer` (
   CONSTRAINT `FK9ogndo8hll7edx5iloyu2uegy` FOREIGN KEY (`customer_group_id`) REFERENCES `customer_group` (`id`),
   CONSTRAINT `FKj8dlm21j202cadsbfkoem0s58` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   CONSTRAINT `FKp8952xfwntg9alu1r6b4vhsuj` FOREIGN KEY (`customer_resource_id`) REFERENCES `customer_resource` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -214,7 +220,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES (3,'2026-04-14 23:36:27.175680',NULL,'2026-04-14 23:36:27.175680',NULL,1,1,1,6);
+INSERT INTO `customer` VALUES (3,'2026-04-14 23:36:27.175680',NULL,'2026-04-14 23:36:27.175680',NULL,1,1,1,6),(4,'2026-04-17 08:58:52.813716',NULL,'2026-04-17 08:58:52.813716',NULL,1,1,1,7),(5,'2026-04-17 11:56:38.910008',NULL,'2026-04-17 11:56:38.910008',NULL,1,1,1,8),(6,'2026-04-17 21:31:56.569550',NULL,'2026-04-17 21:31:56.569550',NULL,1,1,1,9),(7,'2026-05-03 02:50:12.656146',NULL,'2026-05-03 02:50:12.656146',NULL,1,1,1,11);
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -438,7 +444,7 @@ CREATE TABLE `guarantee` (
   `name` varchar(255) NOT NULL,
   `status` tinyint NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -447,6 +453,7 @@ CREATE TABLE `guarantee` (
 
 LOCK TABLES `guarantee` WRITE;
 /*!40000 ALTER TABLE `guarantee` DISABLE KEYS */;
+INSERT INTO `guarantee` VALUES (1,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'Sản phẩm không áp dụng chính sách bảo hành','Không bảo hành',1),(2,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'Cho phép đổi trả nếu có lỗi nhà sản xuất trong 7 ngày','Đổi trả trong 7 ngày',1),(3,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'Cho phép đổi trả trong vòng 30 ngày','Đổi trả trong 30 ngày',1),(4,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'Bảo hành kỹ thuật 6 tháng','Bảo hành 6 tháng',1),(5,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'Bảo hành chính hãng 1 năm','Bảo hành 1 năm',1);
 /*!40000 ALTER TABLE `guarantee` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -485,7 +492,7 @@ CREATE TABLE `image` (
 
 LOCK TABLES `image` WRITE;
 /*!40000 ALTER TABLE `image` DISABLE KEYS */;
-INSERT INTO `image` VALUES (1,'2026-04-15 00:28:34.052239',NULL,'2026-04-15 01:26:30.017239',NULL,'image/jpeg','P',0,1,'img-10073292412101105124.jpg','http://localhost:8085/images/img-10073292412101105124.jpg',154087,23),(2,'2026-04-15 00:29:02.577059',NULL,'2026-04-15 01:26:30.017774',NULL,'image/jpeg','P',0,0,'img-9509293596983052968.jpg','http://localhost:8085/images/img-9509293596983052968.jpg',123445,23);
+INSERT INTO `image` VALUES (1,'2026-04-15 00:28:34.052239',NULL,'2026-04-17 15:58:17.016155',NULL,'image/jpeg','P',0,1,'img-10073292412101105124.jpg','http://localhost:8085/images/img-10073292412101105124.jpg',154087,23),(2,'2026-04-15 00:29:02.577059',NULL,'2026-04-17 15:58:17.016155',NULL,'image/jpeg','P',0,0,'img-9509293596983052968.jpg','http://localhost:8085/images/img-9509293596983052968.jpg',123445,23);
 /*!40000 ALTER TABLE `image` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -510,7 +517,7 @@ CREATE TABLE `inventory_item` (
   KEY `FKqduqxbwaujqxuwa9byg8e5c6c` (`variant_id`),
   CONSTRAINT `FKp4tl6yxuxgtcxmmrnmclvbd37` FOREIGN KEY (`storage_location_id`) REFERENCES `storage_location` (`id`),
   CONSTRAINT `FKqduqxbwaujqxuwa9byg8e5c6c` FOREIGN KEY (`variant_id`) REFERENCES `variant` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -519,7 +526,7 @@ CREATE TABLE `inventory_item` (
 
 LOCK TABLES `inventory_item` WRITE;
 /*!40000 ALTER TABLE `inventory_item` DISABLE KEYS */;
-INSERT INTO `inventory_item` VALUES (2,'2026-04-15 01:27:14.332113',NULL,'2026-04-15 01:27:14.332113',NULL,5,5,4),(5,'2026-04-15 01:47:52.285938',NULL,'2026-04-15 01:47:52.285938',NULL,0,8,4),(6,'2026-04-15 01:48:59.621092',NULL,'2026-04-15 01:48:59.621092',NULL,0,8,3),(7,'2026-04-15 01:49:30.891938',NULL,'2026-04-15 01:49:30.891938',NULL,0,5,3),(8,'2026-04-15 01:52:02.510314',NULL,'2026-04-15 01:52:02.510314',NULL,0,9,4),(9,'2026-04-15 01:53:43.365881',NULL,'2026-04-15 01:53:43.365881',NULL,0,10,3),(10,'2026-04-15 01:53:43.375427',NULL,'2026-04-15 01:53:43.375427',NULL,0,10,4);
+INSERT INTO `inventory_item` VALUES (1,'2026-05-03 06:25:53.014582',NULL,'2026-05-03 06:25:53.014582',NULL,8,1,2),(2,'2026-05-03 06:25:53.016586',NULL,'2026-05-03 06:25:53.016586',NULL,5,1,1),(3,'2026-05-03 06:25:53.020089',NULL,'2026-05-03 06:25:53.020089',NULL,4,1,3),(4,'2026-05-03 06:25:53.024226',NULL,'2026-05-03 06:25:53.024226',NULL,11,1,22),(5,'2026-05-03 06:25:53.027251',NULL,'2026-05-03 06:25:53.027251',NULL,8,1,27),(6,'2026-05-03 06:25:53.031184',NULL,'2026-05-03 06:25:53.031184',NULL,3,1,28),(7,'2026-05-03 06:25:53.033696',NULL,'2026-05-03 06:25:53.033696',NULL,6,1,29),(8,'2026-05-03 06:25:53.036216',NULL,'2026-05-03 06:25:53.036216',NULL,3,1,4),(9,'2026-05-03 06:25:53.041678',NULL,'2026-05-03 06:25:53.041678',NULL,10,1,7),(10,'2026-05-03 06:25:53.043723',NULL,'2026-05-03 06:25:53.043723',NULL,6,1,8),(11,'2026-05-03 06:25:53.045232',NULL,'2026-05-03 06:25:53.045232',NULL,5,1,9),(12,'2026-05-03 06:25:53.049409',NULL,'2026-05-03 06:25:53.049409',NULL,0,1,16),(13,'2026-05-03 06:25:53.051929',NULL,'2026-05-03 06:25:53.051929',NULL,0,1,25),(14,'2026-05-03 06:25:53.053952',NULL,'2026-05-03 06:25:53.053952',NULL,6,1,26),(15,'2026-05-03 06:25:53.059526',NULL,'2026-05-03 06:25:53.059526',NULL,6,1,10),(16,'2026-05-03 06:25:53.062565',NULL,'2026-05-03 06:25:53.062565',NULL,3,1,15),(17,'2026-05-03 06:25:53.065132',NULL,'2026-05-03 06:25:53.065132',NULL,0,1,12),(18,'2026-05-03 06:25:53.067153',NULL,'2026-05-03 06:25:53.067153',NULL,5,1,18),(19,'2026-05-03 06:25:53.071685',NULL,'2026-05-03 06:25:53.071685',NULL,0,1,13),(20,'2026-05-03 06:25:53.076109',NULL,'2026-05-03 06:25:53.076109',NULL,3,1,17),(21,'2026-05-03 06:25:53.078644',NULL,'2026-05-03 06:25:53.078644',NULL,4,1,23),(22,'2026-05-03 06:25:53.081779',NULL,'2026-05-03 06:25:53.081779',NULL,3,1,14);
 /*!40000 ALTER TABLE `inventory_item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -629,7 +636,7 @@ CREATE TABLE `message` (
   KEY `FKb3y6etti1cfougkdr0qiiemgv` (`user_id`),
   CONSTRAINT `FKb3y6etti1cfougkdr0qiiemgv` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   CONSTRAINT `FKl1kg5a2471cv6pkew0gdgjrmo` FOREIGN KEY (`room_id`) REFERENCES `room` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -638,7 +645,7 @@ CREATE TABLE `message` (
 
 LOCK TABLES `message` WRITE;
 /*!40000 ALTER TABLE `message` DISABLE KEYS */;
-INSERT INTO `message` VALUES (1,'2026-04-14 23:49:52.918672',NULL,'2026-04-14 23:49:52.918672',NULL,'qeqweqe',1,1,6),(2,'2026-04-14 23:58:16.691207',NULL,'2026-04-14 23:58:16.691207',NULL,'dấd',1,1,1);
+INSERT INTO `message` VALUES (1,'2026-04-14 23:49:52.918672',NULL,'2026-04-14 23:49:52.918672',NULL,'qeqweqe',1,1,6),(2,'2026-04-14 23:58:16.691207',NULL,'2026-04-14 23:58:16.691207',NULL,'dấd',1,1,1),(3,'2026-04-17 12:31:33.004009',NULL,'2026-04-17 12:31:33.004009',NULL,'fdsfsdf',1,1,6),(4,'2026-04-17 21:44:10.836346',NULL,'2026-04-17 21:44:10.836346',NULL,'qwaeqwe',1,1,5);
 /*!40000 ALTER TABLE `message` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -693,7 +700,7 @@ CREATE TABLE `notification` (
   PRIMARY KEY (`id`),
   KEY `FKb0yvoep4h4k92ipon31wmdf7e` (`user_id`),
   CONSTRAINT `FKb0yvoep4h4k92ipon31wmdf7e` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -702,7 +709,7 @@ CREATE TABLE `notification` (
 
 LOCK TABLES `notification` WRITE;
 /*!40000 ALTER TABLE `notification` DISABLE KEYS */;
-INSERT INTO `notification` VALUES (1,'2026-04-15 01:27:50.622969',NULL,'2026-04-15 01:27:50.622969',NULL,'/order/detail/LWHSZE2ZDSBS','Đơn hàng LWHSZE2ZDSBS của bạn đã được duyệt. Phí vận chuyển là 27.509 ₫. Tổng tiền cần trả là 28.389 ₫.',1,'ORDER',6);
+INSERT INTO `notification` VALUES (1,'2026-04-15 01:27:50.622969',NULL,'2026-04-15 01:27:50.622969',NULL,'/order/detail/LWHSZE2ZDSBS','Đơn hàng LWHSZE2ZDSBS của bạn đã được duyệt. Phí vận chuyển là 27.509 ₫. Tổng tiền cần trả là 28.389 ₫.',1,'ORDER',6),(2,'2026-04-17 16:54:53.421435',NULL,'2026-04-17 16:54:53.421435',NULL,'/order/detail/IFT0U8QCTUEW','Đơn hàng IFT0U8QCTUEW của bạn đã được thanh toán thành công bằng VNPay.',1,'CHECKOUT_PAYPAL_SUCCESS',6),(3,'2026-04-17 16:57:31.986246',NULL,'2026-04-17 16:57:31.986246',NULL,'/order/detail/LNBGBV9AEAW2','Đơn hàng LNBGBV9AEAW2 của bạn đã được duyệt.',1,'ORDER',6),(4,'2026-04-17 16:58:17.837759',NULL,'2026-04-17 16:58:17.837759',NULL,'/order/detail/IFT0U8QCTUEW','Đơn hàng IFT0U8QCTUEW của bạn đã được duyệt.',1,'ORDER',6),(5,'2026-04-17 20:38:05.647274',NULL,'2026-04-17 20:38:05.647274',NULL,'/order/detail/CN8LMPEFVXHU','Đơn hàng CN8LMPEFVXHU của bạn đã được thanh toán thành công bằng VNPay.',1,'CHECKOUT_PAYPAL_SUCCESS',6),(6,'2026-04-17 20:38:34.375428',NULL,'2026-04-17 20:38:34.375428',NULL,'/order/detail/CN8LMPEFVXHU','Đơn hàng CN8LMPEFVXHU của bạn đã được duyệt.',1,'ORDER',6),(7,'2026-04-17 21:20:03.244238',NULL,'2026-04-17 21:20:03.244238',NULL,'/order/detail/D1RCFYRO4HIA','Đơn hàng D1RCFYRO4HIA của bạn đã được duyệt.',1,'ORDER',6),(8,'2026-04-17 21:34:36.140794',NULL,'2026-04-17 21:34:36.140794',NULL,'/order/detail/GNQJYLDN7ST3','Đơn hàng GNQJYLDN7ST3 của bạn đã được thanh toán thành công bằng VNPay.',1,'CHECKOUT_PAYPAL_SUCCESS',9),(9,'2026-04-19 18:51:39.935039',NULL,'2026-04-19 18:51:39.935039',NULL,'/order/detail/KGU5RTGIMWVV','Bạn đã hủy thanh toán VNPay cho đơn hàng KGU5RTGIMWVV.',1,'CHECKOUT_PAYPAL_CANCEL',9),(10,'2026-04-19 20:16:34.913083',NULL,'2026-04-19 20:16:34.913083',NULL,'/order/detail/KGU5RTGIMWVV','Đơn hàng KGU5RTGIMWVV của bạn đã được duyệt.',1,'ORDER',9),(11,'2026-05-03 03:19:48.383214',NULL,'2026-05-03 03:19:48.383214',NULL,'/order/detail/4AZNJZDXQBOX','Đơn hàng 4AZNJZDXQBOX của bạn đã được duyệt. Phí vận chuyển là 49.502 ₫. Tổng tiền cần trả là 1.149.502 ₫.',1,'ORDER',7);
 /*!40000 ALTER TABLE `notification` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -787,7 +794,7 @@ CREATE TABLE `order` (
 
 LOCK TABLES `order` WRITE;
 /*!40000 ALTER TABLE `order` DISABLE KEYS */;
-INSERT INTO `order` VALUES (4,'2026-04-15 01:05:50.843633',NULL,'2026-04-15 01:05:50.843633',NULL,'LWHSZE2ZDSBS',NULL,'CASH',1,NULL,NULL,27509.00000,2,0.10000,'ưqe','Huyện KBang','Hoang Nghia Hieu','0912345678','Gia Lai','Xã Sơn Lang',800.00000,28389.00000,NULL,1,6);
+INSERT INTO `order` VALUES (4,'2026-05-03 18:10:03.144548',NULL,'2026-05-03 18:10:03.144548',NULL,'MUZCC0H7W4LN',NULL,'VNPAY',1,'MUZCC0H7W4LN',NULL,0.00000,1,0.10000,'334 Võ Văn Kiệt, Cần Thơ','Huyện Phú Tân','Đặng Đức Hiêu','0947388805','Cà Mau','Xã Rạch Chèo',110000.00000,121000.00000,NULL,1,7);
 /*!40000 ALTER TABLE `order` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -881,7 +888,7 @@ CREATE TABLE `order_variant` (
 
 LOCK TABLES `order_variant` WRITE;
 /*!40000 ALTER TABLE `order_variant` DISABLE KEYS */;
-INSERT INTO `order_variant` VALUES (4,4,800.00000,800.00000,1);
+INSERT INTO `order_variant` VALUES (4,2,110000.00000,110000.00000,1);
 /*!40000 ALTER TABLE `order_variant` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -936,7 +943,7 @@ CREATE TABLE `preorder` (
   KEY `FKnl5u7s90vitdf2fyb8vtnp7i2` (`product_id`),
   CONSTRAINT `FKl0pm6jiq78m1rhg2ntmoacemw` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   CONSTRAINT `FKnl5u7s90vitdf2fyb8vtnp7i2` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -945,6 +952,7 @@ CREATE TABLE `preorder` (
 
 LOCK TABLES `preorder` WRITE;
 /*!40000 ALTER TABLE `preorder` DISABLE KEYS */;
+INSERT INTO `preorder` VALUES (1,'2026-05-03 06:02:07.375716',NULL,'2026-05-03 06:02:07.375716',NULL,1,1,7);
 /*!40000 ALTER TABLE `preorder` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -988,7 +996,7 @@ CREATE TABLE `product` (
   CONSTRAINT `FKgfhdydadolarv86kxk0my2uj3` FOREIGN KEY (`guarantee_id`) REFERENCES `guarantee` (`id`),
   CONSTRAINT `FKndrubbm6whifirg6o2bpdcf6b` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`),
   CONSTRAINT `FKs6cydsualtsrprvlf2bb3lcam` FOREIGN KEY (`brand_id`) REFERENCES `brand` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -997,8 +1005,35 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,'2026-04-14 21:30:15.460363',NULL,'2026-04-14 21:30:15.460363',NULL,'qưeq',NULL,'eqwe','null',NULL,'qưe','null',1,NULL,NULL,6,NULL,NULL,NULL),(23,'2026-04-15 00:28:34.051735',NULL,'2026-04-15 00:28:34.051735',NULL,'qưeqw','qưe','qưe','null','qưe','eqw','null',1,NULL,2,6,NULL,NULL,NULL);
+INSERT INTO `product` VALUES (1,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD001','Nội dung kể về tình yêu đơn phương của Ngạn dành cho Hà Lan...','Mắt Biếc','{\"1\": \"Bìa mềm\"}','Truyện dài nổi tiếng của Nguyễn Nhật Ánh','mat-biec','{\"1\": \"300\", \"4\": \"2019\"}',1,0.3,1,NULL,2,1,1),(2,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD002','Câu chuyện về những trò nghịch ngợm của trẻ con...','Cho Tôi Xin Một Vé Đi Tuổi Thơ','{\"1\": \"Bìa mềm\"}','Tác phẩm dành cho thiếu nhi và người lớn','cho-toi-xin-mot-ve-di-tuoi-tho','{\"1\": \"200\", \"4\": \"2018\"}',1,0.25,1,NULL,2,1,1),(3,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD003','Hình ảnh người nông dân bị tha hóa trong xã hội cũ...','Chí Phèo','{\"1\": \"Bìa mềm\"}','Tác phẩm kinh điển của Nam Cao','chi-pheo','{\"1\": \"150\", \"4\": \"2020\"}',1,0.2,2,NULL,1,3,1),(4,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD004','Câu chuyện về những người trẻ cô đơn...','Rừng Na Uy','{\"1\": \"Bìa cứng\"}','Tiểu thuyết hiện đại Nhật Bản','rung-na-uy','{\"1\": \"500\", \"4\": \"2015\"}',1,0.4,3,NULL,2,4,1),(5,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD005','Nghệ thuật thu phục lòng người...','Đắc Nhân Tâm','{\"1\": \"Bìa mềm\"}','Sách kỹ năng sống bán chạy nhất mọi thời đại','dac-nhan-tam','{\"1\": \"320\", \"4\": \"2021\"}',1,0.35,4,NULL,3,6,1),(6,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD006','Sự khác biệt giữa người giàu và người nghèo...','Cha Giàu Cha Nghèo','{\"1\": \"Bìa mềm\"}','Sách dạy về tư duy tài chính','cha-giau-cha-nghèo','{\"1\": \"400\", \"4\": \"2017\"}',1,0.3,5,NULL,3,5,1),(7,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD007','Những bài viết truyền cảm hứng của Dượng Tony...','Trên Đường Băng','{\"1\": \"Bìa mềm\"}','Cảm hứng khởi nghiệp cho giới trẻ','tren-duong-bang','{\"1\": \"300\", \"4\": \"2016\"}',1,0.28,6,NULL,2,1,1),(8,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD008','Ký ức tuổi thơ ở làng quê nghèo...','Tôi Thấy Hoa Vàng Trên Cỏ Xanh','{\"1\": \"Bìa mềm\"}','Truyện dài của Nguyễn Nhật Ánh','toi-thay-hoa-vang-tren-co-xanh','{\"1\": \"280\", \"4\": \"2015\"}',1,0.3,1,NULL,2,1,1),(9,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD009','Nỗi đau của người nông dân...','Lão Hạc','{\"1\": \"Bìa mềm\"}','Truyện ngắn của Nam Cao','lao-hac','{\"1\": \"100\", \"4\": \"2020\"}',1,0.15,2,NULL,1,3,1),(10,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD010','Hành trình kỳ ảo của cậu bé Kafka...','Kafka Bên Bờ Biển','{\"1\": \"Bìa cứng\"}','Kiệt tác của Murakami','kafka-ben-bo-bien','{\"1\": \"600\", \"4\": \"2018\"}',1,0.5,3,NULL,2,4,1),(11,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD011','Làm sao để bớt lo lắng...','Quẳng Gánh Lo Đi Và Vui Sống','{\"1\": \"Bìa mềm\"}','Sách giúp giải tỏa áp lực cuộc sống','quang-ganh-lo-di-va-vui-song','{\"1\": \"250\", \"4\": \"2021\"}',1,0.32,4,NULL,2,6,1),(12,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD012','Kim tứ đồ và tự do tài chính...','Dạy Con Làm Giàu - Tập 2','{\"1\": \"Bìa mềm\"}','Hướng dẫn đầu tư','day-con-lam-giau-tap-2','{\"1\": \"450\", \"4\": \"2017\"}',1,0.35,5,NULL,3,5,1),(13,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD013','Chuyện làm ăn, chuyện đời...','Cà Phê Cùng Tony','{\"1\": \"Bìa mềm\"}','Tập hợp các bài viết của Tony Buổi Sáng','ca-phe-cung-tony','{\"1\": \"260\", \"4\": \"2016\"}',1,0.25,6,NULL,2,1,1),(14,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD014','Câu chuyện về Anh Thư và Tiểu Li...','Cô Gái Đến Từ Hôm Qua','{\"1\": \"Bìa mềm\"}','Truyện tình cảm tuổi học trò','co-gai-den-tu-hom-qua','{\"1\": \"240\", \"4\": \"2014\"}',1,0.28,1,NULL,2,1,1),(15,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD015','Cuộc sống bế tắc của trí thức nghèo...','Sống Mòn','{\"1\": \"Bìa mềm\"}','Tiểu thuyết của Nam Cao','song-mon','{\"1\": \"350\", \"4\": \"2020\"}',1,0.35,2,NULL,1,3,1),(16,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD016','Vụ án hoàn hảo của Ishigami...','Phía Sau Nghi Can X','{\"1\": \"Bìa mềm\"}','Trinh thám Nhật Bản','phia-sau-nghi-can-x','{\"1\": \"400\", \"4\": \"2019\"}',1,0.45,3,NULL,3,4,1),(17,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD017','Mùa hè rực rỡ và những kỷ niệm...','Bảy Bước Tới Mùa Hè','{\"1\": \"Bìa mềm\"}','Truyện dài Nguyễn Nhật Ánh','bay-buoc-toi-mua-he','{\"1\": \"290\", \"4\": \"2015\"}',1,0.3,1,NULL,2,1,1),(18,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD018','Hành trình theo đuổi ước mơ...','Nhà Giả Kim','{\"1\": \"Bìa cứng\"}','Cuốn sách bán chạy chỉ sau Kinh Thánh','nha-gia-kim','{\"1\": \"220\", \"4\": \"2020\"}',1,0.2,3,NULL,3,4,1),(19,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD019','Cơ chế hoạt động của thói quen...','Sức Mạnh Của Thói Quen','{\"1\": \"Bìa mềm\"}','Dành cho ai muốn thay đổi bản thân','suc-manh-cua-thoi-quen','{\"1\": \"480\", \"4\": \"2018\"}',1,0.42,4,NULL,3,5,1),(20,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD020','Xây dựng mạng lưới quan hệ...','Đừng Bao Giờ Đi Ăn Một Mình','{\"1\": \"Bìa mềm\"}','Kỹ năng giao tiếp và kết nối','dung-bao-gio-di-an-mot-minh','{\"1\": \"380\", \"4\": \"2019\"}',1,0.38,4,NULL,3,6,1),(21,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD021','Hai hệ thống tư duy của con người...','Tư Duy Nhanh Và Chậm','{\"1\": \"Bìa mềm\"}','Phân tích về tâm lý học hành vi','tu-duy-nhanh-va-cham','{\"1\": \"700\", \"4\": \"2021\"}',1,0.6,4,NULL,3,5,1),(22,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD022','Bức tranh xã hội Nga thời Napoléon...','Chiến Tranh Và Hòa Bình','{\"1\": \"Bìa cứng\"}','Kiệt tác của Lev Tolstoy','chien-tranh-va-hoa-binh','{\"1\": \"1500\", \"4\": \"2010\"}',1,1.5,3,NULL,5,3,1),(23,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD023','Cuộc đời của Jean Valjean...','Những Người Khốn Khổ','{\"1\": \"Bìa cứng\"}','Tác phẩm của Victor Hugo','nhung-nguoi-khon-kho','{\"1\": \"1200\", \"4\": \"2012\"}',1,1.2,3,NULL,5,4,1),(24,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD024','Quyền tự do của cá nhân...','Bàn Về Tự Do','{\"1\": \"Bìa mềm\"}','Triết học kinh điển','ban-ve-tu-do','{\"1\": \"200\", \"4\": \"2015\"}',1,0.25,3,NULL,3,5,1),(25,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD025','Chuyện tình giữa Meggie và cha Ralph...','Tiếng Chim Hót Trong Bụi Mận Gai','{\"1\": \"Bìa mềm\"}','Tiểu thuyết lãng mạn','tieng-chim-hot-trong-bui-man-gai','{\"1\": \"800\", \"4\": \"2013\"}',1,0.7,3,NULL,3,4,1),(26,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD026','Chuyến du hành qua các tiểu hành tinh...','Hoàng Tử Bé','{\"1\": \"Bìa mềm\"}','Cuốn sách của mọi lứa tuổi','hoang-tu-be','{\"1\": \"100\", \"4\": \"2021\"}',1,0.15,3,NULL,1,4,1),(27,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD027','Gia đình Corleone...','Bố Già','{\"1\": \"Bìa cứng\"}','Tiểu thuyết về mafia Mỹ','bo-gia','{\"1\": \"550\", \"4\": \"2018\"}',1,0.5,3,NULL,5,6,1),(28,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD028','Nghị lực và lòng nhân ái...','Không Gia Đình','{\"1\": \"Bìa mềm\"}','Hành trình của cậu bé Rémi','khong-gia-dinh','{\"1\": \"600\", \"4\": \"2019\"}',1,0.6,3,NULL,2,2,1),(29,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD029','Sự dằn vặt của Raskolnikov...','Tội Ác Và Hình Phạt','{\"1\": \"Bìa cứng\"}','Kiệt tác tâm lý của Dostoevsky','toi-ac-va-hinh-phat','{\"1\": \"750\", \"4\": \"2020\"}',1,0.8,3,NULL,5,3,1),(30,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'PROD030','Góc nhìn về cái chết để trân trọng sự sống...','Điểm Đến Của Cuộc Đời','{\"1\": \"Bìa mềm\"}','Câu chuyện về ranh giới sinh tử','diem-den-cua-cuoc-doi','{\"1\": \"300\", \"4\": \"2017\"}',1,0.28,2,NULL,2,4,1);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `product_category`
+--
+
+DROP TABLE IF EXISTS `product_category`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `product_category` (
+  `product_id` bigint NOT NULL,
+  `category_id` bigint NOT NULL,
+  PRIMARY KEY (`product_id`,`category_id`),
+  KEY `FKkud35ls1d40wpjb5htpp14q4e` (`category_id`),
+  CONSTRAINT `FK2k3smhbruedlcrvu6clued06x` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
+  CONSTRAINT `FKkud35ls1d40wpjb5htpp14q4e` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `product_category`
+--
+
+LOCK TABLES `product_category` WRITE;
+/*!40000 ALTER TABLE `product_category` DISABLE KEYS */;
+INSERT INTO `product_category` VALUES (5,3),(11,3),(19,3),(21,3),(30,3),(20,6),(24,6),(6,7),(1,8),(8,8),(14,8),(15,8),(17,8),(2,9),(3,9),(9,9),(4,10),(10,10),(16,10),(18,10),(22,10),(23,10),(25,10),(26,10),(27,10),(28,10),(29,10),(7,11),(13,11),(12,12);
+/*!40000 ALTER TABLE `product_category` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1046,7 +1081,7 @@ CREATE TABLE `promotion` (
   `start_date` datetime(6) NOT NULL,
   `status` tinyint NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1055,7 +1090,6 @@ CREATE TABLE `promotion` (
 
 LOCK TABLES `promotion` WRITE;
 /*!40000 ALTER TABLE `promotion` DISABLE KEYS */;
-INSERT INTO `promotion` VALUES (1,'2026-04-15 01:02:46.046677',NULL,'2026-04-15 01:02:46.046677',NULL,'2026-04-22 00:00:00.000000','23',5,'2026-04-16 00:00:00.000000',1);
 /*!40000 ALTER TABLE `promotion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1082,7 +1116,6 @@ CREATE TABLE `promotion_product` (
 
 LOCK TABLES `promotion_product` WRITE;
 /*!40000 ALTER TABLE `promotion_product` DISABLE KEYS */;
-INSERT INTO `promotion_product` VALUES (1,23);
 /*!40000 ALTER TABLE `promotion_product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1105,7 +1138,7 @@ CREATE TABLE `property` (
   `status` tinyint NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_17f03s5ron7wrua25qyg8tx2v` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1114,6 +1147,7 @@ CREATE TABLE `property` (
 
 LOCK TABLES `property` WRITE;
 /*!40000 ALTER TABLE `property` DISABLE KEYS */;
+INSERT INTO `property` VALUES (1,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'LOAIBIA',NULL,'Loại bìa',1),(2,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'NGONNGU',NULL,'Ngôn ngữ',1),(3,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'CHATLIEU',NULL,'Chất liệu giấy',1),(4,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'MAUSAC',NULL,'Màu sắc',1),(5,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'QUATANG',NULL,'Kèm quà tặng',1);
 /*!40000 ALTER TABLE `property` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1166,7 +1200,7 @@ CREATE TABLE `refresh_token` (
   UNIQUE KEY `UK_r4k4edos30bx9neoq81mdvwph` (`token`),
   KEY `FKfgk1klcib7i15utalmcqo7krt` (`user_id`),
   CONSTRAINT `FKfgk1klcib7i15utalmcqo7krt` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=183 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1175,7 +1209,7 @@ CREATE TABLE `refresh_token` (
 
 LOCK TABLES `refresh_token` WRITE;
 /*!40000 ALTER TABLE `refresh_token` DISABLE KEYS */;
-INSERT INTO `refresh_token` VALUES (1,'2026-04-14 18:44:17.384514',NULL,'2026-04-14 18:44:17.384514',NULL,'2026-04-15 18:44:17.392661','811a0ca6-6fd3-438c-bb94-fc625cad9e12',1),(2,'2026-04-14 18:44:21.632767',NULL,'2026-04-14 18:44:21.632767',NULL,'2026-04-15 18:44:21.640439','80a2b95c-8eae-4ba3-93e4-090a02f5989c',1),(3,'2026-04-14 18:45:39.721679',NULL,'2026-04-14 18:45:39.721679',NULL,'2026-04-15 18:45:39.729233','0ad3606b-456d-4b88-8973-2c8f785d247a',1),(4,'2026-04-14 18:48:27.013880',NULL,'2026-04-14 18:48:27.013880',NULL,'2026-04-15 18:48:27.014898','7bad0949-123b-4927-9b86-1e59304e95a5',1),(5,'2026-04-14 19:00:55.213820',NULL,'2026-04-14 19:00:55.213820',NULL,'2026-04-15 19:00:55.220575','6874b3d1-0f24-4db0-a0d9-40b40c02c91e',1),(6,'2026-04-14 19:10:21.338728',NULL,'2026-04-14 19:10:21.338728',NULL,'2026-04-15 19:10:21.367672','8db744df-8ac9-4abf-8466-d01f95f06e9f',2),(7,'2026-04-14 19:11:10.064750',NULL,'2026-04-14 19:11:10.064750',NULL,'2026-04-15 19:11:10.069417','4b33354c-d300-4e81-b8c9-678d0c67c5a0',2),(8,'2026-04-14 19:11:39.073777',NULL,'2026-04-14 19:11:39.073777',NULL,'2026-04-15 19:11:39.076943','7d5a3f90-2fa1-4ee3-9182-661beac13394',2),(9,'2026-04-14 19:11:44.777644',NULL,'2026-04-14 19:11:44.777644',NULL,'2026-04-15 19:11:44.790407','76eb5418-fd3f-4796-868a-6e441ccf53b3',2),(10,'2026-04-14 19:11:50.087591',NULL,'2026-04-14 19:11:50.087591',NULL,'2026-04-15 19:11:50.087591','516b8a84-ecb8-416f-b768-9b024270af51',1),(11,'2026-04-14 19:12:23.422885',NULL,'2026-04-14 19:12:23.422885',NULL,'2026-04-15 19:12:23.424060','7e0e7034-3c9d-4593-a603-80f94f8e3d34',2),(12,'2026-04-14 19:15:49.428410',NULL,'2026-04-14 19:15:49.428410',NULL,'2026-04-15 19:15:49.429454','e67ffd10-f026-4901-b665-73c842c880b7',2),(13,'2026-04-14 19:15:59.805940',NULL,'2026-04-14 19:15:59.805940',NULL,'2026-04-15 19:15:59.807964','2a36b335-d06b-48d2-9d87-80f1cd40115a',1),(14,'2026-04-14 19:16:30.398678',NULL,'2026-04-14 19:16:30.398678',NULL,'2026-04-15 19:16:30.403980','26adb885-60db-42b2-bcba-baf3a44f1994',2),(15,'2026-04-14 19:16:48.053075',NULL,'2026-04-14 19:16:48.053075',NULL,'2026-04-15 19:16:48.055363','568bf425-2681-467e-859d-5f3762ea568c',2),(16,'2026-04-14 19:16:57.236011',NULL,'2026-04-14 19:16:57.236011',NULL,'2026-04-15 19:16:57.238043','38945708-63e8-47d7-a447-8621a0110b7c',2),(17,'2026-04-14 19:21:31.978595',NULL,'2026-04-14 19:21:31.978595',NULL,'2026-04-15 19:21:31.979641','76c1d7dd-36b6-4ad3-89c2-6fe6a67727cb',1),(18,'2026-04-14 19:22:57.632010',NULL,'2026-04-14 19:22:57.632010',NULL,'2026-04-15 19:22:57.634553','a9025526-c3e3-4e12-930d-4ce0ba9e7f8f',2),(19,'2026-04-14 19:25:10.653980',NULL,'2026-04-14 19:25:10.653980',NULL,'2026-04-15 19:25:10.655975','ec4806b6-e196-4ee3-93cb-be22b8ed822c',2),(20,'2026-04-14 19:25:11.610509',NULL,'2026-04-14 19:25:11.610509',NULL,'2026-04-15 19:25:11.613723','69f010f8-dd14-4f9d-aed6-e8550eff6ba6',2),(21,'2026-04-14 19:25:58.836103',NULL,'2026-04-14 19:25:58.836103',NULL,'2026-04-15 19:25:58.840117','8e7fd6b3-68ff-4dd1-88d2-17a7c11803f1',2),(22,'2026-04-14 19:27:07.108985',NULL,'2026-04-14 19:27:07.108985',NULL,'2026-04-15 19:27:07.128589','4ed30719-ae14-4abd-b0a5-e52ad70cb679',2),(23,'2026-04-14 19:29:25.367640',NULL,'2026-04-14 19:29:25.367640',NULL,'2026-04-15 19:29:25.373162','30dd5e8e-9b69-48fc-bbde-4c30c0b8d96e',1),(24,'2026-04-14 19:30:30.391849',NULL,'2026-04-14 19:30:30.391849',NULL,'2026-04-15 19:30:30.398148','30e3b06e-4f8f-408e-8fbe-5fa5fd1a8c2a',5),(25,'2026-04-14 19:30:44.916080',NULL,'2026-04-14 19:30:44.916080',NULL,'2026-04-15 19:30:44.919825','9768854a-555d-4129-b284-4e2ceacda1d5',5),(26,'2026-04-14 19:32:14.024582',NULL,'2026-04-14 19:32:14.024582',NULL,'2026-04-15 19:32:14.027909','7a4b5be8-1186-495d-8856-b0d6b9c70cba',5),(27,'2026-04-14 19:32:45.575025',NULL,'2026-04-14 19:32:45.575025',NULL,'2026-04-15 19:32:45.578795','1da0df19-b0d0-4b76-a54b-282570be2819',5),(28,'2026-04-14 20:51:00.774168',NULL,'2026-04-14 20:51:00.774168',NULL,'2026-04-15 20:51:00.777157','29a73e94-4b42-47ac-bb26-b93f55519eb9',5),(29,'2026-04-14 20:55:59.648741',NULL,'2026-04-14 20:55:59.648741',NULL,'2026-04-15 20:55:59.654750','52bceea5-a758-42f6-9439-f3204c11a33d',1),(30,'2026-04-14 20:56:16.962493',NULL,'2026-04-14 20:56:16.962493',NULL,'2026-04-15 20:56:16.964832','65295d49-811a-4033-994a-a27e83e8830b',2),(31,'2026-04-14 20:56:23.043921',NULL,'2026-04-14 20:56:23.043921',NULL,'2026-04-15 20:56:23.046623','daac3066-e07c-4886-ba49-2b40b73fa0aa',5),(32,'2026-04-14 20:56:39.153747',NULL,'2026-04-14 20:56:39.153747',NULL,'2026-04-15 20:56:39.156750','f41337d7-93d3-4c8e-af18-e7a9759c0129',5),(33,'2026-04-14 20:56:44.997828',NULL,'2026-04-14 20:56:44.997828',NULL,'2026-04-15 20:56:44.998946','ff2d8085-53b8-4add-8893-d37b70391ca1',1),(34,'2026-04-14 21:07:48.546313',NULL,'2026-04-14 21:07:48.546313',NULL,'2026-04-15 21:07:48.547968','c8e596a6-1f42-48f8-b0bd-88fc881a1837',1),(35,'2026-04-14 21:08:04.861303',NULL,'2026-04-14 21:08:04.861303',NULL,'2026-04-15 21:08:04.863854','2c03ad4d-2efa-4390-9e79-ffb4d82edad6',5),(36,'2026-04-14 21:08:36.766157',NULL,'2026-04-14 21:08:36.766157',NULL,'2026-04-15 21:08:36.773669','3ab0d78c-db22-42a4-8fb5-72545312d3be',1),(37,'2026-04-14 21:08:38.828651',NULL,'2026-04-14 21:08:38.828651',NULL,'2026-04-15 21:08:38.834235','ebaf26d6-7d24-4a28-8245-d7e9967af5fb',1),(38,'2026-04-14 21:08:57.579728',NULL,'2026-04-14 21:08:57.579728',NULL,'2026-04-15 21:08:57.581763','dc9a6232-e5a0-4023-a37d-9f134d83dfab',5),(39,'2026-04-14 21:15:34.422958',NULL,'2026-04-14 21:15:34.422958',NULL,'2026-04-15 21:15:34.427513','bac66d6e-226e-4f9b-9d2b-dfa88a65c649',1),(40,'2026-04-14 21:15:40.614944',NULL,'2026-04-14 21:15:40.614944',NULL,'2026-04-15 21:15:40.615941','5d2c049d-e116-4600-adee-422212b7559a',5),(41,'2026-04-14 21:17:06.639367',NULL,'2026-04-14 21:17:06.639367',NULL,'2026-04-15 21:17:06.644927','ce91b6c3-aa4b-4d24-aef2-e0758326571e',5),(42,'2026-04-14 21:17:11.800660',NULL,'2026-04-14 21:17:11.800660',NULL,'2026-04-15 21:17:11.805471','05a9ebbf-634b-4a1e-918b-c949951a5306',1),(43,'2026-04-14 21:17:13.038016',NULL,'2026-04-14 21:17:13.038016',NULL,'2026-04-15 21:17:13.042516','612c3b40-8b31-434d-aa28-c8c298e984c7',1),(44,'2026-04-14 21:17:14.004285',NULL,'2026-04-14 21:17:14.004285',NULL,'2026-04-15 21:17:14.009818','d26225e7-e471-499b-b54a-381aca764650',1),(45,'2026-04-14 21:17:22.623958',NULL,'2026-04-14 21:17:22.623958',NULL,'2026-04-15 21:17:22.626461','dfa917ec-943c-453d-b8bc-f3f1fe5d5f1d',1),(46,'2026-04-14 21:17:28.203911',NULL,'2026-04-14 21:17:28.203911',NULL,'2026-04-15 21:17:28.207199','dd881dc2-9283-44e1-8f12-b37858f3e616',1),(47,'2026-04-14 21:17:30.443427',NULL,'2026-04-14 21:17:30.443427',NULL,'2026-04-15 21:17:30.446551','ddf6d7b4-8cab-4297-ba4f-6287caa134b9',5),(48,'2026-04-14 21:17:37.803769',NULL,'2026-04-14 21:17:37.803769',NULL,'2026-04-15 21:17:37.805271','1ac541dc-abc7-4047-b8d9-5d4b6e3fb878',1),(49,'2026-04-14 21:18:45.522181',NULL,'2026-04-14 21:18:45.522181',NULL,'2026-04-15 21:18:45.522701','8433d021-bde8-4379-861d-1fdb99758230',5),(50,'2026-04-14 21:19:31.853096',NULL,'2026-04-14 21:19:31.853096',NULL,'2026-04-15 21:19:31.854771','d3041178-87f4-4ddd-bee5-a8364dfb0302',5),(51,'2026-04-14 21:20:44.350953',NULL,'2026-04-14 21:20:44.350953',NULL,'2026-04-15 21:20:44.358898','65893886-d7b8-4674-8067-f597bd2f991c',5),(52,'2026-04-14 21:21:32.441014',NULL,'2026-04-14 21:21:32.441014',NULL,'2026-04-15 21:21:32.443015','3c010bd0-4531-4cfa-b02d-337176b73937',5),(53,'2026-04-14 21:22:16.907193',NULL,'2026-04-14 21:22:16.907193',NULL,'2026-04-15 21:22:16.915882','daaa7c80-1310-473f-9fe1-ed8a663cd2c3',5),(54,'2026-04-14 21:22:43.387559',NULL,'2026-04-14 21:22:43.387559',NULL,'2026-04-15 21:22:43.389061','6265aefb-e00b-4940-b1a4-8d704c67f341',5),(55,'2026-04-14 21:22:44.371863',NULL,'2026-04-14 21:22:44.371863',NULL,'2026-04-15 21:22:44.372994','a2c73b2e-131a-41a6-9ebe-39e06965052f',5),(56,'2026-04-14 21:24:08.014211',NULL,'2026-04-14 21:24:08.014211',NULL,'2026-04-15 21:24:08.016552','fd740a4d-1eae-4569-96b7-d1807e8ca4aa',5),(57,'2026-04-14 21:26:42.661816',NULL,'2026-04-14 21:26:42.661816',NULL,'2026-04-15 21:26:42.672806','c2fd8cd7-9268-4f3d-bc84-f451706b0350',5),(58,'2026-04-14 21:26:45.050917',NULL,'2026-04-14 21:26:45.050917',NULL,'2026-04-15 21:26:45.053683','eb895cc4-09f7-4d01-b4cb-0b3d792dfdb0',1),(59,'2026-04-14 21:30:22.545851',NULL,'2026-04-14 21:30:22.545851',NULL,'2026-04-15 21:30:22.549876','45323880-ef5a-44da-9897-831818a47480',5),(60,'2026-04-14 21:36:21.478752',NULL,'2026-04-14 21:36:21.478752',NULL,'2026-04-15 21:36:21.485667','c2d11a33-0ed6-47c0-845f-db86792b9a43',5),(61,'2026-04-14 21:36:24.609622',NULL,'2026-04-14 21:36:24.609622',NULL,'2026-04-15 21:36:24.616157','e23d5e1b-96a0-4d64-8804-a1aae2af84c3',1),(62,'2026-04-14 21:36:30.572831',NULL,'2026-04-14 21:36:30.572831',NULL,'2026-04-15 21:36:30.585363','d837dae5-34c2-4583-9e53-8b1177f98394',5),(63,'2026-04-14 22:34:25.210522',NULL,'2026-04-14 22:34:25.210522',NULL,'2026-04-15 22:34:25.213029','fa9127c5-b385-44d7-8f91-a2cf6c0b52cd',5),(64,'2026-04-14 22:34:31.872741',NULL,'2026-04-14 22:34:31.872741',NULL,'2026-04-15 22:34:31.875259','bcbe5777-a453-42cc-bc4b-73c523adc705',5),(65,'2026-04-14 22:35:05.560577',NULL,'2026-04-14 22:35:05.560577',NULL,'2026-04-15 22:35:05.563529','42523196-18e3-4dc1-a1d0-d481ab1629fa',1),(66,'2026-04-14 22:35:16.261534',NULL,'2026-04-14 22:35:16.261534',NULL,'2026-04-15 22:35:16.263042','57d552be-1b67-411e-9cf4-73b77d7c1f57',5),(67,'2026-04-14 22:41:32.735898',NULL,'2026-04-14 22:41:32.735898',NULL,'2026-04-15 22:41:32.744593','3d1ed884-2f57-4ba3-af75-81985b1e2575',5),(68,'2026-04-14 22:41:35.478741',NULL,'2026-04-14 22:41:35.478741',NULL,'2026-04-15 22:41:35.481760','3ec001c3-5dde-4b20-908d-1f8ef041c514',1),(69,'2026-04-14 22:52:44.119996',NULL,'2026-04-14 22:52:44.119996',NULL,'2026-04-15 22:52:44.124508','8cd96b71-f5cb-4eec-ad77-e6ba84cfd13d',5),(70,'2026-04-14 22:53:37.859759',NULL,'2026-04-14 22:53:37.859759',NULL,'2026-04-15 22:53:37.875143','e1e8cfb5-01ed-421d-80cf-c7ab8a9f2315',5),(71,'2026-04-14 23:03:02.197298',NULL,'2026-04-14 23:03:02.197298',NULL,'2026-04-15 23:03:02.201745','e72a30eb-0643-4f1c-9e57-9e8c55221dc2',1),(72,'2026-04-14 23:03:06.851580',NULL,'2026-04-14 23:03:06.851580',NULL,'2026-04-15 23:03:06.855219','53e1e4cc-42c2-432c-9433-2e1b3294413d',5),(73,'2026-04-14 23:03:38.898173',NULL,'2026-04-14 23:03:38.898173',NULL,'2026-04-15 23:03:38.901252','414e6801-76d0-4c52-8661-6fb366975ef1',5),(74,'2026-04-14 23:10:29.209199',NULL,'2026-04-14 23:10:29.209199',NULL,'2026-04-15 23:10:29.210198','545cb7a5-b463-40d4-80e7-9af64d689f60',5),(75,'2026-04-14 23:10:42.028556',NULL,'2026-04-14 23:10:42.028556',NULL,'2026-04-15 23:10:42.030593','a67bfcf2-9c75-4ebe-b4da-6376ebe100ac',5),(76,'2026-04-14 23:10:45.219369',NULL,'2026-04-14 23:10:45.219369',NULL,'2026-04-15 23:10:45.223889','bb880824-6763-473b-9c95-0bcb385f9653',5),(77,'2026-04-14 23:11:11.978554',NULL,'2026-04-14 23:11:11.978554',NULL,'2026-04-15 23:11:11.978554','bf786e23-7636-4dd8-8cae-1a4619277509',2),(78,'2026-04-14 23:11:15.760047',NULL,'2026-04-14 23:11:15.760047',NULL,'2026-04-15 23:11:15.761632','f4844b75-afb1-4ad4-93dd-20f21a1f34a3',5),(79,'2026-04-14 23:11:32.136650',NULL,'2026-04-14 23:11:32.136650',NULL,'2026-04-15 23:11:32.139169','4842c254-e627-459f-92a5-0939312adf67',5),(80,'2026-04-14 23:11:37.710342',NULL,'2026-04-14 23:11:37.710342',NULL,'2026-04-15 23:11:37.711962','c0de3b34-3e73-4fdb-bac0-e597fa0e2546',2),(81,'2026-04-14 23:11:48.704771',NULL,'2026-04-14 23:11:48.704771',NULL,'2026-04-15 23:11:48.704771','ef8715f5-81f6-4de0-847b-111654a4b357',5),(82,'2026-04-14 23:12:48.005364',NULL,'2026-04-14 23:12:48.005364',NULL,'2026-04-15 23:12:48.009124','0a15331c-7247-46fc-b611-a1ad8766f72d',5),(83,'2026-04-14 23:13:49.230579',NULL,'2026-04-14 23:13:49.230579',NULL,'2026-04-15 23:13:49.234109','01b984a1-e0f3-4d82-a08c-f883ba054e6e',5),(84,'2026-04-14 23:20:01.775040',NULL,'2026-04-14 23:20:01.775040',NULL,'2026-04-15 23:20:01.785456','9ef39589-26fa-4d70-a056-984be3111d94',5),(85,'2026-04-14 23:20:29.096101',NULL,'2026-04-14 23:20:29.096101',NULL,'2026-04-15 23:20:29.101949','8dd568d7-1ebb-4091-988b-491750483e50',2),(86,'2026-04-14 23:37:42.615061',NULL,'2026-04-14 23:37:42.615061',NULL,'2026-04-15 23:37:42.618666','1ce6a672-d893-44a4-9107-79a5c1a64e0d',6),(87,'2026-04-14 23:38:56.060052',NULL,'2026-04-14 23:38:56.060052',NULL,'2026-04-15 23:38:56.064294','c4fc18f4-9e8c-4bf8-bc9c-8dc34b27a00e',6),(88,'2026-04-14 23:40:40.290413',NULL,'2026-04-14 23:40:40.290413',NULL,'2026-04-15 23:40:40.295057','6fd05de5-4a00-4ecb-b842-965de8dbc082',1),(89,'2026-04-15 01:07:28.848031',NULL,'2026-04-15 01:07:28.848031',NULL,'2026-04-16 01:07:28.849029','e05e922f-4f15-44ab-a57f-ad21921e2b3f',2),(90,'2026-04-15 01:07:37.885451',NULL,'2026-04-15 01:07:37.885451',NULL,'2026-04-16 01:07:37.888051','9205ccad-6778-47a3-8d10-a3d90ad0f407',1),(91,'2026-04-15 01:13:03.527134',NULL,'2026-04-15 01:13:03.527134',NULL,'2026-04-16 01:13:03.530213','a67727a7-90b1-41cb-99c4-2d20c62aa466',5),(92,'2026-04-15 01:13:05.577199',NULL,'2026-04-15 01:13:05.577199',NULL,'2026-04-16 01:13:05.578721','9e52bcff-492f-4f25-9b75-265edc3c95d2',2),(93,'2026-04-15 01:14:20.634159',NULL,'2026-04-15 01:14:20.634159',NULL,'2026-04-16 01:14:20.635686','18438c8a-429f-4755-b8ef-097ae51a3e03',5),(94,'2026-04-15 01:14:29.739243',NULL,'2026-04-15 01:14:29.739243',NULL,'2026-04-16 01:14:29.741470','046e2f8a-0574-4519-a03f-96406bff1a6b',1),(95,'2026-04-15 01:30:33.471314',NULL,'2026-04-15 01:30:33.471314',NULL,'2026-04-16 01:30:33.472817','7b50fdbe-336a-4653-b0b0-8d2e5ec7f7d2',5),(96,'2026-04-15 01:30:40.393390',NULL,'2026-04-15 01:30:40.393390',NULL,'2026-04-16 01:30:40.393897','9a5ef06c-f88c-4483-8588-075d66c5bf01',2),(97,'2026-04-15 01:30:50.069966',NULL,'2026-04-15 01:30:50.069966',NULL,'2026-04-16 01:30:50.070966','0c20ed06-d353-4b3b-b093-91e5c7c16b56',1);
+INSERT INTO `refresh_token` VALUES (1,'2026-04-14 18:44:17.384514',NULL,'2026-04-14 18:44:17.384514',NULL,'2026-04-15 18:44:17.392661','811a0ca6-6fd3-438c-bb94-fc625cad9e12',1),(2,'2026-04-14 18:44:21.632767',NULL,'2026-04-14 18:44:21.632767',NULL,'2026-04-15 18:44:21.640439','80a2b95c-8eae-4ba3-93e4-090a02f5989c',1),(3,'2026-04-14 18:45:39.721679',NULL,'2026-04-14 18:45:39.721679',NULL,'2026-04-15 18:45:39.729233','0ad3606b-456d-4b88-8973-2c8f785d247a',1),(4,'2026-04-14 18:48:27.013880',NULL,'2026-04-14 18:48:27.013880',NULL,'2026-04-15 18:48:27.014898','7bad0949-123b-4927-9b86-1e59304e95a5',1),(5,'2026-04-14 19:00:55.213820',NULL,'2026-04-14 19:00:55.213820',NULL,'2026-04-15 19:00:55.220575','6874b3d1-0f24-4db0-a0d9-40b40c02c91e',1),(6,'2026-04-14 19:10:21.338728',NULL,'2026-04-14 19:10:21.338728',NULL,'2026-04-15 19:10:21.367672','8db744df-8ac9-4abf-8466-d01f95f06e9f',2),(7,'2026-04-14 19:11:10.064750',NULL,'2026-04-14 19:11:10.064750',NULL,'2026-04-15 19:11:10.069417','4b33354c-d300-4e81-b8c9-678d0c67c5a0',2),(8,'2026-04-14 19:11:39.073777',NULL,'2026-04-14 19:11:39.073777',NULL,'2026-04-15 19:11:39.076943','7d5a3f90-2fa1-4ee3-9182-661beac13394',2),(9,'2026-04-14 19:11:44.777644',NULL,'2026-04-14 19:11:44.777644',NULL,'2026-04-15 19:11:44.790407','76eb5418-fd3f-4796-868a-6e441ccf53b3',2),(10,'2026-04-14 19:11:50.087591',NULL,'2026-04-14 19:11:50.087591',NULL,'2026-04-15 19:11:50.087591','516b8a84-ecb8-416f-b768-9b024270af51',1),(11,'2026-04-14 19:12:23.422885',NULL,'2026-04-14 19:12:23.422885',NULL,'2026-04-15 19:12:23.424060','7e0e7034-3c9d-4593-a603-80f94f8e3d34',2),(12,'2026-04-14 19:15:49.428410',NULL,'2026-04-14 19:15:49.428410',NULL,'2026-04-15 19:15:49.429454','e67ffd10-f026-4901-b665-73c842c880b7',2),(13,'2026-04-14 19:15:59.805940',NULL,'2026-04-14 19:15:59.805940',NULL,'2026-04-15 19:15:59.807964','2a36b335-d06b-48d2-9d87-80f1cd40115a',1),(14,'2026-04-14 19:16:30.398678',NULL,'2026-04-14 19:16:30.398678',NULL,'2026-04-15 19:16:30.403980','26adb885-60db-42b2-bcba-baf3a44f1994',2),(15,'2026-04-14 19:16:48.053075',NULL,'2026-04-14 19:16:48.053075',NULL,'2026-04-15 19:16:48.055363','568bf425-2681-467e-859d-5f3762ea568c',2),(16,'2026-04-14 19:16:57.236011',NULL,'2026-04-14 19:16:57.236011',NULL,'2026-04-15 19:16:57.238043','38945708-63e8-47d7-a447-8621a0110b7c',2),(17,'2026-04-14 19:21:31.978595',NULL,'2026-04-14 19:21:31.978595',NULL,'2026-04-15 19:21:31.979641','76c1d7dd-36b6-4ad3-89c2-6fe6a67727cb',1),(18,'2026-04-14 19:22:57.632010',NULL,'2026-04-14 19:22:57.632010',NULL,'2026-04-15 19:22:57.634553','a9025526-c3e3-4e12-930d-4ce0ba9e7f8f',2),(19,'2026-04-14 19:25:10.653980',NULL,'2026-04-14 19:25:10.653980',NULL,'2026-04-15 19:25:10.655975','ec4806b6-e196-4ee3-93cb-be22b8ed822c',2),(20,'2026-04-14 19:25:11.610509',NULL,'2026-04-14 19:25:11.610509',NULL,'2026-04-15 19:25:11.613723','69f010f8-dd14-4f9d-aed6-e8550eff6ba6',2),(21,'2026-04-14 19:25:58.836103',NULL,'2026-04-14 19:25:58.836103',NULL,'2026-04-15 19:25:58.840117','8e7fd6b3-68ff-4dd1-88d2-17a7c11803f1',2),(22,'2026-04-14 19:27:07.108985',NULL,'2026-04-14 19:27:07.108985',NULL,'2026-04-15 19:27:07.128589','4ed30719-ae14-4abd-b0a5-e52ad70cb679',2),(23,'2026-04-14 19:29:25.367640',NULL,'2026-04-14 19:29:25.367640',NULL,'2026-04-15 19:29:25.373162','30dd5e8e-9b69-48fc-bbde-4c30c0b8d96e',1),(24,'2026-04-14 19:30:30.391849',NULL,'2026-04-14 19:30:30.391849',NULL,'2026-04-15 19:30:30.398148','30e3b06e-4f8f-408e-8fbe-5fa5fd1a8c2a',5),(25,'2026-04-14 19:30:44.916080',NULL,'2026-04-14 19:30:44.916080',NULL,'2026-04-15 19:30:44.919825','9768854a-555d-4129-b284-4e2ceacda1d5',5),(26,'2026-04-14 19:32:14.024582',NULL,'2026-04-14 19:32:14.024582',NULL,'2026-04-15 19:32:14.027909','7a4b5be8-1186-495d-8856-b0d6b9c70cba',5),(27,'2026-04-14 19:32:45.575025',NULL,'2026-04-14 19:32:45.575025',NULL,'2026-04-15 19:32:45.578795','1da0df19-b0d0-4b76-a54b-282570be2819',5),(28,'2026-04-14 20:51:00.774168',NULL,'2026-04-14 20:51:00.774168',NULL,'2026-04-15 20:51:00.777157','29a73e94-4b42-47ac-bb26-b93f55519eb9',5),(29,'2026-04-14 20:55:59.648741',NULL,'2026-04-14 20:55:59.648741',NULL,'2026-04-15 20:55:59.654750','52bceea5-a758-42f6-9439-f3204c11a33d',1),(30,'2026-04-14 20:56:16.962493',NULL,'2026-04-14 20:56:16.962493',NULL,'2026-04-15 20:56:16.964832','65295d49-811a-4033-994a-a27e83e8830b',2),(31,'2026-04-14 20:56:23.043921',NULL,'2026-04-14 20:56:23.043921',NULL,'2026-04-15 20:56:23.046623','daac3066-e07c-4886-ba49-2b40b73fa0aa',5),(32,'2026-04-14 20:56:39.153747',NULL,'2026-04-14 20:56:39.153747',NULL,'2026-04-15 20:56:39.156750','f41337d7-93d3-4c8e-af18-e7a9759c0129',5),(33,'2026-04-14 20:56:44.997828',NULL,'2026-04-14 20:56:44.997828',NULL,'2026-04-15 20:56:44.998946','ff2d8085-53b8-4add-8893-d37b70391ca1',1),(34,'2026-04-14 21:07:48.546313',NULL,'2026-04-14 21:07:48.546313',NULL,'2026-04-15 21:07:48.547968','c8e596a6-1f42-48f8-b0bd-88fc881a1837',1),(35,'2026-04-14 21:08:04.861303',NULL,'2026-04-14 21:08:04.861303',NULL,'2026-04-15 21:08:04.863854','2c03ad4d-2efa-4390-9e79-ffb4d82edad6',5),(36,'2026-04-14 21:08:36.766157',NULL,'2026-04-14 21:08:36.766157',NULL,'2026-04-15 21:08:36.773669','3ab0d78c-db22-42a4-8fb5-72545312d3be',1),(37,'2026-04-14 21:08:38.828651',NULL,'2026-04-14 21:08:38.828651',NULL,'2026-04-15 21:08:38.834235','ebaf26d6-7d24-4a28-8245-d7e9967af5fb',1),(38,'2026-04-14 21:08:57.579728',NULL,'2026-04-14 21:08:57.579728',NULL,'2026-04-15 21:08:57.581763','dc9a6232-e5a0-4023-a37d-9f134d83dfab',5),(39,'2026-04-14 21:15:34.422958',NULL,'2026-04-14 21:15:34.422958',NULL,'2026-04-15 21:15:34.427513','bac66d6e-226e-4f9b-9d2b-dfa88a65c649',1),(40,'2026-04-14 21:15:40.614944',NULL,'2026-04-14 21:15:40.614944',NULL,'2026-04-15 21:15:40.615941','5d2c049d-e116-4600-adee-422212b7559a',5),(41,'2026-04-14 21:17:06.639367',NULL,'2026-04-14 21:17:06.639367',NULL,'2026-04-15 21:17:06.644927','ce91b6c3-aa4b-4d24-aef2-e0758326571e',5),(42,'2026-04-14 21:17:11.800660',NULL,'2026-04-14 21:17:11.800660',NULL,'2026-04-15 21:17:11.805471','05a9ebbf-634b-4a1e-918b-c949951a5306',1),(43,'2026-04-14 21:17:13.038016',NULL,'2026-04-14 21:17:13.038016',NULL,'2026-04-15 21:17:13.042516','612c3b40-8b31-434d-aa28-c8c298e984c7',1),(44,'2026-04-14 21:17:14.004285',NULL,'2026-04-14 21:17:14.004285',NULL,'2026-04-15 21:17:14.009818','d26225e7-e471-499b-b54a-381aca764650',1),(45,'2026-04-14 21:17:22.623958',NULL,'2026-04-14 21:17:22.623958',NULL,'2026-04-15 21:17:22.626461','dfa917ec-943c-453d-b8bc-f3f1fe5d5f1d',1),(46,'2026-04-14 21:17:28.203911',NULL,'2026-04-14 21:17:28.203911',NULL,'2026-04-15 21:17:28.207199','dd881dc2-9283-44e1-8f12-b37858f3e616',1),(47,'2026-04-14 21:17:30.443427',NULL,'2026-04-14 21:17:30.443427',NULL,'2026-04-15 21:17:30.446551','ddf6d7b4-8cab-4297-ba4f-6287caa134b9',5),(48,'2026-04-14 21:17:37.803769',NULL,'2026-04-14 21:17:37.803769',NULL,'2026-04-15 21:17:37.805271','1ac541dc-abc7-4047-b8d9-5d4b6e3fb878',1),(49,'2026-04-14 21:18:45.522181',NULL,'2026-04-14 21:18:45.522181',NULL,'2026-04-15 21:18:45.522701','8433d021-bde8-4379-861d-1fdb99758230',5),(50,'2026-04-14 21:19:31.853096',NULL,'2026-04-14 21:19:31.853096',NULL,'2026-04-15 21:19:31.854771','d3041178-87f4-4ddd-bee5-a8364dfb0302',5),(51,'2026-04-14 21:20:44.350953',NULL,'2026-04-14 21:20:44.350953',NULL,'2026-04-15 21:20:44.358898','65893886-d7b8-4674-8067-f597bd2f991c',5),(52,'2026-04-14 21:21:32.441014',NULL,'2026-04-14 21:21:32.441014',NULL,'2026-04-15 21:21:32.443015','3c010bd0-4531-4cfa-b02d-337176b73937',5),(53,'2026-04-14 21:22:16.907193',NULL,'2026-04-14 21:22:16.907193',NULL,'2026-04-15 21:22:16.915882','daaa7c80-1310-473f-9fe1-ed8a663cd2c3',5),(54,'2026-04-14 21:22:43.387559',NULL,'2026-04-14 21:22:43.387559',NULL,'2026-04-15 21:22:43.389061','6265aefb-e00b-4940-b1a4-8d704c67f341',5),(55,'2026-04-14 21:22:44.371863',NULL,'2026-04-14 21:22:44.371863',NULL,'2026-04-15 21:22:44.372994','a2c73b2e-131a-41a6-9ebe-39e06965052f',5),(56,'2026-04-14 21:24:08.014211',NULL,'2026-04-14 21:24:08.014211',NULL,'2026-04-15 21:24:08.016552','fd740a4d-1eae-4569-96b7-d1807e8ca4aa',5),(57,'2026-04-14 21:26:42.661816',NULL,'2026-04-14 21:26:42.661816',NULL,'2026-04-15 21:26:42.672806','c2fd8cd7-9268-4f3d-bc84-f451706b0350',5),(58,'2026-04-14 21:26:45.050917',NULL,'2026-04-14 21:26:45.050917',NULL,'2026-04-15 21:26:45.053683','eb895cc4-09f7-4d01-b4cb-0b3d792dfdb0',1),(59,'2026-04-14 21:30:22.545851',NULL,'2026-04-14 21:30:22.545851',NULL,'2026-04-15 21:30:22.549876','45323880-ef5a-44da-9897-831818a47480',5),(60,'2026-04-14 21:36:21.478752',NULL,'2026-04-14 21:36:21.478752',NULL,'2026-04-15 21:36:21.485667','c2d11a33-0ed6-47c0-845f-db86792b9a43',5),(61,'2026-04-14 21:36:24.609622',NULL,'2026-04-14 21:36:24.609622',NULL,'2026-04-15 21:36:24.616157','e23d5e1b-96a0-4d64-8804-a1aae2af84c3',1),(62,'2026-04-14 21:36:30.572831',NULL,'2026-04-14 21:36:30.572831',NULL,'2026-04-15 21:36:30.585363','d837dae5-34c2-4583-9e53-8b1177f98394',5),(63,'2026-04-14 22:34:25.210522',NULL,'2026-04-14 22:34:25.210522',NULL,'2026-04-15 22:34:25.213029','fa9127c5-b385-44d7-8f91-a2cf6c0b52cd',5),(64,'2026-04-14 22:34:31.872741',NULL,'2026-04-14 22:34:31.872741',NULL,'2026-04-15 22:34:31.875259','bcbe5777-a453-42cc-bc4b-73c523adc705',5),(65,'2026-04-14 22:35:05.560577',NULL,'2026-04-14 22:35:05.560577',NULL,'2026-04-15 22:35:05.563529','42523196-18e3-4dc1-a1d0-d481ab1629fa',1),(66,'2026-04-14 22:35:16.261534',NULL,'2026-04-14 22:35:16.261534',NULL,'2026-04-15 22:35:16.263042','57d552be-1b67-411e-9cf4-73b77d7c1f57',5),(67,'2026-04-14 22:41:32.735898',NULL,'2026-04-14 22:41:32.735898',NULL,'2026-04-15 22:41:32.744593','3d1ed884-2f57-4ba3-af75-81985b1e2575',5),(68,'2026-04-14 22:41:35.478741',NULL,'2026-04-14 22:41:35.478741',NULL,'2026-04-15 22:41:35.481760','3ec001c3-5dde-4b20-908d-1f8ef041c514',1),(69,'2026-04-14 22:52:44.119996',NULL,'2026-04-14 22:52:44.119996',NULL,'2026-04-15 22:52:44.124508','8cd96b71-f5cb-4eec-ad77-e6ba84cfd13d',5),(70,'2026-04-14 22:53:37.859759',NULL,'2026-04-14 22:53:37.859759',NULL,'2026-04-15 22:53:37.875143','e1e8cfb5-01ed-421d-80cf-c7ab8a9f2315',5),(71,'2026-04-14 23:03:02.197298',NULL,'2026-04-14 23:03:02.197298',NULL,'2026-04-15 23:03:02.201745','e72a30eb-0643-4f1c-9e57-9e8c55221dc2',1),(72,'2026-04-14 23:03:06.851580',NULL,'2026-04-14 23:03:06.851580',NULL,'2026-04-15 23:03:06.855219','53e1e4cc-42c2-432c-9433-2e1b3294413d',5),(73,'2026-04-14 23:03:38.898173',NULL,'2026-04-14 23:03:38.898173',NULL,'2026-04-15 23:03:38.901252','414e6801-76d0-4c52-8661-6fb366975ef1',5),(74,'2026-04-14 23:10:29.209199',NULL,'2026-04-14 23:10:29.209199',NULL,'2026-04-15 23:10:29.210198','545cb7a5-b463-40d4-80e7-9af64d689f60',5),(75,'2026-04-14 23:10:42.028556',NULL,'2026-04-14 23:10:42.028556',NULL,'2026-04-15 23:10:42.030593','a67bfcf2-9c75-4ebe-b4da-6376ebe100ac',5),(76,'2026-04-14 23:10:45.219369',NULL,'2026-04-14 23:10:45.219369',NULL,'2026-04-15 23:10:45.223889','bb880824-6763-473b-9c95-0bcb385f9653',5),(77,'2026-04-14 23:11:11.978554',NULL,'2026-04-14 23:11:11.978554',NULL,'2026-04-15 23:11:11.978554','bf786e23-7636-4dd8-8cae-1a4619277509',2),(78,'2026-04-14 23:11:15.760047',NULL,'2026-04-14 23:11:15.760047',NULL,'2026-04-15 23:11:15.761632','f4844b75-afb1-4ad4-93dd-20f21a1f34a3',5),(79,'2026-04-14 23:11:32.136650',NULL,'2026-04-14 23:11:32.136650',NULL,'2026-04-15 23:11:32.139169','4842c254-e627-459f-92a5-0939312adf67',5),(80,'2026-04-14 23:11:37.710342',NULL,'2026-04-14 23:11:37.710342',NULL,'2026-04-15 23:11:37.711962','c0de3b34-3e73-4fdb-bac0-e597fa0e2546',2),(81,'2026-04-14 23:11:48.704771',NULL,'2026-04-14 23:11:48.704771',NULL,'2026-04-15 23:11:48.704771','ef8715f5-81f6-4de0-847b-111654a4b357',5),(82,'2026-04-14 23:12:48.005364',NULL,'2026-04-14 23:12:48.005364',NULL,'2026-04-15 23:12:48.009124','0a15331c-7247-46fc-b611-a1ad8766f72d',5),(83,'2026-04-14 23:13:49.230579',NULL,'2026-04-14 23:13:49.230579',NULL,'2026-04-15 23:13:49.234109','01b984a1-e0f3-4d82-a08c-f883ba054e6e',5),(84,'2026-04-14 23:20:01.775040',NULL,'2026-04-14 23:20:01.775040',NULL,'2026-04-15 23:20:01.785456','9ef39589-26fa-4d70-a056-984be3111d94',5),(85,'2026-04-14 23:20:29.096101',NULL,'2026-04-14 23:20:29.096101',NULL,'2026-04-15 23:20:29.101949','8dd568d7-1ebb-4091-988b-491750483e50',2),(86,'2026-04-14 23:37:42.615061',NULL,'2026-04-14 23:37:42.615061',NULL,'2026-04-15 23:37:42.618666','1ce6a672-d893-44a4-9107-79a5c1a64e0d',6),(87,'2026-04-14 23:38:56.060052',NULL,'2026-04-14 23:38:56.060052',NULL,'2026-04-15 23:38:56.064294','c4fc18f4-9e8c-4bf8-bc9c-8dc34b27a00e',6),(88,'2026-04-14 23:40:40.290413',NULL,'2026-04-14 23:40:40.290413',NULL,'2026-04-15 23:40:40.295057','6fd05de5-4a00-4ecb-b842-965de8dbc082',1),(89,'2026-04-15 01:07:28.848031',NULL,'2026-04-15 01:07:28.848031',NULL,'2026-04-16 01:07:28.849029','e05e922f-4f15-44ab-a57f-ad21921e2b3f',2),(90,'2026-04-15 01:07:37.885451',NULL,'2026-04-15 01:07:37.885451',NULL,'2026-04-16 01:07:37.888051','9205ccad-6778-47a3-8d10-a3d90ad0f407',1),(91,'2026-04-15 01:13:03.527134',NULL,'2026-04-15 01:13:03.527134',NULL,'2026-04-16 01:13:03.530213','a67727a7-90b1-41cb-99c4-2d20c62aa466',5),(92,'2026-04-15 01:13:05.577199',NULL,'2026-04-15 01:13:05.577199',NULL,'2026-04-16 01:13:05.578721','9e52bcff-492f-4f25-9b75-265edc3c95d2',2),(93,'2026-04-15 01:14:20.634159',NULL,'2026-04-15 01:14:20.634159',NULL,'2026-04-16 01:14:20.635686','18438c8a-429f-4755-b8ef-097ae51a3e03',5),(94,'2026-04-15 01:14:29.739243',NULL,'2026-04-15 01:14:29.739243',NULL,'2026-04-16 01:14:29.741470','046e2f8a-0574-4519-a03f-96406bff1a6b',1),(95,'2026-04-15 01:30:33.471314',NULL,'2026-04-15 01:30:33.471314',NULL,'2026-04-16 01:30:33.472817','7b50fdbe-336a-4653-b0b0-8d2e5ec7f7d2',5),(96,'2026-04-15 01:30:40.393390',NULL,'2026-04-15 01:30:40.393390',NULL,'2026-04-16 01:30:40.393897','9a5ef06c-f88c-4483-8588-075d66c5bf01',2),(97,'2026-04-15 01:30:50.069966',NULL,'2026-04-15 01:30:50.069966',NULL,'2026-04-16 01:30:50.070966','0c20ed06-d353-4b3b-b093-91e5c7c16b56',1),(98,'2026-04-15 17:18:07.903862',NULL,'2026-04-15 17:18:07.903862',NULL,'2026-04-16 17:18:07.906390','ae4ebe0f-ec2e-4dcf-b7cb-db8674abc53e',1),(99,'2026-04-15 17:18:11.060997',NULL,'2026-04-15 17:18:11.060997',NULL,'2026-04-16 17:18:11.079638','2cd4b3df-167f-4a5d-92cd-991eecf44e80',1),(100,'2026-04-15 17:18:17.103461',NULL,'2026-04-15 17:18:17.103461',NULL,'2026-04-16 17:18:17.106015','3d665f3d-f723-45a2-a11c-27c2acfb6a98',1),(101,'2026-04-15 17:20:38.971315',NULL,'2026-04-15 17:20:38.971315',NULL,'2026-04-16 17:20:38.971818','dbfd93f1-50e9-4579-bba7-bf18f1e2e609',1),(102,'2026-04-15 17:20:42.451152',NULL,'2026-04-15 17:20:42.451152',NULL,'2026-04-16 17:20:42.452704','433a94ef-2abf-42e3-ab1b-a5e2da7ec8f3',5),(103,'2026-04-15 17:30:06.924950',NULL,'2026-04-15 17:30:06.924950',NULL,'2026-04-16 17:30:06.928663','0f00fcc3-9db6-4360-8792-ba57da3587af',1),(104,'2026-04-15 17:43:43.372007',NULL,'2026-04-15 17:43:43.372007',NULL,'2026-04-16 17:43:43.399817','016a8062-1589-4519-b480-6db58c3d2a9a',5),(105,'2026-04-15 17:44:23.986194',NULL,'2026-04-15 17:44:23.986194',NULL,'2026-04-16 17:44:23.989220','eaa8bece-f316-441b-902d-22e4390f1b9f',2),(106,'2026-04-15 17:45:04.571400',NULL,'2026-04-15 17:45:04.571400',NULL,'2026-04-16 17:45:04.575929','c07f5ffd-7383-4912-85a8-87652f26668b',2),(107,'2026-04-15 17:45:09.070701',NULL,'2026-04-15 17:45:09.070701',NULL,'2026-04-16 17:45:09.102588','cc582c76-1d48-4d6a-9a89-6d60cc23d732',2),(108,'2026-04-15 17:45:12.265354',NULL,'2026-04-15 17:45:12.265354',NULL,'2026-04-16 17:45:12.267364','ad8cce8f-b8e4-4e16-9b2c-8e3cc61a27df',5),(109,'2026-04-15 17:45:13.531747',NULL,'2026-04-15 17:45:13.531747',NULL,'2026-04-16 17:45:13.533747','a20766ea-4b0b-48a9-b5fa-cc5d36f5ee0a',5),(110,'2026-04-15 17:46:30.677964',NULL,'2026-04-15 17:46:30.677964',NULL,'2026-04-16 17:46:30.679982','c684c7e4-9fa3-46bf-9293-840c49b84951',5),(111,'2026-04-15 17:46:31.991252',NULL,'2026-04-15 17:46:31.991252',NULL,'2026-04-16 17:46:31.994293','f53795b2-c2ad-4be5-9604-ee95516f6a26',5),(112,'2026-04-15 17:48:16.913265',NULL,'2026-04-15 17:48:16.913265',NULL,'2026-04-16 17:48:16.917783','aa5f4583-b005-4611-b874-57d7cbcae126',5),(113,'2026-04-15 17:48:29.372530',NULL,'2026-04-15 17:48:29.372530',NULL,'2026-04-16 17:48:29.374043','bf19ca54-444d-46de-8c81-4d091642f0c5',2),(114,'2026-04-15 17:49:43.197446',NULL,'2026-04-15 17:49:43.197446',NULL,'2026-04-16 17:49:43.201469','8bf2ea52-81ee-4ee1-b2ad-e6c70df68a20',1),(115,'2026-04-15 17:51:49.199919',NULL,'2026-04-15 17:51:49.199919',NULL,'2026-04-16 17:51:49.212978','e675095e-e7da-4f03-adf4-0251b5dcfbf8',5),(116,'2026-04-15 17:52:10.012702',NULL,'2026-04-15 17:52:10.012702',NULL,'2026-04-16 17:52:10.014935','41ac1133-72f4-4eb5-8664-82989a235074',2),(117,'2026-04-15 17:52:14.402934',NULL,'2026-04-15 17:52:14.402934',NULL,'2026-04-16 17:52:14.405849','c3ae03d8-0652-48fd-bd66-6118d1db117a',1),(118,'2026-04-15 20:51:21.952347',NULL,'2026-04-15 20:51:21.952347',NULL,'2026-04-16 20:51:21.975823','13ade39c-73a8-4822-8aad-14e7fc963a18',5),(119,'2026-04-15 20:51:44.303675',NULL,'2026-04-15 20:51:44.303675',NULL,'2026-04-16 20:51:44.305681','bb5c5315-9a4b-449d-ad1a-6c35d3979384',6),(120,'2026-04-17 08:39:18.018617',NULL,'2026-04-17 08:39:18.018617',NULL,'2026-04-18 08:39:18.020489','11b18df5-093c-465a-b852-f6ac3af8330e',1),(121,'2026-04-17 08:47:45.080561',NULL,'2026-04-17 08:47:45.080561',NULL,'2026-04-18 08:47:45.082119','2f1a404f-918c-4153-a3ef-5ec9af70166c',6),(122,'2026-04-17 08:59:29.542310',NULL,'2026-04-17 08:59:29.542310',NULL,'2026-04-18 08:59:29.543692','7c34281a-d665-4ec7-a2ce-56b4825d2981',7),(123,'2026-04-17 09:03:32.600831',NULL,'2026-04-17 09:03:32.600831',NULL,'2026-04-18 09:03:32.635156','9133260c-fc55-43a8-b8e6-b38a148339bf',1),(124,'2026-04-17 11:48:56.100294',NULL,'2026-04-17 11:48:56.100294',NULL,'2026-04-18 11:48:56.102866','073fcb10-f795-4e9b-9b80-82a946521b80',1),(125,'2026-04-17 11:48:58.709189',NULL,'2026-04-17 11:48:58.709189',NULL,'2026-04-18 11:48:58.709189','d7114ced-9b63-4582-8a22-8625afd649bf',6),(126,'2026-04-17 11:57:00.296675',NULL,'2026-04-17 11:57:00.296675',NULL,'2026-04-18 11:57:00.298689','474b020f-f190-402c-8bd2-f0badf8d4425',8),(127,'2026-04-17 12:28:38.833569',NULL,'2026-04-17 12:28:38.833569',NULL,'2026-04-18 12:28:38.837059','a8391d01-9cdd-4584-98f0-91d2110afc64',6),(128,'2026-04-17 12:31:24.380047',NULL,'2026-04-17 12:31:24.380047',NULL,'2026-04-18 12:31:24.381628','e1f40a82-93fe-409c-b501-5a10c6d5c1f0',6),(129,'2026-04-17 15:53:02.134277',NULL,'2026-04-17 15:53:02.134277',NULL,'2026-04-18 15:53:02.137462','eff7c0de-6ba5-41dc-bab1-8a66e536a5d0',6),(130,'2026-04-17 15:57:44.483010',NULL,'2026-04-17 15:57:44.483010',NULL,'2026-04-18 15:57:44.484100','cd2d10b7-b02c-431a-b4a7-f8c54079aecc',1),(131,'2026-04-17 16:01:47.526623',NULL,'2026-04-17 16:01:47.526623',NULL,'2026-04-18 16:01:47.544132','d86cf430-89ea-4b92-97f4-cc8c976c5a3b',6),(132,'2026-04-17 16:01:56.576456',NULL,'2026-04-17 16:01:56.576456',NULL,'2026-04-18 16:01:56.583079','50cdc6be-fe89-4765-8eab-d662a32d1961',2),(133,'2026-04-17 16:02:18.417718',NULL,'2026-04-17 16:02:18.417718',NULL,'2026-04-18 16:02:18.433302','bbc644e7-5ec5-4acc-a100-c1aa546cfb3f',5),(134,'2026-04-17 16:02:24.318924',NULL,'2026-04-17 16:02:24.318924',NULL,'2026-04-18 16:02:24.429195','4ab7bd09-ac03-42ab-a4e6-e5d016113da0',5),(135,'2026-04-17 16:02:35.327015',NULL,'2026-04-17 16:02:35.327015',NULL,'2026-04-18 16:02:35.330110','9bfe27f7-9321-47bd-8069-9e7b4740846c',1),(136,'2026-04-17 20:31:52.399402',NULL,'2026-04-17 20:31:52.399402',NULL,'2026-04-18 20:31:52.406249','e892373e-7b6a-4d37-b4b7-c5a125cd9aa1',1),(137,'2026-04-17 20:31:56.856659',NULL,'2026-04-17 20:31:56.856659',NULL,'2026-04-18 20:31:56.859664','dcf09da7-a561-4842-832f-6f5bdea7f86a',1),(138,'2026-04-17 20:31:59.341624',NULL,'2026-04-17 20:31:59.341624',NULL,'2026-04-18 20:31:59.346743','1716a9bb-1e56-4110-92e6-fe46edcb5548',1),(139,'2026-04-17 20:33:22.669772',NULL,'2026-04-17 20:33:22.669772',NULL,'2026-04-18 20:33:22.677408','48b7ae81-ac0e-4b26-b6cc-184720990466',1),(140,'2026-04-17 20:37:02.442657',NULL,'2026-04-17 20:37:02.442657',NULL,'2026-04-18 20:37:02.443163','0cdac186-b3df-4e5d-afb8-d4f64cf8e576',6),(141,'2026-04-17 20:38:54.417937',NULL,'2026-04-17 20:38:54.417937',NULL,'2026-04-18 20:38:54.425983','9c895b35-7d57-44bd-9450-9c05753dc7f3',5),(142,'2026-04-17 20:38:56.323968',NULL,'2026-04-17 20:38:56.323968',NULL,'2026-04-18 20:38:56.331991','4f443014-a0f4-4bcf-b720-0a41907f9f77',5),(143,'2026-04-17 20:38:58.099193',NULL,'2026-04-17 20:38:58.099193',NULL,'2026-04-18 20:38:58.100310','97e45d53-3ef8-41da-b580-65a56f01df64',5),(144,'2026-04-17 20:39:41.920527',NULL,'2026-04-17 20:39:41.920527',NULL,'2026-04-18 20:39:41.920527','94af2bd5-00ba-4fe2-b41e-0cc838d93e66',1),(145,'2026-04-17 21:07:05.379924',NULL,'2026-04-17 21:07:05.379924',NULL,'2026-04-18 21:07:05.391669','6315326f-c20a-44b9-96f5-ae3b2ecb0e65',1),(146,'2026-04-17 21:29:20.447204',NULL,'2026-04-17 21:29:20.447204',NULL,'2026-04-18 21:29:20.448211','1de69fb5-bead-4782-8580-cb55bd993889',5),(147,'2026-04-17 21:29:23.804787',NULL,'2026-04-17 21:29:23.804787',NULL,'2026-04-18 21:29:23.806405','653dc0b9-3c22-4660-b218-ebcdd42223e5',5),(148,'2026-04-17 21:29:25.686499',NULL,'2026-04-17 21:29:25.686499',NULL,'2026-04-18 21:29:25.686499','fc9e2fb9-8946-48d2-95a1-08f3cbbdf149',5),(149,'2026-04-17 21:33:04.657116',NULL,'2026-04-17 21:33:04.657116',NULL,'2026-04-18 21:33:04.661643','299d71e5-dcf5-4d4b-ba46-a02a04c4fad1',9),(150,'2026-04-17 21:43:57.318728',NULL,'2026-04-17 21:43:57.318728',NULL,'2026-04-18 21:43:57.320769','93c1524b-b8cf-457e-bac9-ae3e1c10b035',5),(151,'2026-04-19 17:59:39.348751',NULL,'2026-04-19 17:59:39.348751',NULL,'2026-04-20 17:59:39.351332','4ec98ddd-5fee-4ad8-8f1f-4d1ed0e9f24a',9),(152,'2026-04-19 20:15:13.509040',NULL,'2026-04-19 20:15:13.509040',NULL,'2026-04-20 20:15:13.533514','3d208a14-70db-4675-a18e-257b9c0f6231',1),(153,'2026-04-28 02:00:51.065041',NULL,'2026-04-28 02:00:51.065041',NULL,'2026-04-29 02:00:51.067546','61570018-7733-493f-b829-73aa94faff07',1),(154,'2026-04-28 02:09:46.680477',NULL,'2026-04-28 02:09:46.680477',NULL,'2026-04-29 02:09:46.684125','a74de309-1566-4e85-b8cd-495d95dd4a1f',1),(155,'2026-04-28 02:15:46.852331',NULL,'2026-04-28 02:15:46.852331',NULL,'2026-04-29 02:15:46.856841','c2001a7f-5ad1-4f23-af5e-ae181a90240a',9),(156,'2026-04-28 02:17:39.532526',NULL,'2026-04-28 02:17:39.532526',NULL,'2026-04-29 02:17:39.533562','62a1b1ae-df45-49ff-bb3c-0b99cacfe166',9),(157,'2026-04-28 02:19:26.353388',NULL,'2026-04-28 02:19:26.353388',NULL,'2026-04-29 02:19:26.354397','89fd1a64-fb58-4602-993e-31e0fbd96b5f',1),(158,'2026-04-28 02:34:00.408320',NULL,'2026-04-28 02:34:00.408320',NULL,'2026-04-29 02:34:00.412368','3a6121d2-741a-4550-9a7c-ed2bd25c84a3',7),(159,'2026-04-29 05:37:46.491239',NULL,'2026-04-29 05:37:46.491239',NULL,'2026-04-30 05:37:46.496297','42ccc341-46f2-40a9-b865-01439048500f',7),(160,'2026-04-29 05:39:09.038720',NULL,'2026-04-29 05:39:09.038720',NULL,'2026-04-30 05:39:09.041746','c664b06e-780d-4355-affe-01d3cfc9f364',1),(161,'2026-04-29 08:41:30.811238',NULL,'2026-04-29 08:41:30.811238',NULL,'2026-04-30 08:41:30.813068','eade13d6-0cf7-4c85-8df2-d3411b99eaff',7),(162,'2026-04-29 09:16:02.600017',NULL,'2026-04-29 09:16:02.600017',NULL,'2026-04-30 09:16:02.613161','49f6331e-f6c7-4336-9544-20ca2a965ae7',1),(163,'2026-05-03 01:21:23.781638',NULL,'2026-05-03 01:21:23.781638',NULL,'2026-05-04 01:21:23.784653','c8e4dd40-ce9b-46c1-9382-9cbcf0995bbb',7),(164,'2026-05-03 01:37:50.900174',NULL,'2026-05-03 01:37:50.900174',NULL,'2026-05-04 01:37:50.901693','73312a45-1e41-43eb-b0c1-525f0b7b9a10',9),(165,'2026-05-03 01:48:09.827643',NULL,'2026-05-03 01:48:09.827643',NULL,'2026-05-04 01:48:09.830853','b798f4ca-7ac2-4655-bc77-ecded888d476',9),(166,'2026-05-03 02:16:19.933325',NULL,'2026-05-03 02:16:19.933325',NULL,'2026-05-04 02:16:19.936993','06fa3331-f3ef-4d4a-8b87-1bef0b0762e1',9),(167,'2026-05-03 02:29:14.901623',NULL,'2026-05-03 02:29:14.901623',NULL,'2026-05-04 02:29:14.903670','e8a37197-5bda-4d1e-bf60-df922125ca83',1),(168,'2026-05-03 03:05:23.199872',NULL,'2026-05-03 03:05:23.199872',NULL,'2026-05-04 03:05:23.202235','fa68886f-02e4-4cc6-a2d5-fc3690d5c24c',9),(169,'2026-05-03 03:18:03.106689',NULL,'2026-05-03 03:18:03.106689',NULL,'2026-05-04 03:18:03.109200','4f39f500-4d4a-453a-929a-98ca6a588465',7),(170,'2026-05-03 03:36:50.910207',NULL,'2026-05-03 03:36:50.910207',NULL,'2026-05-04 03:36:50.913742','076ce013-fc62-401b-b5b1-cf0ec965fb51',9),(171,'2026-05-03 03:44:10.964266',NULL,'2026-05-03 03:44:10.964266',NULL,'2026-05-04 03:44:11.012637','47e15ad4-010d-4612-a930-51b3948e1bb3',1),(172,'2026-05-03 03:51:37.903287',NULL,'2026-05-03 03:51:37.903287',NULL,'2026-05-04 03:51:37.905644','410a4b89-e16a-415c-927f-355c86587fef',7),(173,'2026-05-03 03:59:14.902084',NULL,'2026-05-03 03:59:14.902084',NULL,'2026-05-04 03:59:14.903624','38209b8b-49f7-418e-a788-6b2bfd74b7ed',7),(174,'2026-05-03 04:13:54.895057',NULL,'2026-05-03 04:13:54.895057',NULL,'2026-05-04 04:13:54.902102','252e18be-1895-428a-aacd-b260d8416a07',1),(175,'2026-05-03 04:13:57.659902',NULL,'2026-05-03 04:13:57.659902',NULL,'2026-05-04 04:13:57.666531','00dbfc52-c740-4bbc-b449-adde9ec50e76',1),(176,'2026-05-03 04:50:04.251697',NULL,'2026-05-03 04:50:04.251697',NULL,'2026-05-04 04:50:04.253848','1e919e6e-936a-4552-9aef-cc31e77cac94',7),(177,'2026-05-03 17:31:50.471895',NULL,'2026-05-03 17:31:50.471895',NULL,'2026-05-04 17:31:50.476587','a3e093ca-62f9-46ca-a6aa-36112e2db83b',1),(178,'2026-05-03 17:32:39.050556',NULL,'2026-05-03 17:32:39.050556',NULL,'2026-05-04 17:32:39.054069','7e1e2d04-6dac-4cae-baac-e50db4e56b92',7),(179,'2026-05-03 17:46:42.770350',NULL,'2026-05-03 17:46:42.770350',NULL,'2026-05-04 17:46:42.772414','2b080410-69d4-44aa-a2d5-398b7c4a4032',7),(180,'2026-05-03 17:52:41.143784',NULL,'2026-05-03 17:52:41.143784',NULL,'2026-05-04 17:52:41.146850','68e0b899-472e-45db-893d-aca7e563157c',5),(181,'2026-05-03 17:52:42.906866',NULL,'2026-05-03 17:52:42.906866',NULL,'2026-05-04 17:52:42.908206','4d57d648-e710-43c6-91ad-5cb43fe8cea7',5),(182,'2026-05-03 17:54:55.778238',NULL,'2026-05-03 17:54:55.778238',NULL,'2026-05-04 17:54:55.783250','d875fb2f-618d-4f6d-a3ad-f493bd4c429c',7);
 /*!40000 ALTER TABLE `refresh_token` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1203,7 +1237,7 @@ CREATE TABLE `review` (
   KEY `FKiyof1sindb9qiqr9o8npj8klt` (`product_id`),
   CONSTRAINT `FKiyf57dy48lyiftdrf7y87rnxi` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   CONSTRAINT `FKiyof1sindb9qiqr9o8npj8klt` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1212,7 +1246,6 @@ CREATE TABLE `review` (
 
 LOCK TABLES `review` WRITE;
 /*!40000 ALTER TABLE `review` DISABLE KEYS */;
-INSERT INTO `review` VALUES (1,'2026-04-14 23:41:47.826854',NULL,'2026-04-14 23:41:47.826854',NULL,'ưeqeqweq',1,NULL,1,1,6);
 /*!40000 ALTER TABLE `review` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1297,7 +1330,7 @@ CREATE TABLE `role` (
   `status` tinyint NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_c36say97xydpmgigg38qv5l2p` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1306,7 +1339,7 @@ CREATE TABLE `role` (
 
 LOCK TABLES `role` WRITE;
 /*!40000 ALTER TABLE `role` DISABLE KEYS */;
-INSERT INTO `role` VALUES (1,'2026-04-14 18:37:29.000000',NULL,'2026-04-14 18:37:29.000000',NULL,'ADMIN','Quản trị viên hệ thống',1),(2,'2026-04-14 18:37:29.000000',NULL,'2026-04-14 18:37:29.000000',NULL,'MANAGER','Quản lý (Sản phẩm & Kho)',1),(3,'2026-04-14 18:37:29.000000',NULL,'2026-04-14 18:37:29.000000',NULL,'OPERATOR','Nhân viên vận hành (Đơn hàng)',1),(4,'2026-04-14 18:37:29.000000',NULL,'2026-04-14 18:37:29.000000',NULL,'CUSTOMER','Khách hàng',1);
+INSERT INTO `role` VALUES (1,'2026-04-14 18:37:29.000000',NULL,'2026-04-14 18:37:29.000000',NULL,'ADMIN','Quản trị viên hệ thống',1),(2,'2026-04-14 18:37:29.000000',NULL,'2026-04-14 18:37:29.000000',NULL,'MANAGER','Quản lý (Sản phẩm & Kho)',1),(3,'2026-04-14 18:37:29.000000',NULL,'2026-04-14 18:37:29.000000',NULL,'OPERATOR','Nhân viên vận hành (Đơn hàng)',1),(4,'2026-04-14 18:37:29.000000',NULL,'2026-04-14 18:37:29.000000',NULL,'CUSTOMER','Khách hàng',1),(6,'2026-04-28 01:52:37.000000',NULL,'2026-04-28 01:52:37.000000',NULL,'SHIPPER','Người giao hàng',1);
 /*!40000 ALTER TABLE `role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1331,7 +1364,7 @@ CREATE TABLE `room` (
   UNIQUE KEY `UK_p6gc8ipudo7mwq8wwq2t05iov` (`last_message_id`),
   CONSTRAINT `FKgklsfkcs5o94kiti4qlrsb3pq` FOREIGN KEY (`last_message_id`) REFERENCES `message` (`id`),
   CONSTRAINT `FKj8a5tk6wghd3x2sxgksj2fv3o` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1340,7 +1373,7 @@ CREATE TABLE `room` (
 
 LOCK TABLES `room` WRITE;
 /*!40000 ALTER TABLE `room` DISABLE KEYS */;
-INSERT INTO `room` VALUES (1,'2026-04-14 23:45:18.120779',NULL,'2026-04-14 23:58:16.710365',NULL,'Hoang Nghia Hieu',2,6);
+INSERT INTO `room` VALUES (1,'2026-04-14 23:45:18.120779',NULL,'2026-04-17 21:44:10.867823',NULL,'Hoang Nghia Hieu',4,6),(2,'2026-04-29 06:39:54.600358',NULL,'2026-04-29 06:39:54.600358',NULL,'Đặng Đức Hiêu',NULL,7);
 /*!40000 ALTER TABLE `room` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1363,7 +1396,7 @@ CREATE TABLE `specification` (
   `status` tinyint NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_3lssqgpri39w9a5y932fgdvsa` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1372,6 +1405,7 @@ CREATE TABLE `specification` (
 
 LOCK TABLES `specification` WRITE;
 /*!40000 ALTER TABLE `specification` DISABLE KEYS */;
+INSERT INTO `specification` VALUES (1,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'SOTRANG',NULL,'Số trang',1),(2,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'KICHTHUOC',NULL,'Kích thước',1),(3,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'TRONGLUONG',NULL,'Trọng lượng',1),(4,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'NAMXB',NULL,'Năm xuất bản',1),(5,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'DINHDANG',NULL,'Định dạng',1);
 /*!40000 ALTER TABLE `specification` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1395,7 +1429,7 @@ CREATE TABLE `storage_location` (
   PRIMARY KEY (`id`),
   KEY `FK956y7ykytekn259p907onqkiw` (`warehouse_id`),
   CONSTRAINT `FK956y7ykytekn259p907onqkiw` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouse` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1404,7 +1438,7 @@ CREATE TABLE `storage_location` (
 
 LOCK TABLES `storage_location` WRITE;
 /*!40000 ALTER TABLE `storage_location` DISABLE KEYS */;
-INSERT INTO `storage_location` VALUES (5,'2026-04-15 01:27:14.318151',NULL,'2026-04-15 01:27:14.318151',NULL,NULL,NULL,NULL,5),(8,'2026-04-15 01:47:52.281904',NULL,'2026-04-15 01:47:52.281904',NULL,NULL,NULL,NULL,8),(9,'2026-04-15 01:52:02.501627',NULL,'2026-04-15 01:52:02.501627',NULL,NULL,NULL,NULL,9),(10,'2026-04-15 01:53:43.361638',NULL,'2026-04-15 01:53:43.361638',NULL,NULL,NULL,NULL,10);
+INSERT INTO `storage_location` VALUES (1,'2026-05-03 06:25:53.010926',NULL,'2026-05-03 06:25:53.010926',NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `storage_location` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1440,7 +1474,7 @@ CREATE TABLE `supplier` (
   UNIQUE KEY `UK_u0lh6hby20ok7au7646wrewl` (`code`),
   UNIQUE KEY `UK_78419iap4p0q918rhlcr1phkl` (`address_id`),
   CONSTRAINT `FK95a8oipih48obtbhltjy7hgvb` FOREIGN KEY (`address_id`) REFERENCES `address` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1449,6 +1483,7 @@ CREATE TABLE `supplier` (
 
 LOCK TABLES `supplier` WRITE;
 /*!40000 ALTER TABLE `supplier` DISABLE KEYS */;
+INSERT INTO `supplier` VALUES (1,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'NXBTRE',NULL,NULL,NULL,NULL,NULL,'NXB Trẻ',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL),(2,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'NXBKD',NULL,NULL,NULL,NULL,NULL,'NXB Kim Đồng',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL),(3,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'NXBHNV',NULL,NULL,NULL,NULL,NULL,'NXB Hội Nhà Văn',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL),(4,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'NHANAM',NULL,NULL,NULL,NULL,NULL,'Nhã Nam',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL),(5,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'ALPHA',NULL,NULL,NULL,NULL,NULL,'Alphabooks',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL),(6,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'FN',NULL,NULL,NULL,NULL,NULL,'First News',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `supplier` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1470,7 +1505,7 @@ CREATE TABLE `tag` (
   `status` tinyint NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_1afk1y1o95l8oxxjxsqvelm3o` (`slug`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1479,7 +1514,7 @@ CREATE TABLE `tag` (
 
 LOCK TABLES `tag` WRITE;
 /*!40000 ALTER TABLE `tag` DISABLE KEYS */;
-INSERT INTO `tag` VALUES (1,'2026-04-14 18:51:32.847678',NULL,'2026-04-14 18:51:32.847678',NULL,'rewe','rrwer',1);
+INSERT INTO `tag` VALUES (1,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'Bán chạy','ban-chay',1),(2,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'Mới về','moi-ve',1),(3,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'Khuyên đọc','khuyen-doc',1),(4,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'Giảm giá','giam-gia',1),(5,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'Kinh điển','kinh-dien',1);
 /*!40000 ALTER TABLE `tag` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1499,7 +1534,7 @@ CREATE TABLE `unit` (
   `name` varchar(255) NOT NULL,
   `status` tinyint NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1508,6 +1543,7 @@ CREATE TABLE `unit` (
 
 LOCK TABLES `unit` WRITE;
 /*!40000 ALTER TABLE `unit` DISABLE KEYS */;
+INSERT INTO `unit` VALUES (1,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'Cuốn',1),(2,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'Bộ',1),(3,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'Tờ',1),(4,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'Hộp',1),(5,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,'Cái',1);
 /*!40000 ALTER TABLE `unit` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1533,13 +1569,10 @@ CREATE TABLE `user` (
   `reset_password_token` varchar(255) DEFAULT NULL,
   `status` tinyint NOT NULL,
   `username` varchar(255) NOT NULL,
-  `address_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_ob8kqyqqgmefl0aco34akdtpe` (`email`),
-  UNIQUE KEY `UK_sb8bbouer5wak8vyiiy4pf2bx` (`username`),
-  UNIQUE KEY `UK_dhlcfg8h1drrgu0irs1ro3ohb` (`address_id`),
-  CONSTRAINT `FKddefmvbrws3hvl5t0hnnsv8ox` FOREIGN KEY (`address_id`) REFERENCES `address` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `UK_sb8bbouer5wak8vyiiy4pf2bx` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1548,7 +1581,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'2026-04-14 18:42:46.000000',NULL,'2026-04-14 18:42:46.000000',NULL,NULL,'admin@hnh.com','System Admin','M','$2a$10$Vm4BKUqryGZ.vOdPGpTZMu99Ab9AENmcBLcgJ.tFWvW9IbR/S/2ny','0987654321',NULL,1,'admin',1),(2,'2026-04-14 19:09:56.588057',NULL,'2026-04-14 19:09:56.588057',NULL,NULL,'duchieudang1210@gmail.com','Thêm người dùng','M','$2a$10$Vm4BKUqryGZ.vOdPGpTZMu99Ab9AENmcBLcgJ.tFWvW9IbR/S/2ny','0987654321',NULL,1,'hieu',47),(5,'2026-04-14 19:30:01.584774',NULL,'2026-04-14 19:30:01.584774',NULL,'21','admin@gmail.com','323','M','$2a$10$uKCGBHeJGagubuIFCO4UBuFSORp355Q4xcK3qN6JpWNIYrCAcevga','0987654321',NULL,1,'hieu2',50),(6,'2026-04-14 23:30:39.190075',NULL,'2026-04-14 23:30:39.190075',NULL,NULL,'ddhntt3@gmail.com','Hoang Nghia Hieu','M','$2a$10$Vm4BKUqryGZ.vOdPGpTZMu99Ab9AENmcBLcgJ.tFWvW9IbR/S/2ny','0912345678',NULL,1,'hieu123',51);
+INSERT INTO `user` VALUES (1,'2026-04-14 18:42:46.000000',NULL,'2026-04-14 18:42:46.000000',NULL,NULL,'admin@hnh.com','System Admin','M','$2a$10$Vm4BKUqryGZ.vOdPGpTZMu99Ab9AENmcBLcgJ.tFWvW9IbR/S/2ny','0987654321',NULL,1,'admin'),(2,'2026-04-14 19:09:56.588057',NULL,'2026-04-14 19:09:56.588057',NULL,NULL,'duchieudang10@gmail.com','Thêm người dùng','M','$2a$10$egNwF.PS4hWuk67OFvPyW.fKquk.hdXTSlcBu0aMyqLxiLY4qMpgG','0987654321',NULL,1,'hieu'),(5,'2026-04-14 19:30:01.584774',NULL,'2026-04-14 19:30:01.584774',NULL,'21','admin@gmail.com','323','M','$2a$10$O1hRX50h7VtWj9sdbHEnhOpK6s6xKR8SudV30lCZASL/ec9kdfDsu','0987654321',NULL,1,'hieu2'),(6,'2026-04-14 23:30:39.190075',NULL,'2026-04-14 23:30:39.190075',NULL,NULL,'ddhntt@gmail.com','Hoang Nghia Hieu','M','$2a$10$Vm4BKUqryGZ.vOdPGpTZMu99Ab9AENmcBLcgJ.tFWvW9IbR/S/2ny','0912345678',NULL,1,'hieu123'),(7,'2026-04-17 08:58:18.803412',NULL,'2026-04-17 08:58:18.803412',NULL,NULL,'duc31231hieudang1210@gmail.com','Đặng Đức Hiêu','F','$2a$10$Vm4BKUqryGZ.vOdPGpTZMu99Ab9AENmcBLcgJ.tFWvW9IbR/S/2ny','0947388805','BSnuR7ifkh',1,'hieu1233'),(8,'2026-04-17 11:55:51.936945',NULL,'2026-04-17 11:55:51.936945',NULL,NULL,'ddhntt3@gmail.com','hieu123','M','$2a$10$u8CElBY3LOPPu49Bj2LGDOVMHYr5L2IWmj2Pk7iUKeBSuDc/MnD9i','0947388807',NULL,1,'qeqwe'),(9,'2026-04-17 21:31:20.837782',NULL,'2026-04-17 21:31:20.837782',NULL,NULL,'duchieudang1q210@gmail.com','hieu1210','M','$2a$10$Vm4BKUqryGZ.vOdPGpTZMu99Ab9AENmcBLcgJ.tFWvW9IbR/S/2ny','0947388807',NULL,1,'hiey'),(11,'2026-05-03 02:48:43.932569',NULL,'2026-05-03 02:48:43.932569',NULL,NULL,'duchieudang12120@gmail.com','qưeqw','M','$2a$10$PEB8.O/s7lyWnKz6FygWdO94S30rF1qkEf5NnCl/Qbju4kFv9cBfm','0947388804',NULL,1,'hieyu121');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1575,7 +1608,7 @@ CREATE TABLE `user_role` (
 
 LOCK TABLES `user_role` WRITE;
 /*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
-INSERT INTO `user_role` VALUES (1,1),(2,2),(5,3),(6,4);
+INSERT INTO `user_role` VALUES (1,1),(2,2),(5,3),(6,4),(7,4),(8,4),(9,6),(11,6);
 /*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1604,7 +1637,7 @@ CREATE TABLE `variant` (
   UNIQUE KEY `UK_llpabmolrn143l5uh3dp92bgy` (`sku`),
   KEY `FKjjpllnln6hk6hj98uesgxno00` (`product_id`),
   CONSTRAINT `FKjjpllnln6hk6hj98uesgxno00` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1613,7 +1646,7 @@ CREATE TABLE `variant` (
 
 LOCK TABLES `variant` WRITE;
 /*!40000 ALTER TABLE `variant` DISABLE KEYS */;
-INSERT INTO `variant` VALUES (3,'2026-04-15 00:25:03.300238',NULL,'2026-04-15 01:48:38.048346',NULL,800,NULL,1100,'null',0,'122',1,1),(4,'2026-04-15 00:29:02.578567',NULL,'2026-04-15 01:26:30.024468',NULL,1200,NULL,800,'null',6,'qưe',1,23);
+INSERT INTO `variant` VALUES (1,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,52000,NULL,105000,NULL,5,'SKU-1',1,1),(2,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,54000,NULL,110000,NULL,8,'SKU-2',1,2),(3,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,56000,NULL,115000,NULL,4,'SKU-3',1,3),(4,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,58000,NULL,120000,NULL,3,'SKU-4',1,4),(5,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,60000,NULL,125000,NULL,0,'SKU-5',1,5),(6,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,62000,NULL,130000,NULL,0,'SKU-6',1,6),(7,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,64000,NULL,135000,NULL,10,'SKU-7',1,7),(8,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,66000,NULL,140000,NULL,6,'SKU-8',1,8),(9,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,68000,NULL,145000,NULL,5,'SKU-9',1,9),(10,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,70000,NULL,150000,NULL,6,'SKU-10',1,10),(11,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,72000,NULL,155000,NULL,0,'SKU-11',1,11),(12,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,74000,NULL,160000,NULL,0,'SKU-12',1,12),(13,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,76000,NULL,165000,NULL,0,'SKU-13',1,13),(14,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,78000,NULL,170000,NULL,3,'SKU-14',1,14),(15,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,80000,NULL,175000,NULL,3,'SKU-15',1,15),(16,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,82000,NULL,180000,NULL,0,'SKU-16',1,16),(17,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,84000,NULL,185000,NULL,3,'SKU-17',1,17),(18,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,86000,NULL,190000,NULL,5,'SKU-18',1,18),(19,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,88000,NULL,195000,NULL,0,'SKU-19',1,19),(20,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,90000,NULL,200000,NULL,0,'SKU-20',1,20),(21,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,92000,NULL,205000,NULL,0,'SKU-21',1,21),(22,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,94000,NULL,210000,NULL,11,'SKU-22',1,22),(23,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,96000,NULL,215000,NULL,4,'SKU-23',1,23),(24,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,98000,NULL,220000,NULL,0,'SKU-24',1,24),(25,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,100000,NULL,225000,NULL,0,'SKU-25',1,25),(26,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,102000,NULL,230000,NULL,6,'SKU-26',1,26),(27,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,104000,NULL,235000,NULL,8,'SKU-27',1,27),(28,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,106000,NULL,240000,NULL,3,'SKU-28',1,28),(29,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,108000,NULL,245000,NULL,6,'SKU-29',1,29),(30,'2026-05-03 06:25:04.000000',NULL,'2026-05-03 06:25:04.000000',NULL,110000,NULL,250000,NULL,0,'SKU-30',1,30);
 /*!40000 ALTER TABLE `variant` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1637,7 +1670,7 @@ CREATE TABLE `verification` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_a0iaxio0f0unln4qmdryyfiqg` (`user_id`),
   CONSTRAINT `FKlhkcrvgj83d37uxew4gvjm684` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1702,7 +1735,7 @@ CREATE TABLE `warehouse` (
   UNIQUE KEY `UK_9wk4ocyt0wv0hpffpr41aoweu` (`code`),
   KEY `FKp7xymgre8vt94ihf75e9movyt` (`address_id`),
   CONSTRAINT `FKp7xymgre8vt94ihf75e9movyt` FOREIGN KEY (`address_id`) REFERENCES `address` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1711,7 +1744,7 @@ CREATE TABLE `warehouse` (
 
 LOCK TABLES `warehouse` WRITE;
 /*!40000 ALTER TABLE `warehouse` DISABLE KEYS */;
-INSERT INTO `warehouse` VALUES (5,'2026-04-15 01:27:14.252174',NULL,'2026-04-15 01:27:14.252174',NULL,'qưeq','eqw',1,70),(8,'2026-04-15 01:47:52.260257',NULL,'2026-04-15 01:47:52.260257',NULL,'22','22',1,72),(9,'2026-04-15 01:52:02.476578',NULL,'2026-04-15 01:52:02.476578',NULL,'099','0999',1,73),(10,'2026-04-15 01:53:43.327094',NULL,'2026-04-15 01:53:43.327094',NULL,'ưqw','qư',1,74);
+INSERT INTO `warehouse` VALUES (1,'2026-05-03 06:25:52.900480',NULL,'2026-05-03 06:25:52.900480',NULL,'asd','asd',1,118);
 /*!40000 ALTER TABLE `warehouse` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1738,7 +1771,7 @@ CREATE TABLE `warehouse_category` (
 
 LOCK TABLES `warehouse_category` WRITE;
 /*!40000 ALTER TABLE `warehouse_category` DISABLE KEYS */;
-INSERT INTO `warehouse_category` VALUES (5,4),(8,4),(9,4),(5,5),(8,5),(9,5),(5,6),(8,6),(9,6),(10,6);
+INSERT INTO `warehouse_category` VALUES (1,8),(1,9),(1,10),(1,11),(1,12);
 /*!40000 ALTER TABLE `warehouse_category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1765,7 +1798,7 @@ CREATE TABLE `warehouse_product` (
 
 LOCK TABLES `warehouse_product` WRITE;
 /*!40000 ALTER TABLE `warehouse_product` DISABLE KEYS */;
-INSERT INTO `warehouse_product` VALUES (5,1),(8,1),(10,1),(9,23),(10,23);
+INSERT INTO `warehouse_product` VALUES (1,1),(1,2),(1,3),(1,4),(1,7),(1,8),(1,9),(1,10),(1,12),(1,13),(1,14),(1,15),(1,16),(1,17),(1,18),(1,22),(1,23),(1,25),(1,26),(1,27),(1,28),(1,29);
 /*!40000 ALTER TABLE `warehouse_product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1797,13 +1830,16 @@ CREATE TABLE `waybill` (
   `width` int NOT NULL,
   `from_warehouse_id` bigint DEFAULT NULL,
   `order_id` bigint NOT NULL,
+  `shipper_id` bigint DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_o1ajfse9ste901tf5b97l7vm5` (`code`),
   UNIQUE KEY `UK_qjsm9ff8ehn9sp3brtnvjkdjr` (`order_id`),
   KEY `FKqvgroro6nrysihnjwappg0cnb` (`from_warehouse_id`),
+  KEY `FKrcguyd9bqueueht2udotuc5ps` (`shipper_id`),
   CONSTRAINT `FKqvgroro6nrysihnjwappg0cnb` FOREIGN KEY (`from_warehouse_id`) REFERENCES `warehouse` (`id`),
+  CONSTRAINT `FKrcguyd9bqueueht2udotuc5ps` FOREIGN KEY (`shipper_id`) REFERENCES `user` (`id`),
   CONSTRAINT `FKtm4nwydrvd6klhjy7i9slhf83` FOREIGN KEY (`order_id`) REFERENCES `order` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1812,7 +1848,6 @@ CREATE TABLE `waybill` (
 
 LOCK TABLES `waybill` WRITE;
 /*!40000 ALTER TABLE `waybill` DISABLE KEYS */;
-INSERT INTO `waybill` VALUES (1,'2026-04-15 01:27:50.560428',NULL,'2026-04-15 01:27:50.560428',NULL,880,'LHNGYW','2026-04-18 23:59:59.000000',2,'KHONGCHOXEMHANG',1,1,NULL,'2026-04-15 00:00:00.000000',27509,1,1,1,5,4);
 /*!40000 ALTER TABLE `waybill` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1835,7 +1870,7 @@ CREATE TABLE `waybill_log` (
   PRIMARY KEY (`id`),
   KEY `FKp2i7b3xbv4u8593g4tdds790w` (`waybill_id`),
   CONSTRAINT `FKp2i7b3xbv4u8593g4tdds790w` FOREIGN KEY (`waybill_id`) REFERENCES `waybill` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1844,7 +1879,6 @@ CREATE TABLE `waybill_log` (
 
 LOCK TABLES `waybill_log` WRITE;
 /*!40000 ALTER TABLE `waybill_log` DISABLE KEYS */;
-INSERT INTO `waybill_log` VALUES (1,'2026-04-15 01:27:50.608735',NULL,'2026-04-15 01:27:50.608735',NULL,1,NULL,1);
 /*!40000 ALTER TABLE `waybill_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1868,7 +1902,7 @@ CREATE TABLE `wish` (
   KEY `FKh3bvkvkslnehbxqma1x2eynqb` (`product_id`),
   CONSTRAINT `FKh3bvkvkslnehbxqma1x2eynqb` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
   CONSTRAINT `FKkqi4lso34o5xjkhiw71uadwvu` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1877,7 +1911,7 @@ CREATE TABLE `wish` (
 
 LOCK TABLES `wish` WRITE;
 /*!40000 ALTER TABLE `wish` DISABLE KEYS */;
-INSERT INTO `wish` VALUES (1,'2026-04-15 00:30:11.426862',NULL,'2026-04-15 00:30:11.426862',NULL,23,6);
+INSERT INTO `wish` VALUES (1,'2026-04-15 00:30:11.426862',NULL,'2026-04-15 00:30:11.426862',NULL,23,6),(2,'2026-05-03 17:46:51.377358',NULL,'2026-05-03 17:46:51.377358',NULL,10,7);
 /*!40000 ALTER TABLE `wish` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1890,4 +1924,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-15  1:57:29
+-- Dump completed on 2026-05-03 18:11:29

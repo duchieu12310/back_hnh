@@ -41,7 +41,8 @@ public interface SecurityConstants {
             "/api/users",
             "/api/users/**",
             "/api/roles",
-            "/api/roles/**"
+            "/api/roles/**",
+            "/api/admin/**"
     };
 
     String[] MANAGER_API_PATHS = {

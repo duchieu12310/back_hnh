@@ -33,6 +33,18 @@ public class EmailSenderServiceImpl implements EmailSenderService {
         sendEmail(toEmail, "[Hiếu Store]  Yêu cầu cấp lại mật khẩu", text);
     }
 
+    @Override
+    public void sendAccountAccepted(String toEmail, Map<String, Object> attributes) {
+        String text = getEmailContent("account-accepted.ftlh", attributes);
+        sendEmail(toEmail, "[Hiếu Store] Chúc mừng! Tài khoản của bạn đã được chấp nhận", text);
+    }
+
+    @Override
+    public void sendAccountRejected(String toEmail, Map<String, Object> attributes) {
+        String text = getEmailContent("account-rejected.ftlh", attributes);
+        sendEmail(toEmail, "[Hiếu Store] Thông báo về yêu cầu đăng ký tài khoản", text);
+    }
+
     // TODO: TẠM THỜI COMMENT - ĐĂNG KÝ NHẬN KM
     /*
      * @Override

@@ -82,6 +82,12 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(new RegistrationResponse(userId));
     }
 
+    @PostMapping("/registration/role")
+    public ResponseEntity<RegistrationResponse> registerUserWithRole(@RequestBody UserRequest userRequest) {
+        Long userId = verificationService.generateTokenVerifyForRole(userRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(new RegistrationResponse(userId));
+    }
+
     @GetMapping("/registration/{userId}/resend-token")
     public ResponseEntity<ObjectNode> resendRegistrationToken(@PathVariable Long userId) {
         verificationService.resendRegistrationToken(userId);

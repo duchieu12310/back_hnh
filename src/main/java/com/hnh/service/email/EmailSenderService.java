@@ -10,6 +10,8 @@ public interface EmailSenderService {
 
     // TODO: TẠM THỜI COMMENT - ĐĂNG KÝ NHẬN KM
     // void sendNewsletterConfirmation(String toEmail, Map<String, Object> attributes);
+    void sendAccountAccepted(String toEmail, Map<String, Object> attributes);
+    void sendAccountRejected(String toEmail, Map<String, Object> attributes);
 
 }
 

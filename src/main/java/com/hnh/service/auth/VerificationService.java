@@ -7,6 +7,7 @@ import com.hnh.dto.authentication.UserRequest;
 public interface VerificationService {
 
     Long generateTokenVerify(UserRequest userRequest);
+    Long generateTokenVerifyForRole(UserRequest userRequest);
 
     void resendRegistrationToken(Long userId);
 

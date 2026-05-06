@@ -85,6 +85,55 @@ public class VerificationServiceImpl implements VerificationService {
     }
 
     @Override
+    public Long generateTokenVerifyForRole(UserRequest userRequest) {
+        // (1) Check if username exists in database
+        if (userRepository.existsUserByUsername(userRequest.getUsername())) {
+            throw new VerificationException("Tên tài khoản này đã tồn tại trong hệ thống.");
+        }
+
+        // (2) Check if email existing in database
+        if (userRepository.existsUserByEmail(userRequest.getEmail())) {
+            throw new VerificationException("Địa chỉ email này đã được sử dụng để đăng ký.");
+        }
+
+        // (3) Validate roles (only 2 - MANAGER or 3 - OPERATOR)
+        if (userRequest.getRoles() == null || userRequest.getRoles().isEmpty()) {
+            throw new VerificationException("Vui lòng chọn vai trò đăng ký.");
+        }
+        
+        boolean validRoles = userRequest.getRoles().stream()
+                .allMatch(r -> r.getId().equals(2L) || r.getId().equals(3L));
+        if (!validRoles) {
+            throw new VerificationException("Vai trò đăng ký không hợp lệ.");
+        }
+
+        // (4) Create user entity with status 2 (non-verified)
+        User user = userMapper.requestToEntity(userRequest);
+        user.setStatus(2); // Non-verified
+
+        userRepository.save(user);
+
+        // (5) Create new verification entity and set user, token
+        Verification verification = new Verification();
+        String token = generateVerificationToken();
+
+        verification.setUser(user);
+        verification.setToken(token);
+        verification.setExpiredAt(Instant.now().plus(5, ChronoUnit.MINUTES));
+        verification.setType(VerificationType.REGISTRATION);
+
+        verificationRepository.save(verification);
+
+        // (6) Send email
+        Map<String, Object> attributes = Map.of(
+                "token", token,
+                "link", MessageFormat.format("{0}/signup?userId={1}", AppConstants.FRONTEND_HOST, user.getId()));
+        emailSenderService.sendVerificationToken(user.getEmail(), attributes);
+
+        return user.getId();
+    }
+
+    @Override
     public void resendRegistrationToken(Long userId) {
         User user = ensureUserIsUnverified(userId);
         Optional<Verification> verifyOpt = verificationRepository.findByUserId(userId);
@@ -146,17 +195,29 @@ public class VerificationServiceImpl implements VerificationService {
             if (validVerification) {
                 // (1) Set status code and delete row verification
                 User user = verification.getUser();
-                user.setStatus(1); // Verified
+
+                // Check if user has role MANAGER (2) or OPERATOR (3)
+                boolean needsApproval = user.getRoles().stream()
+                        .anyMatch(r -> r.getId().equals(2L) || r.getId().equals(3L));
+
+                if (needsApproval) {
+                    user.setStatus(-1); // Pending admin approval
+                } else {
+                    user.setStatus(1); // Verified
+
+                    // (2) Create customer entity (only for role 4)
+                    if (user.getRoles().stream().anyMatch(r -> r.getId().equals(4L))) {
+                        Customer customer = new Customer();
+                        customer.setUser(user);
+                        customer.setCustomerGroup((CustomerGroup) new CustomerGroup().setId(1L));
+                        customer.setCustomerStatus((CustomerStatus) new CustomerStatus().setId(1L));
+                        customer.setCustomerResource((CustomerResource) new CustomerResource().setId(1L));
+                        customerRepository.save(customer);
+                    }
+                }
+
                 userRepository.save(user);
                 verificationRepository.delete(verification);
-
-                // (2) Create customer entity
-                Customer customer = new Customer();
-                customer.setUser(user);
-                customer.setCustomerGroup((CustomerGroup) new CustomerGroup().setId(1L));
-                customer.setCustomerStatus((CustomerStatus) new CustomerStatus().setId(1L));
-                customer.setCustomerResource((CustomerResource) new CustomerResource().setId(1L));
-                customerRepository.save(customer);
             }
 
             boolean tokenIsExpired = verification.getToken().equals(registration.getToken())
@@ -279,7 +340,7 @@ public class VerificationServiceImpl implements VerificationService {
                 .orElseThrow(() -> new VerificationException("User not found"));
         
         if (user.getStatus() == 1) {
-            throw new VerificationException("Cannot cancel an active account");
+            throw new VerificationException("Tài khoản này đã được kích hoạt thành công, bạn không thể hủy đăng ký. Vui lòng đăng nhập để tiếp tục.");
         }
 
         // Xóa Verification trước vì có ràng buộc khóa ngoại

@@ -117,13 +117,13 @@ public class Product extends BaseEntity {
 //    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
 //    private ProductInventoryLimit productInventoryLimit;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Preorder> preorders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
     @ManyToMany(mappedBy = "products")

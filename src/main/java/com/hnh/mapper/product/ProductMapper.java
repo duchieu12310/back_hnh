@@ -12,15 +12,19 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         uses = {MapperUtils.class, ImageMapper.class, BrandMapper.class, SupplierMapper.class, UnitMapper.class,
                 GuaranteeMapper.class})
-public interface ProductMapper extends GenericMapper<Product, ProductRequest, ProductResponse> {
+public abstract class ProductMapper implements GenericMapper<Product, ProductRequest, ProductResponse> {
+
+    @Autowired
+    protected MapperUtils mapperUtils;
 
     @AfterMapping
-    default void setInventoryStatus(@MappingTarget ProductResponse response) {
+    protected void setInventoryStatus(@MappingTarget ProductResponse response) {
         if (response.getVariants() != null) {
             response.getVariants().forEach(variant -> {
                 if (variant.getQuantity() != null && variant.getQuantity() > 0) {
@@ -33,12 +37,16 @@ public interface ProductMapper extends GenericMapper<Product, ProductRequest, Pr
     }
 
     @AfterMapping
-    default void syncRelationships(@MappingTarget Product entity) {
+    protected void syncRelationships(@MappingTarget Product entity) {
         if (entity.getVariants() != null) {
             entity.getVariants().forEach(variant -> variant.setProduct(entity));
         }
         if (entity.getImages() != null) {
             entity.getImages().forEach(image -> image.setProduct(entity));
+        }
+        // Kết nối lại Tag từ database để tránh lỗi Detached Entity
+        if (mapperUtils != null) {
+            mapperUtils.attachProduct(entity);
         }
     }
 
@@ -48,7 +56,7 @@ public interface ProductMapper extends GenericMapper<Product, ProductRequest, Pr
     @Mapping(source = "supplierId", target = "supplier", qualifiedByName = "mapToSupplier")
     @Mapping(source = "unitId", target = "unit", qualifiedByName = "mapToUnit")
     @Mapping(source = "guaranteeId", target = "guarantee", qualifiedByName = "mapToGuarantee")
-    Product requestToEntity(ProductRequest request);
+    public abstract Product requestToEntity(ProductRequest request);
 
     @Override
     @Mapping(source = "categoryIds", target = "categories", qualifiedByName = "mapToCategories")
@@ -56,6 +64,6 @@ public interface ProductMapper extends GenericMapper<Product, ProductRequest, Pr
     @Mapping(source = "supplierId", target = "supplier", qualifiedByName = "mapToSupplier")
     @Mapping(source = "unitId", target = "unit", qualifiedByName = "mapToUnit")
     @Mapping(source = "guaranteeId", target = "guarantee", qualifiedByName = "mapToGuarantee")
-    Product partialUpdate(@MappingTarget Product entity, ProductRequest request);
+    public abstract Product partialUpdate(@MappingTarget Product entity, ProductRequest request);
 
 }

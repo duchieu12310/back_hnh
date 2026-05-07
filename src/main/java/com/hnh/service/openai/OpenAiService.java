@@ -33,13 +33,14 @@ public class OpenAiService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private RestTemplate restTemplate;
+
     public String chatWithGpt(String userMessage) {
         return chatWithGpt(userMessage, null);
     }
 
     public String chatWithGpt(String userMessage, String customSystemPrompt) {
-        RestTemplate restTemplate = new RestTemplate();
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + apiKey);

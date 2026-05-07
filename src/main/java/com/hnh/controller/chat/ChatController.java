@@ -5,6 +5,7 @@ import com.hnh.dto.ListResponse;
 import com.hnh.dto.chat.MessageRequest;
 import com.hnh.dto.chat.MessageResponse;
 import com.hnh.service.chat.MessageService;
+import com.hnh.service.openai.OpenAiService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ public class ChatController {
 
     private SimpMessagingTemplate simpMessagingTemplate;
     private MessageService messageService;
+    private OpenAiService openAiService;
 
     @MessageMapping("/{roomId}")
     public void sendMessage(@DestinationVariable String roomId, @Payload MessageRequest message) {
@@ -45,6 +47,16 @@ public class ChatController {
     ) {
         ListResponse<MessageResponse> messageResponses = messageService.findAll(page, size, sort, filter, search, all);
         return ResponseEntity.status(HttpStatus.OK).body(messageResponses);
+    }
+
+    @org.springframework.web.bind.annotation.PostMapping("/chat/book-search")
+    public java.util.Map<String, String> bookSearch(@org.springframework.web.bind.annotation.RequestBody java.util.Map<String, String> request) {
+        String message = request.get("message");
+        String aiResponse = openAiService.chatWithGpt(message);
+
+        java.util.Map<String, String> result = new java.util.HashMap<>();
+        result.put("reply", aiResponse);
+        return result;
     }
 
 }

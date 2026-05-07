@@ -161,4 +161,16 @@ public class MapperUtils {
     @Named("mapToCustomerStatus") public CustomerStatus mapToCustomerStatus(Long id) { return id == null ? null : customerStatusRepository.findById(id).orElse(null); }
     @Named("mapToGuarantee") public Guarantee mapToGuarantee(Long id) { return id == null ? null : guaranteeRepository.findById(id).orElse(null); }
     @Named("mapToProducts") public Set<Product> mapToProducts(java.util.Collection<Long> productIds) { if (productIds == null) return null; return productIds.stream().map(id -> productRepository.findById(id).orElse(null)).collect(Collectors.toSet()); }
+
+    public Product attachProduct(Product product) {
+        if (product == null) return null;
+        if (product.getImages() != null) {
+            product.getImages().forEach(image -> image.setProduct(product));
+        }
+        product.setTags(attachSet(product.getTags(), tagRepository));
+        if (product.getVariants() != null) {
+            product.getVariants().forEach(variant -> variant.setProduct(product));
+        }
+        return product;
+    }
 }

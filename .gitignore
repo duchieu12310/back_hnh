@@ -35,3 +35,5 @@ build/
 ### Custom ###
 /image-dir/
 /src/main/java/com/phucanhduong/Test.java
+.env
+src/main/resources/application.properties

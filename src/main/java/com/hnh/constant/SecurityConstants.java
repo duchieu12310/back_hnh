@@ -33,6 +33,8 @@ public interface SecurityConstants {
             "/client-api/payment-methods/**",
             "/client-api/vnpay/**",
             "/api/geocode",
+            "/api/chat/**",
+            "/api/ai/**",
             "/ws/**"
 
     };

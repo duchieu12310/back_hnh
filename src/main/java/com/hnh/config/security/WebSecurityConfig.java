@@ -1,6 +1,7 @@
 package com.hnh.config.security;
 
 import com.hnh.constant.SecurityConstants;
+import com.hnh.config.security.AuthTokenFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;

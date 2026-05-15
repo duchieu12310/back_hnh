@@ -14,7 +14,7 @@ public class SearchUtils {
         }
 
         return searchFields.stream()
-                .map(field -> field + "=like='" + search.trim() + "'")
+                .map(field -> field + "=like='*" + search.trim() + "*'")
                 .collect(Collectors.collectingAndThen(Collectors.joining(","), RSQLJPASupport::toSpecification));
     }
 

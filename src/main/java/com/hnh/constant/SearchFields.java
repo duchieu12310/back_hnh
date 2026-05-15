@@ -138,8 +138,7 @@ public interface SearchFields {
 
     List<String> CATEGORY = List.of(
             "name",
-            "slug",
-            "description"
+            "slug"
     );
 
     List<String> TAG = List.of(
@@ -190,24 +189,8 @@ public interface SearchFields {
 
     List<String> PRODUCT = List.of(
             "name",
-            "code",
-            "slug",
-            "shortDescription",
-            "description",
             "categories.name",
-            "brand.name",
-            "brand.code",
-            "supplier.displayName",
-            "supplier.code",
-            "supplier.contactFullname",
-            "supplier.contactEmail",
-            "supplier.contactPhone",
-            "supplier.companyName",
-            "supplier.taxCode",
-            "supplier.email",
-            "supplier.phone",
-            "unit.name",
-            "guarantee.name"
+            "brand.name"
     );
 
     List<String> VARIANT = List.of(

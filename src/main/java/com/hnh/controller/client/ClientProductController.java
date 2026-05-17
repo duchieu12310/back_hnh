@@ -33,6 +33,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.domain.Specification;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
+import com.hnh.entity.product.Brand;
+import com.hnh.entity.product.Variant;
+import java.util.ArrayList;
+
 @RestController
 @RequestMapping("/client-api/products")
 @AllArgsConstructor
@@ -44,6 +53,72 @@ public class ClientProductController {
     private ProjectionRepository projectionRepository;
     private ClientProductMapper clientProductMapper;
     private ReviewRepository reviewRepository;
+
+    @GetMapping("/shop")
+    public ResponseEntity<ListResponse<ClientListedProductResponse>> getShopProducts(
+            @RequestParam(name = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(name = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+            @RequestParam(name = "sort", required = false) @Nullable String sort,
+            @RequestParam(name = "saleable", required = false) boolean saleable,
+            @RequestParam(name = "search", required = false) @Nullable String search
+    ) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        Specification<Product> spec = (root, query, cb) -> {
+            List<Predicate> wheres = new ArrayList<>();
+            List<javax.persistence.criteria.Order> orders = new ArrayList<>();
+
+            Join<Product, Variant> variant = root.join("variants", javax.persistence.criteria.JoinType.LEFT);
+
+            if (saleable) {
+                Subquery<Integer> subquery = query.subquery(Integer.class);
+                Root<Variant> variantSq = subquery.from(Variant.class);
+                subquery.select(cb.sum(variantSq.get("quantity")));
+                subquery.where(cb.equal(variantSq.get("product"), root));
+                subquery.groupBy(variantSq.get("product"));
+                wheres.add(cb.greaterThan(cb.coalesce(subquery, 0), 0));
+            }
+
+            if (search != null && !search.isBlank()) {
+                String likeQuery = "%" + search.trim().toLowerCase() + "%";
+                Join<Product, Category> categories = root.join("categories", javax.persistence.criteria.JoinType.LEFT);
+                Join<Product, Brand> brand = root.join("brand", javax.persistence.criteria.JoinType.LEFT);
+                wheres.add(cb.or(
+                    cb.like(cb.lower(root.get("name")), likeQuery),
+                    cb.like(cb.lower(categories.get("name")), likeQuery),
+                    cb.like(cb.lower(brand.get("name")), likeQuery)
+                ));
+            }
+
+            if ("lowest-price".equals(sort)) {
+                orders.add(cb.asc(cb.min(variant.get("price"))));
+            }
+
+            if ("highest-price".equals(sort)) {
+                orders.add(cb.desc(cb.max(variant.get("price"))));
+            }
+
+            if ("random".equals(sort)) {
+                orders.add(cb.asc(cb.function("RAND", Void.class)));
+            }
+
+            query.where(wheres.toArray(Predicate[]::new));
+            query.groupBy(root.get("id"));
+            query.orderBy(orders);
+
+            return query.getRestriction();
+        };
+
+        Page<Product> products = productRepository.findAll(spec, pageable);
+
+        List<Long> productIds = products.map(Product::getId).toList();
+        List<SimpleProductInventory> productInventories = projectionRepository.findSimpleProductInventories(productIds);
+
+        List<ClientListedProductResponse> clientListedProductResponses = products
+                .map(product -> clientProductMapper.entityToListedResponse(product, productInventories)).toList();
+
+        return ResponseEntity.status(HttpStatus.OK).body(ListResponse.of(clientListedProductResponses, products));
+    }
 
     @GetMapping
     public ResponseEntity<ListResponse<ClientListedProductResponse>> getAllProducts(

@@ -38,7 +38,7 @@ public class ClientSearchController {
     private final ProjectionRepository projectionRepository;
 
     @GetMapping
-    public ResponseEntity<GlobalSearchResponse> searchEverything(@RequestParam String query) {
+    public ResponseEntity<GlobalSearchResponse> searchEverything(@RequestParam(required = false, defaultValue = "") String query) {
         String likeQuery = "%" + query.trim().toLowerCase() + "%";
 
         // 1. Tìm kiếm Sách (Products) - Sử dụng Specification tùy chỉnh để ép LEFT JOIN

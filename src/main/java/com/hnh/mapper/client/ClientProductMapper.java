@@ -78,6 +78,16 @@ public class ClientProductMapper {
                 .map(promotionMapper::entityToClientResponse)
                 .orElse(null));
 
+        clientListedProductResponse.setProductUpcomingPromotion(promotionRepository
+                .findUpcomingPromotionByProductId(product.getId())
+                .stream()
+                .findFirst()
+                .map(promotionMapper::entityToClientResponse)
+                .orElse(null));
+
+        clientListedProductResponse.setProductCategories(clientCategoryMapper
+                .entityToResponse(product.getCategories().stream().toList(), 1));
+
         return clientListedProductResponse;
     }
 
@@ -124,6 +134,13 @@ public class ClientProductMapper {
         clientProductResponse.setProductRelatedProducts(relatedProductResponses);
         clientProductResponse.setProductPromotion(promotionRepository
                 .findActivePromotionByProductId(product.getId())
+                .stream()
+                .findFirst()
+                .map(promotionMapper::entityToClientResponse)
+                .orElse(null));
+
+        clientProductResponse.setProductUpcomingPromotion(promotionRepository
+                .findUpcomingPromotionByProductId(product.getId())
                 .stream()
                 .findFirst()
                 .map(promotionMapper::entityToClientResponse)

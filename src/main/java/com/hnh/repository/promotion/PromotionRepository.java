@@ -38,6 +38,10 @@ public interface PromotionRepository extends JpaRepository<Promotion, Long>, Jpa
             "CURRENT_TIMESTAMP >= pr.startDate AND CURRENT_TIMESTAMP <= pr.endDate")
     List<Promotion> findActivePromotionByProductId(@Param("productId") Long productId);
 
+    @Query("SELECT pr FROM Promotion pr JOIN pr.products p WHERE p.id = :productId AND pr.status = 1 AND " +
+            "CURRENT_TIMESTAMP < pr.startDate")
+    List<Promotion> findUpcomingPromotionByProductId(@Param("productId") Long productId);
+
     @Query("SELECT COUNT(pr.id) FROM Promotion pr WHERE pr.status = 1 AND CURRENT_TIMESTAMP >= pr.startDate AND CURRENT_TIMESTAMP <= pr.endDate")
     int countByPromotionId();
 

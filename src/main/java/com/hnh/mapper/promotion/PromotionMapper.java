@@ -42,14 +42,13 @@ public abstract class PromotionMapper implements GenericMapper<Promotion, Promot
     public abstract Promotion partialUpdate(@MappingTarget Promotion entity, PromotionRequest request);
 
     @AfterMapping
-    @Named("addProductsFromCategories")
     protected void addProductsFromCategories(@MappingTarget Promotion promotion, PromotionRequest request) {
         if (request.getCategoryIds() != null && !request.getCategoryIds().isEmpty()) {
-            Set<Product> productsFromCategories = request.getCategoryIds().stream()
-                    .map(categoryRepository::getById)
-                    .map(Category::getProducts)
-                    .flatMap(Set::stream)
-                    .collect(Collectors.toSet());
+            Set<Product> productsFromCategories = new HashSet<>();
+            for (Long categoryId : request.getCategoryIds()) {
+                Category category = categoryRepository.getById(categoryId);
+                collectProductsRecursively(category, productsFromCategories);
+            }
 
             if (promotion.getProducts() == null) {
                 promotion.setProducts(new HashSet<>());
@@ -58,8 +57,23 @@ public abstract class PromotionMapper implements GenericMapper<Promotion, Promot
         }
     }
 
+    private void collectProductsRecursively(Category category, Set<Product> targetSet) {
+        if (category == null) {
+            return;
+        }
+        if (category.getProducts() != null) {
+            targetSet.addAll(category.getProducts());
+        }
+        if (category.getChildren() != null) {
+            for (Category child : category.getChildren()) {
+                collectProductsRecursively(child, targetSet);
+            }
+        }
+    }
+
     @Mapping(source = "id", target = "promotionId")
     @Mapping(source = "percent", target = "promotionPercent")
+    @Mapping(source = "name", target = "promotionName")
     public abstract ClientPromotionResponse entityToClientResponse(Promotion promotion);
 
 }

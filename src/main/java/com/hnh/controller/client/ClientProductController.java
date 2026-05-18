@@ -129,13 +129,14 @@ public class ClientProductController {
             @RequestParam(name = "search", required = false) @Nullable String search,
             @RequestParam(name = "saleable", required = false) boolean saleable,
             @RequestParam(name = "newable", required = false) boolean newable,
-            @RequestParam(name = "slowSelling", required = false) boolean slowSelling
+            @RequestParam(name = "slowSelling", required = false) boolean slowSelling,
+            @RequestParam(name = "topSelling", required = false) boolean topSelling
     ) {
         // Phân trang
         Pageable pageable = PageRequest.of(page - 1, size);
 
         // Lấy danh sách sản phẩm theo điều kiện lọc và phân trang
-        Page<Product> products = productRepository.findByParams(filter, sort, search, saleable, newable, slowSelling, pageable);
+        Page<Product> products = productRepository.findByParams(filter, sort, search, saleable, newable, slowSelling || topSelling, pageable);
 
         // Lấy thông tin tồn kho của sản phẩm
         List<Long> productIds = products.map(Product::getId).toList();
@@ -157,7 +158,8 @@ public class ClientProductController {
             @RequestParam(name = "search", required = false) @Nullable String search,
             @RequestParam(name = "saleable", required = false) boolean saleable,
             @RequestParam(name = "newable", required = false) boolean newable,
-            @RequestParam(name = "slowSelling", required = false) boolean slowSelling
+            @RequestParam(name = "slowSelling", required = false) boolean slowSelling,
+            @RequestParam(name = "topSelling", required = false) boolean topSelling
     ) {
         // Tìm danh mục theo slug, ném lỗi 404 nếu không tồn tại
         Category category = categoryRepository.findBySlug(slug)
@@ -173,7 +175,7 @@ public class ClientProductController {
         String finalFilter = (filter == null || filter.isBlank()) ? categoryFilter : categoryFilter + ";" + filter;
 
         Pageable pageable = PageRequest.of(page - 1, size);
-        Page<Product> products = productRepository.findByParams(finalFilter, sort, search, saleable, newable, slowSelling, pageable);
+        Page<Product> products = productRepository.findByParams(finalFilter, sort, search, saleable, newable, slowSelling || topSelling, pageable);
 
         List<Long> productIds = products.map(Product::getId).toList();
         List<SimpleProductInventory> productInventories = projectionRepository.findSimpleProductInventories(productIds);

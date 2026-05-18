@@ -20,6 +20,9 @@ public class ClientListedProductResponse {
     private boolean productSaleable;
     @Nullable
     private ClientPromotionResponse productPromotion;
+    @Nullable
+    private ClientPromotionResponse productUpcomingPromotion;
+    private List<ClientCategoryResponse> productCategories;
 
     @Data
     @Accessors(chain = true)

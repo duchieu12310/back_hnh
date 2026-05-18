@@ -6,5 +6,8 @@ import lombok.Data;
 public class ClientPromotionResponse {
     private Long promotionId;
     private Integer promotionPercent;
+    private String promotionName;
+    private java.time.Instant startDate;
+    private java.time.Instant endDate;
 }
 

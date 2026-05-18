@@ -102,7 +102,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             }
 
             if (slowSelling) {
-                // Tính tổng số lượng bán từ OrderVariant trong các đơn hàng đã hoàn thành (status = 4)
+                // Tính tổng số lượng bán từ OrderVariant trong các đơn hàng đã mua (status != 5)
                 Subquery<Integer> salesSubquery = query.subquery(Integer.class);
                 Root<Variant> variantSalesSq = salesSubquery.from(Variant.class);
                 Join<Variant, OrderVariant> orderVariantSq = variantSalesSq.join("orderVariants");
@@ -112,7 +112,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
                 salesSubquery.where(
                     cb.and(
                         cb.equal(variantSalesSq.get("product").get("id"), root.get("id")),
-                        cb.equal(orderSq.get("status"), 4) // Đơn hàng đã giao thành công
+                        cb.notEqual(orderSq.get("status"), 5) // Không lấy các đơn hàng đã hủy
                     )
                 );
                 salesSubquery.groupBy(variantSalesSq.get("product").get("id"));
@@ -143,28 +143,47 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
          */
         List<Product> products = findAll(docketable);
         
-        // Nếu slowSelling = true, sort theo số lượng bán giảm dần
+        // Nếu slowSelling = true, sort theo ngày mua gần nhất và số lượng bán giảm dần
         if (slowSelling) {
             List<Long> productIds = products.stream().map(Product::getId).toList();
             List<Object[]> salesData = findTotalSalesByProductIds(productIds);
             
-            // Tạo map productId -> totalSales
+            // Tạo map productId -> totalSales, dateMap -> ngày mua gần nhất
             java.util.Map<Long, Integer> salesMap = new java.util.HashMap<>();
+            java.util.Map<Long, java.time.Instant> dateMap = new java.util.HashMap<>();
             for (Object[] row : salesData) {
                 Long productId = ((Number) row[0]).longValue();
                 Integer totalSales = ((Number) row[1]).intValue();
+                java.time.Instant lastPurchasedAt = java.time.Instant.EPOCH;
+                if (row[2] != null) {
+                    if (row[2] instanceof java.time.Instant) {
+                        lastPurchasedAt = (java.time.Instant) row[2];
+                    } else if (row[2] instanceof java.sql.Timestamp) {
+                        lastPurchasedAt = ((java.sql.Timestamp) row[2]).toInstant();
+                    } else if (row[2] instanceof java.util.Date) {
+                        lastPurchasedAt = ((java.util.Date) row[2]).toInstant();
+                    }
+                }
                 salesMap.put(productId, totalSales);
+                dateMap.put(productId, lastPurchasedAt);
             }
             
-            // Sort products theo số lượng bán giảm dần
+            // Sort products theo ngày mua gần nhất giảm dần, sau đó theo số lượng bán giảm dần
             products.sort((p1, p2) -> {
+                java.time.Instant date1 = dateMap.getOrDefault(p1.getId(), java.time.Instant.EPOCH);
+                java.time.Instant date2 = dateMap.getOrDefault(p2.getId(), java.time.Instant.EPOCH);
+                int dateCompare = date2.compareTo(date1); // Giảm dần
+                if (dateCompare != 0) {
+                    return dateCompare;
+                }
+                
                 Integer sales1 = salesMap.getOrDefault(p1.getId(), 0);
                 Integer sales2 = salesMap.getOrDefault(p2.getId(), 0);
-                int compare = sales2.compareTo(sales1); // Giảm dần
-                if (compare == 0) {
-                    return p1.getId().compareTo(p2.getId()); // Nếu bằng nhau, sort theo ID
+                int salesCompare = sales2.compareTo(sales1); // Giảm dần
+                if (salesCompare != 0) {
+                    return salesCompare;
                 }
-                return compare;
+                return p1.getId().compareTo(p2.getId());
             });
         }
         
@@ -180,11 +199,11 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     @Query("SELECT COUNT(p.id) FROM Product p")
     int countByProductId();
 
-    @Query("SELECT v.product.id, COALESCE(SUM(ov.quantity), 0) " +
+    @Query("SELECT v.product.id, COALESCE(SUM(ov.quantity), 0), MAX(o.createdAt) " +
            "FROM Variant v " +
            "INNER JOIN v.orderVariants ov " +
            "INNER JOIN ov.order o " +
-           "WHERE v.product.id IN :productIds AND o.status = 4 " +
+           "WHERE v.product.id IN :productIds AND o.status != 5 " +
            "GROUP BY v.product.id")
     List<Object[]> findTotalSalesByProductIds(List<Long> productIds);
 

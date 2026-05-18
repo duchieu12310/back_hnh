@@ -33,6 +33,8 @@ public class ClientProductResponse {
     @Nullable
     private ClientPromotionResponse productPromotion;
     @Nullable
+    private ClientPromotionResponse productUpcomingPromotion;
+    @Nullable
     private ClientGuaranteeResponse productGuarantee;
 
     @Data

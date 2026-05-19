@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 public interface WaybillRepository extends JpaRepository<Waybill, Long>, JpaSpecificationExecutor<Waybill> {
@@ -21,5 +23,8 @@ public interface WaybillRepository extends JpaRepository<Waybill, Long>, JpaSpec
     int countByStatus(Integer status);
 
     java.util.List<Waybill> findByStatusAndShipperIsNull(Integer status);
+
+    // Tìm các vận đơn đang hoạt động (status 1=chờ, 2=đang giao) đã qua ngày dự kiến giao hàng
+    List<Waybill> findByStatusInAndExpectedDeliveryTimeBefore(List<Integer> statuses, Instant now);
 }
 

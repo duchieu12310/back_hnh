@@ -77,6 +77,7 @@ public class WaybillServiceImpl implements WaybillService {
     private final NotificationMapper notificationMapper;
     private final WaybillLogRepository waybillLogRepository;
     private final InventoryService inventoryService;
+    private final DeliveryCompletionService deliveryCompletionService;
     // TODO: TẠM THỜI COMMENT - FLOW ĐIỂM THƯỞNG
     // private final RewardUtils rewardUtils;
 
@@ -159,6 +160,9 @@ public class WaybillServiceImpl implements WaybillService {
                 waybill.setFromWarehouse(chosenWarehouse);
 
                 Waybill waybillAfterSave = waybillRepository.save(waybill);
+
+                // Lên lịch tự động hoàn thành đơn tại đúng expectedDeliveryTime
+                deliveryCompletionService.scheduleDeliveryCompletion(waybillAfterSave);
 
                 // (2) Sửa order
                 order.setShippingCost(BigDecimal.valueOf(ghnCreateOrderResponse.getData().getTotalFee()));

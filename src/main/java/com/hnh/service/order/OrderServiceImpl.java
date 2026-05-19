@@ -37,6 +37,7 @@ import com.hnh.repository.waybill.WaybillRepository;
 import com.hnh.repository.product.VariantRepository;
 import com.hnh.service.general.NotificationService;
 import com.hnh.service.warehouse.InventoryService;
+import com.hnh.service.waybill.AutoWaybillService;
 import com.hnh.utils.VNpayService;
 import com.hnh.entity.cart.CartVariant;
 import java.util.ArrayList;
@@ -90,6 +91,7 @@ public class OrderServiceImpl implements OrderService {
     private final NotificationService notificationService;
     private final NotificationMapper notificationMapper;
     private final InventoryService inventoryService;
+    private final AutoWaybillService autoWaybillService;
 
     private static final int USD_VND_RATE = 25_000;
 
@@ -157,7 +159,7 @@ public class OrderServiceImpl implements OrderService {
 
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
 
-        Cart cart = cartRepository.findByUsername(username)
+        Cart cart = cartRepository.findByUsername(username).stream().findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceName.CART, FieldName.USERNAME, username));
 
         // (0) Validate Variant Inventory - Kiểm tra tồn kho trước khi tạo đơn hàng
@@ -235,6 +237,8 @@ public class OrderServiceImpl implements OrderService {
         // (3) Kiểm tra hình thức thanh toán
         if (request.getPaymentMethodType() == PaymentMethodType.CASH) {
             orderRepository.save(order);
+            // Tự động tạo vận đơn ngay lập tức nếu feature đang bật
+            autoWaybillService.processOrderImmediately(order);
         } else if (request.getPaymentMethodType() == PaymentMethodType.PAYPAL) {
             try {
                 // (3.2.1) Tính tổng tiền theo USD

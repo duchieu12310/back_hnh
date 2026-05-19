@@ -31,6 +31,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final com.hnh.repository.warehouse.StorageLocationRepository storageLocationRepository;
     private final com.hnh.repository.warehouse.InventoryItemRepository inventoryItemRepository;
     private final VariantRepository variantRepository;
+    private final com.hnh.repository.product.ProductRepository productRepository;
 
     @Override
     public ListResponse<WarehouseResponse> findAll(int page, int size, String sort, String filter, String search, boolean all) {
@@ -120,7 +121,42 @@ public class WarehouseServiceImpl implements WarehouseService {
                                 .setBin(null)
                 ));
 
-        // 2. Initialize InventoryItems for all Variants of assigned Products
+        // 2. Automatically link existing matching products
+        if (warehouse.getCategories() == null || warehouse.getCategories().isEmpty()) {
+            List<Product> allProducts = productRepository.findAll();
+            if (warehouse.getProducts() == null) {
+                warehouse.setProducts(new HashSet<>());
+            }
+            warehouse.getProducts().addAll(allProducts);
+            warehouseRepository.save(warehouse);
+        } else {
+            List<Product> allProducts = productRepository.findAll();
+            for (Product p : allProducts) {
+                boolean categoryAllowed = false;
+                if (p.getCategories() != null) {
+                    for (com.hnh.entity.product.Category productCat : p.getCategories()) {
+                        com.hnh.entity.product.Category curr = productCat;
+                        while (curr != null) {
+                            if (warehouse.getCategories().contains(curr)) {
+                                categoryAllowed = true;
+                                break;
+                            }
+                            curr = curr.getParentCategory();
+                        }
+                        if (categoryAllowed) break;
+                    }
+                }
+                if (categoryAllowed) {
+                    if (warehouse.getProducts() == null) {
+                        warehouse.setProducts(new HashSet<>());
+                    }
+                    warehouse.getProducts().add(p);
+                }
+            }
+            warehouseRepository.save(warehouse);
+        }
+
+        // 3. Initialize InventoryItems for all Variants of assigned Products
         if (warehouse.getProducts() != null) {
             for (com.hnh.entity.product.Product product : warehouse.getProducts()) {
                 if (product.getVariants() != null) {

@@ -189,8 +189,12 @@ public interface SearchFields {
 
     List<String> PRODUCT = List.of(
             "name",
+            "code",
             "categories.name",
-            "brand.name"
+            "brand.name",
+            "supplier.displayName",
+            "supplier.companyName",
+            "variants.sku"
     );
 
     List<String> VARIANT = List.of(
@@ -244,9 +248,13 @@ public interface SearchFields {
 
     List<String> CLIENT_PRODUCT = List.of(
             "name",
+            "code",
             "slug",
             "categories.name",
-            "brand.name"
+            "brand.name",
+            "supplier.displayName",
+            "supplier.companyName",
+            "variants.sku"
     );
 
     List<String> WAYBILL = List.of(

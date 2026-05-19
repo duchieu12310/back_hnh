@@ -200,7 +200,56 @@ public class InventoryServiceImpl implements InventoryService {
             }
         }
 
-        return new ArrayList<>(l1Nodes.values());
+        List<CategoryLevel1Node> result = new ArrayList<>(l1Nodes.values());
+
+        // 1. Sort Level 1 Nodes by ID
+        result.sort(java.util.Comparator.comparing(CategoryLevel1Node::getId));
+
+        for (CategoryLevel1Node node1 : result) {
+            // Sort L1 Products by ID
+            if (node1.getProducts() != null) {
+                node1.getProducts().sort(java.util.Comparator.comparing(ProductStorageResponse::getProductId));
+                for (ProductStorageResponse p : node1.getProducts()) {
+                    if (p.getVariants() != null) {
+                        p.getVariants().sort(java.util.Comparator.comparing(VariantInventoryDto::getVariantId));
+                    }
+                }
+            }
+
+            // Sort L2 Children by ID
+            if (node1.getChildren() != null) {
+                node1.getChildren().sort(java.util.Comparator.comparing(CategoryLevel2Node::getId));
+                for (CategoryLevel2Node node2 : node1.getChildren()) {
+                    // Sort L2 Products by ID
+                    if (node2.getProducts() != null) {
+                        node2.getProducts().sort(java.util.Comparator.comparing(ProductStorageResponse::getProductId));
+                        for (ProductStorageResponse p : node2.getProducts()) {
+                            if (p.getVariants() != null) {
+                                p.getVariants().sort(java.util.Comparator.comparing(VariantInventoryDto::getVariantId));
+                            }
+                        }
+                    }
+
+                    // Sort L3 Children by ID
+                    if (node2.getChildren() != null) {
+                        node2.getChildren().sort(java.util.Comparator.comparing(CategoryLevel3Node::getId));
+                        for (CategoryLevel3Node node3 : node2.getChildren()) {
+                            // Sort L3 Products by ID
+                            if (node3.getProducts() != null) {
+                                node3.getProducts().sort(java.util.Comparator.comparing(ProductStorageResponse::getProductId));
+                                for (ProductStorageResponse p : node3.getProducts()) {
+                                    if (p.getVariants() != null) {
+                                        p.getVariants().sort(java.util.Comparator.comparing(VariantInventoryDto::getVariantId));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 
     private ProductStorageResponse mapToProductStorageResponse(Product product, StorageLocation loc, List<InventoryItem> items) {

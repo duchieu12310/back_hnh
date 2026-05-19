@@ -36,20 +36,20 @@ import java.util.stream.Collectors;
 @CrossOrigin(AppConstants.FRONTEND_HOST)
 public class ClientCartController {
 
-    private CartRepository cartRepository;
-    private CartVariantRepository cartVariantRepository;
-    private ClientCartMapper clientCartMapper;
+    private final CartRepository cartRepository;
+    private final CartVariantRepository cartVariantRepository;
+    private final ClientCartMapper clientCartMapper;
+    private final ObjectMapper objectMapper;
 
     @GetMapping
     public ResponseEntity<ObjectNode> getCart(Authentication authentication) {
         String username = authentication.getName();
-        ObjectMapper mapper = new ObjectMapper();
 
         // Reference: https://stackoverflow.com/a/11828920, https://stackoverflow.com/a/51456293
         ObjectNode response = cartRepository.findByUsername(username)
                 .map(clientCartMapper::entityToResponse)
-                .map(clientCartResponse -> mapper.convertValue(clientCartResponse, ObjectNode.class))
-                .orElse(mapper.createObjectNode());
+                .map(clientCartResponse -> objectMapper.convertValue(clientCartResponse, ObjectNode.class))
+                .orElse(objectMapper.createObjectNode());
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

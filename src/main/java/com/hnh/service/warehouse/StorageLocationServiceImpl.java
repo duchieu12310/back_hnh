@@ -95,7 +95,21 @@ public class StorageLocationServiceImpl implements StorageLocationService {
     public void delete(Long id) {
         StorageLocation location = storageLocationRepository.findById(id).orElse(null);
         if (location != null) {
-            // InventoryItems will be cascade deleted because of orphanRemoval = true in StorageLocation
+            if (location.getInventoryItems() != null) {
+                for (InventoryItem item : location.getInventoryItems()) {
+                    if (item.getVariant() != null) {
+                        Variant variant = item.getVariant();
+                        if (item.getQuantity() != null && item.getQuantity() > 0) {
+                            int currentQty = variant.getQuantity() != null ? variant.getQuantity() : 0;
+                            variant.setQuantity(Math.max(0, currentQty - item.getQuantity()));
+                        }
+                        if (variant.getInventoryItems() != null) {
+                            variant.getInventoryItems().remove(item);
+                        }
+                        variantRepository.save(variant);
+                    }
+                }
+            }
             storageLocationRepository.delete(location);
         }
     }

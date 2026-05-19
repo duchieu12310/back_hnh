@@ -13,8 +13,9 @@ public class SearchUtils {
             return RSQLJPASupport.toSpecification(null);
         }
 
+        String safeSearch = search.trim().replace("'", "\\'");
         return searchFields.stream()
-                .map(field -> field + "=like='*" + search.trim() + "*'")
+                .map(field -> field + "=like='" + safeSearch + "'")
                 .collect(Collectors.collectingAndThen(Collectors.joining(","), RSQLJPASupport::toSpecification));
     }
 

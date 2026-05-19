@@ -208,11 +208,17 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public void updateInventory(AutoSaveInventoryRequest dto) {
-        Variant variant = variantRepository.findById(dto.getVariantId())
-                .orElseThrow(() -> new com.hnh.exception.ResourceNotFoundException("Variant", "id", dto.getVariantId()));
+        Optional<Variant> variantOpt = variantRepository.findById(dto.getVariantId());
+        if (variantOpt.isEmpty()) {
+            return;
+        }
+        Variant variant = variantOpt.get();
 
-        StorageLocation location = storageLocationRepository.findById(dto.getStorageLocationId())
-                .orElseThrow(() -> new com.hnh.exception.ResourceNotFoundException("StorageLocation", "id", dto.getStorageLocationId()));
+        Optional<StorageLocation> locationOpt = storageLocationRepository.findById(dto.getStorageLocationId());
+        if (locationOpt.isEmpty()) {
+            return;
+        }
+        StorageLocation location = locationOpt.get();
 
         InventoryItem item = inventoryItemRepository.findByVariantIdAndStorageLocationId(variant.getId(), location.getId())
                 .orElse(new InventoryItem().setVariant(variant).setStorageLocation(location).setQuantity(0));

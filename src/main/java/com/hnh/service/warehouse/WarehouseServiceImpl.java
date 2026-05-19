@@ -14,7 +14,12 @@ import javax.transaction.Transactional;
 import com.hnh.entity.warehouse.StorageLocation;
 import com.hnh.entity.warehouse.InventoryItem;
 import com.hnh.entity.warehouse.Warehouse;
+import com.hnh.entity.product.Variant;
+import com.hnh.entity.product.Product;
+import com.hnh.repository.product.VariantRepository;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +30,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseMapper warehouseMapper;
     private final com.hnh.repository.warehouse.StorageLocationRepository storageLocationRepository;
     private final com.hnh.repository.warehouse.InventoryItemRepository inventoryItemRepository;
+    private final VariantRepository variantRepository;
 
     @Override
     public ListResponse<WarehouseResponse> findAll(int page, int size, String sort, String filter, String search, boolean all) {
@@ -45,6 +51,55 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     public WarehouseResponse save(Long id, WarehouseRequest request) {
+        Warehouse existingWarehouse = warehouseRepository.findById(id).orElse(null);
+        if (existingWarehouse != null) {
+            // Find products that are currently assigned but NOT in the new request
+            Set<Long> newProductIds = new HashSet<>();
+            if (request.getCategories() != null) {
+                for (WarehouseRequest.CategorySelectionDto catDto : request.getCategories()) {
+                    if (catDto.getProductIds() != null) {
+                        newProductIds.addAll(catDto.getProductIds());
+                    }
+                }
+            }
+
+            Set<Product> removedProducts = new HashSet<>();
+            if (existingWarehouse.getProducts() != null) {
+                for (Product p : existingWarehouse.getProducts()) {
+                    if (!newProductIds.contains(p.getId())) {
+                        removedProducts.add(p);
+                    }
+                }
+            }
+
+            // For each removed product, decrease the quantities of all its variants,
+            // and delete the corresponding InventoryItem records in this warehouse!
+            for (Product p : removedProducts) {
+                if (p.getVariants() != null) {
+                    for (Variant variant : p.getVariants()) {
+                        List<InventoryItem> itemsToDelete = inventoryItemRepository.findByVariantIdAndWarehouseId(variant.getId(), id);
+                        for (InventoryItem item : itemsToDelete) {
+                            if (item.getQuantity() != null && item.getQuantity() > 0) {
+                                int currentQty = variant.getQuantity() != null ? variant.getQuantity() : 0;
+                                variant.setQuantity(Math.max(0, currentQty - item.getQuantity()));
+                            }
+                            if (variant.getInventoryItems() != null) {
+                                variant.getInventoryItems().remove(item);
+                            }
+                            variantRepository.save(variant);
+
+                            StorageLocation loc = item.getStorageLocation();
+                            if (loc != null && loc.getInventoryItems() != null) {
+                                loc.getInventoryItems().remove(item);
+                            }
+
+                            inventoryItemRepository.delete(item);
+                        }
+                    }
+                }
+            }
+        }
+
         WarehouseResponse response = defaultSave(id, request, warehouseRepository, warehouseMapper, ResourceName.WAREHOUSE);
         initInventoryItems(id);
         return response;
@@ -87,12 +142,40 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     public void delete(Long id) {
-        warehouseRepository.deleteById(id);
+        Warehouse warehouse = warehouseRepository.findById(id).orElse(null);
+        if (warehouse != null) {
+            decreaseVariantQuantities(warehouse);
+            warehouseRepository.delete(warehouse);
+        }
     }
 
     @Override
     public void delete(List<Long> ids) {
-        warehouseRepository.deleteAllById(ids);
+        for (Long id : ids) {
+            delete(id);
+        }
+    }
+
+    private void decreaseVariantQuantities(Warehouse warehouse) {
+        if (warehouse.getLocations() != null) {
+            for (StorageLocation location : warehouse.getLocations()) {
+                if (location.getInventoryItems() != null) {
+                    for (InventoryItem item : location.getInventoryItems()) {
+                        if (item.getVariant() != null) {
+                            Variant variant = item.getVariant();
+                            if (item.getQuantity() != null && item.getQuantity() > 0) {
+                                int currentQty = variant.getQuantity() != null ? variant.getQuantity() : 0;
+                                variant.setQuantity(Math.max(0, currentQty - item.getQuantity()));
+                            }
+                            if (variant.getInventoryItems() != null) {
+                                variant.getInventoryItems().remove(item);
+                            }
+                            variantRepository.save(variant);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override

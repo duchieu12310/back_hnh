@@ -79,7 +79,14 @@ public class InventoryServiceImpl implements InventoryService {
                 .filter(p -> {
                     if (request.getProductIds() != null && !request.getProductIds().isEmpty() && !request.getProductIds().contains(p.getId())) return false;
 
-                    if (p.getCategories() == null || p.getCategories().isEmpty()) return false;
+                    if (p.getCategories() == null || p.getCategories().isEmpty()) {
+                        if ((request.getCategoryL1Ids() != null && !request.getCategoryL1Ids().isEmpty()) ||
+                            (request.getCategoryL2Ids() != null && !request.getCategoryL2Ids().isEmpty()) ||
+                            (request.getCategoryL3Ids() != null && !request.getCategoryL3Ids().isEmpty())) {
+                            return false;
+                        }
+                        return true;
+                    }
 
                     // Check if any associated category matches the requested filters
                     return p.getCategories().stream().anyMatch(cat -> {
@@ -109,6 +116,40 @@ public class InventoryServiceImpl implements InventoryService {
         Map<Long, CategoryLevel3Node> l3Nodes = new HashMap<>();
 
         for (Product product : productsToInclude) {
+            // 1. Prepare Product Storage Responses for this product
+            List<ProductStorageResponse> pResponses = new ArrayList<>();
+            Map<Long, List<InventoryItem>> itemsByLocation = new HashMap<>();
+            if (warehouse != null) {
+                for (Variant variant : product.getVariants()) {
+                    List<InventoryItem> varItems = itemsByVariantId.getOrDefault(variant.getId(), Collections.emptyList());
+                    for (InventoryItem item : varItems) {
+                        itemsByLocation.computeIfAbsent(item.getStorageLocation().getId(), id -> new ArrayList<>()).add(item);
+                    }
+                }
+            }
+
+            if (!itemsByLocation.isEmpty()) {
+                for (Map.Entry<Long, List<InventoryItem>> entry : itemsByLocation.entrySet()) {
+                    StorageLocation loc = entry.getValue().get(0).getStorageLocation();
+                    pResponses.add(mapToProductStorageResponse(product, loc, entry.getValue()));
+                }
+            } else if (warehouse != null) {
+                if (request.getAisle() == null && request.getShelf() == null && request.getBin() == null) {
+                    StorageLocation defaultLoc = warehouse.getLocations().isEmpty() ? null : warehouse.getLocations().get(0);
+                    if (defaultLoc != null) pResponses.add(mapToProductStorageResponse(product, defaultLoc, Collections.emptyList()));
+                }
+            } else {
+                pResponses.add(mapToProductStorageResponse(product, null, Collections.emptyList()));
+            }
+
+            // 2. Attach to Tree
+            if (product.getCategories() == null || product.getCategories().isEmpty()) {
+                CategoryLevel1Node node1 = l1Nodes.computeIfAbsent(-1L, id -> new CategoryLevel1Node().setId(-1L).setName("Chưa phân loại").setChildren(new ArrayList<>()).setProducts(new ArrayList<>()));
+                if (node1.getProducts() == null) node1.setProducts(new ArrayList<>());
+                node1.getProducts().addAll(pResponses);
+                continue;
+            }
+
             for (Category leafCat : product.getCategories()) {
                 // Determine full ancestry path
                 List<Category> path = new ArrayList<>();
@@ -127,33 +168,7 @@ public class InventoryServiceImpl implements InventoryService {
                 if (request.getCategoryL2Ids() != null && !request.getCategoryL2Ids().isEmpty() && (l2Cat == null || !request.getCategoryL2Ids().contains(l2Cat.getId()))) continue;
                 if (request.getCategoryL1Ids() != null && !request.getCategoryL1Ids().isEmpty() && (l1Cat == null || !request.getCategoryL1Ids().contains(l1Cat.getId()))) continue;
 
-                // 1. Prepare Product Storage Responses for this product
-                List<ProductStorageResponse> pResponses = new ArrayList<>();
-                Map<Long, List<InventoryItem>> itemsByLocation = new HashMap<>();
-                if (warehouse != null) {
-                    for (Variant variant : product.getVariants()) {
-                        List<InventoryItem> varItems = itemsByVariantId.getOrDefault(variant.getId(), Collections.emptyList());
-                        for (InventoryItem item : varItems) {
-                            itemsByLocation.computeIfAbsent(item.getStorageLocation().getId(), id -> new ArrayList<>()).add(item);
-                        }
-                    }
-                }
-
-                if (!itemsByLocation.isEmpty()) {
-                    for (Map.Entry<Long, List<InventoryItem>> entry : itemsByLocation.entrySet()) {
-                        StorageLocation loc = entry.getValue().get(0).getStorageLocation();
-                        pResponses.add(mapToProductStorageResponse(product, loc, entry.getValue()));
-                    }
-                } else if (warehouse != null) {
-                    if (request.getAisle() == null && request.getShelf() == null && request.getBin() == null) {
-                        StorageLocation defaultLoc = warehouse.getLocations().isEmpty() ? null : warehouse.getLocations().get(0);
-                        if (defaultLoc != null) pResponses.add(mapToProductStorageResponse(product, defaultLoc, Collections.emptyList()));
-                    }
-                } else {
-                    pResponses.add(mapToProductStorageResponse(product, null, Collections.emptyList()));
-                }
-
-                // 2. Attach to Tree at correct level
+                // Attach to Tree at correct level
                 if (leafCat.getLevel() == 1) {
                     CategoryLevel1Node node1 = l1Nodes.computeIfAbsent(leafCat.getId(), id -> new CategoryLevel1Node().setId(leafCat.getId()).setName(leafCat.getName()).setChildren(new ArrayList<>()).setProducts(new ArrayList<>()));
                     if (node1.getProducts() == null) node1.setProducts(new ArrayList<>());

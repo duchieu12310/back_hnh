@@ -45,8 +45,18 @@ public class ClientCartController {
     public ResponseEntity<ObjectNode> getCart(Authentication authentication) {
         String username = authentication.getName();
 
+        List<Cart> carts = cartRepository.findByUsername(username);
+        if (carts.size() > 1) {
+            for (int i = 0; i < carts.size() - 1; i++) {
+                Cart oldCart = carts.get(i);
+                oldCart.setStatus(0);
+                cartRepository.save(oldCart);
+            }
+        }
+        java.util.Optional<Cart> activeCart = carts.isEmpty() ? java.util.Optional.empty() : java.util.Optional.of(carts.get(carts.size() - 1));
+
         // Reference: https://stackoverflow.com/a/11828920, https://stackoverflow.com/a/51456293
-        ObjectNode response = cartRepository.findByUsername(username)
+        ObjectNode response = activeCart
                 .map(clientCartMapper::entityToResponse)
                 .map(clientCartResponse -> objectMapper.convertValue(clientCartResponse, ObjectNode.class))
                 .orElse(objectMapper.createObjectNode());
@@ -55,12 +65,24 @@ public class ClientCartController {
     }
 
     @PostMapping
-    public ResponseEntity<ClientCartResponse> saveCart(@RequestBody ClientCartRequest request) {
+    public ResponseEntity<ClientCartResponse> saveCart(@RequestBody ClientCartRequest request, Authentication authentication) {
         final Cart cartBeforeSave;
 
-        // TODO: Đôi khi cartId null nhưng thực tế user vẫn đang có cart trong DB
+        // Xử lý tạo mới nếu request.getCartId() == null nhưng user có thể đã có giỏ hàng
         if (request.getCartId() == null) {
-            cartBeforeSave = clientCartMapper.requestToEntity(request);
+            List<Cart> carts = cartRepository.findByUsername(authentication.getName());
+            if (carts.size() > 1) {
+                for (int i = 0; i < carts.size() - 1; i++) {
+                    Cart oldCart = carts.get(i);
+                    oldCart.setStatus(0);
+                    cartRepository.save(oldCart);
+                }
+            }
+            java.util.Optional<Cart> activeCart = carts.isEmpty() ? java.util.Optional.empty() : java.util.Optional.of(carts.get(carts.size() - 1));
+
+            cartBeforeSave = activeCart
+                    .map(existingEntity -> clientCartMapper.partialUpdate(existingEntity, request))
+                    .orElseGet(() -> clientCartMapper.requestToEntity(request));
         } else {
             cartBeforeSave = cartRepository.findById(request.getCartId())
                     .map(existingEntity -> clientCartMapper.partialUpdate(existingEntity, request))

@@ -27,6 +27,9 @@
         <stomp-websocket.version>2.3.3</stomp-websocket.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <jackson.version>2.13.4.2</jackson.version>
+        <snakeyaml.version>2.0</snakeyaml.version>
+        <logback.version>1.2.13</logback.version>
     </properties>
     <dependencies>
         <dependency>

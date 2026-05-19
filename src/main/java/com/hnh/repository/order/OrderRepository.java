@@ -27,5 +27,6 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
     @Query("SELECT COUNT(o.id) FROM Order o")
     int countByOrderId();
 
+    int countByStatus(Integer status);
 }
 

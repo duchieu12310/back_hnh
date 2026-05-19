@@ -47,7 +47,9 @@ public class StatisticServiceImpl implements StatisticService {
         int totalCustomer = customerRepository.countByCustomerId();
         int totalProduct = productRepository.countByProductId();
         int totalOrder = orderRepository.countByOrderId();
+        int totalDeliveredOrder = orderRepository.countByStatus(4);
         int totalWaybill = waybillRepository.countByWaybillId();
+        int totalCompletedWaybill = waybillRepository.countByStatus(3);
         int totalReview = reviewRepository.countByReviewId();
         int totalActivePromotion = promotionRepository.countByPromotionId();
         int totalSupplier = supplierRepository.countBySupplierId();
@@ -62,7 +64,9 @@ public class StatisticServiceImpl implements StatisticService {
         statisticResponse.setTotalCustomer(totalCustomer);
         statisticResponse.setTotalProduct(totalProduct);
         statisticResponse.setTotalOrder(totalOrder);
+        statisticResponse.setTotalDeliveredOrder(totalDeliveredOrder);
         statisticResponse.setTotalWaybill(totalWaybill);
+        statisticResponse.setTotalCompletedWaybill(totalCompletedWaybill);
         statisticResponse.setTotalReview(totalReview);
         statisticResponse.setTotalActivePromotion(totalActivePromotion);
         statisticResponse.setTotalSupplier(totalSupplier);

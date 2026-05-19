@@ -9,7 +9,9 @@ public class StatisticResponse {
     private Integer totalCustomer;
     private Integer totalProduct;
     private Integer totalOrder;
+    private Integer totalDeliveredOrder;
     private Integer totalWaybill;
+    private Integer totalCompletedWaybill;
     private Integer totalReview;
     private Integer totalActivePromotion;
     private Integer totalSupplier;

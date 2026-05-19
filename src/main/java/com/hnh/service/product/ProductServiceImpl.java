@@ -4,6 +4,7 @@ import com.hnh.constant.ResourceName;
 import com.hnh.constant.SearchFields;
 import com.hnh.dto.product.ProductRequest;
 import com.hnh.dto.product.ProductResponse;
+import com.hnh.dto.product.VariantRequest;
 import com.hnh.entity.product.Product;
 import com.hnh.entity.product.Variant;
 import com.hnh.entity.warehouse.Warehouse;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -51,6 +53,25 @@ public class ProductServiceImpl extends GenericService<Product, ProductRequest, 
     @Override
     public ProductResponse save(Long id, ProductRequest request) {
         validateUniqueness(request, id);
+
+        // Detect and clean up deleted variants' inventory items
+        Product existingProduct = productRepository.findById(id).orElse(null);
+        if (existingProduct != null && existingProduct.getVariants() != null && request.getVariants() != null) {
+            java.util.Set<Long> requestVariantIds = request.getVariants().stream()
+                    .map(VariantRequest::getId)
+                    .filter(java.util.Objects::nonNull)
+                    .collect(Collectors.toSet());
+
+            for (Variant variant : existingProduct.getVariants()) {
+                if (!requestVariantIds.contains(variant.getId())) {
+                    List<InventoryItem> itemsToDelete = inventoryItemRepository.findByVariantId(variant.getId());
+                    if (itemsToDelete != null && !itemsToDelete.isEmpty()) {
+                        inventoryItemRepository.deleteAll(itemsToDelete);
+                    }
+                }
+            }
+        }
+
         ProductResponse response = super.save(id, request);
         initializeInventoryForProduct(response.getId());
         return response;

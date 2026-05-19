@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -20,9 +21,8 @@ public class StatisticController {
     private StatisticService statisticService;
 
     @GetMapping
-    public ResponseEntity<StatisticResponse> getStatistic() {
-        // TODO: [28-03-2023] Chưa rõ API này có lấy thống kê theo 7 ngày gần nhất?
-        return ResponseEntity.status(HttpStatus.OK).body(statisticService.getStatistic());
+    public ResponseEntity<StatisticResponse> getStatistic(@RequestParam(value = "period", defaultValue = "month") String period) {
+        return ResponseEntity.status(HttpStatus.OK).body(statisticService.getStatistic(period));
     }
 
 }

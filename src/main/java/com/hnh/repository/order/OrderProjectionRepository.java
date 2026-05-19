@@ -74,10 +74,10 @@ public class OrderProjectionRepository {
     }
 
     /**
-     * Lấy danh sách sản phẩm bán chạy trong tháng (30 ngày gần nhất)
+     * Lấy danh sách sản phẩm bán chạy trong khoảng thời gian chỉ định
      * Chỉ tính các đơn hàng đã giao thành công (status = 4) và đã thanh toán (paymentStatus = 2)
      */
-    public List<ProductSalesStatistic> getTopSellingProductsThisMonth(int limit) {
+    public List<ProductSalesStatistic> getTopSellingProducts(Instant startDate, int limit) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Object[]> query = cb.createQuery(Object[].class);
 
@@ -90,12 +90,14 @@ public class OrderProjectionRepository {
         Predicate statusPredicate = cb.equal(order.get("status"), 4);
         Predicate paymentStatusPredicate = cb.equal(order.get("paymentStatus"), 2);
         
-        // Lọc theo tháng (30 ngày gần nhất)
-        Instant now = Instant.now();
-        Instant monthAgo = now.minus(30, ChronoUnit.DAYS);
-        Predicate datePredicate = cb.greaterThanOrEqualTo(order.get("createdAt").as(Instant.class), monthAgo);
-        
-        Predicate wherePredicate = cb.and(statusPredicate, paymentStatusPredicate, datePredicate);
+        // Lọc theo ngày
+        Predicate wherePredicate;
+        if (startDate != null) {
+            Predicate datePredicate = cb.greaterThanOrEqualTo(order.get("createdAt").as(Instant.class), startDate);
+            wherePredicate = cb.and(statusPredicate, paymentStatusPredicate, datePredicate);
+        } else {
+            wherePredicate = cb.and(statusPredicate, paymentStatusPredicate);
+        }
 
         // Group by Product và tính tổng quantity và revenue
         query.select(cb.array(
@@ -136,34 +138,36 @@ public class OrderProjectionRepository {
     }
 
     /**
-     * Lấy danh sách sản phẩm không bán được trong tháng (30 ngày gần nhất)
-     * Lấy các sản phẩm không có đơn hàng nào đã giao thành công và đã thanh toán trong 30 ngày gần nhất
+     * Lấy danh sách sản phẩm không bán được trong khoảng thời gian chỉ định
+     * Lấy các sản phẩm không có đơn hàng nào đã giao thành công và đã thanh toán trong khoảng thời gian đó
      */
-    public List<ProductSalesStatistic> getSlowSellingProductsThisMonth(int limit) {
+    public List<ProductSalesStatistic> getSlowSellingProducts(Instant startDate, int limit) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Object[]> query = cb.createQuery(Object[].class);
 
         Root<Product> product = query.from(Product.class);
         
-        // Subquery để kiểm tra xem sản phẩm có bán trong tháng không
+        // Subquery để kiểm tra xem sản phẩm có bán trong period không
         javax.persistence.criteria.Subquery<Long> soldProductsSubquery = query.subquery(Long.class);
         Root<OrderVariant> orderVariantSq = soldProductsSubquery.from(OrderVariant.class);
         Join<OrderVariant, Order> orderSq = orderVariantSq.join("order");
         Join<OrderVariant, Variant> variantSq = orderVariantSq.join("variant");
         
-        // Điều kiện: đơn hàng đã giao thành công, đã thanh toán và trong 30 ngày gần nhất
-        Instant now = Instant.now();
-        Instant monthAgo = now.minus(30, ChronoUnit.DAYS);
-        
         soldProductsSubquery.select(cb.literal(1L));
-        soldProductsSubquery.where(cb.and(
+        
+        Predicate subqueryPredicate = cb.and(
             cb.equal(variantSq.get("product").get("id"), product.get("id")), // Liên kết với product bên ngoài
             cb.equal(orderSq.get("status"), 4), // Đã giao thành công
-            cb.equal(orderSq.get("paymentStatus"), 2), // Đã thanh toán
-            cb.greaterThanOrEqualTo(orderSq.get("createdAt").as(Instant.class), monthAgo) // Trong 30 ngày gần nhất
-        ));
+            cb.equal(orderSq.get("paymentStatus"), 2) // Đã thanh toán
+        );
         
-        // Lấy các sản phẩm KHÔNG có bán trong tháng (NOT EXISTS)
+        if (startDate != null) {
+            subqueryPredicate = cb.and(subqueryPredicate, cb.greaterThanOrEqualTo(orderSq.get("createdAt").as(Instant.class), startDate));
+        }
+        
+        soldProductsSubquery.where(subqueryPredicate);
+        
+        // Lấy các sản phẩm KHÔNG có bán trong period (NOT EXISTS)
         query.select(cb.array(
             product.get("id"),
             product.get("name"),

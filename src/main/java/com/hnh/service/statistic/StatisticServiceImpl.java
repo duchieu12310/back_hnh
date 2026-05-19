@@ -18,6 +18,8 @@ import com.hnh.repository.waybill.WaybillRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -38,7 +40,7 @@ public class StatisticServiceImpl implements StatisticService {
     private ReviewProjectionRepository reviewProjectionRepository;
 
     @Override
-    public StatisticResponse getStatistic() {
+    public StatisticResponse getStatistic(String period) {
         StatisticResponse statisticResponse = new StatisticResponse();
 
         // TODO: Nên dùng tên hàm `count` hợp lý hơn, như `countAll()`
@@ -71,9 +73,21 @@ public class StatisticServiceImpl implements StatisticService {
         statisticResponse.setStatisticWaybill(statisticWaybill);
         statisticResponse.setStatisticRevenue(statisticRevenue);
 
-        // Lấy top 10 sản phẩm bán chạy và bán chậm trong tháng
-        List<ProductSalesStatistic> topSellingProducts = orderProjectionRepository.getTopSellingProductsThisMonth(10);
-        List<ProductSalesStatistic> slowSellingProducts = orderProjectionRepository.getSlowSellingProductsThisMonth(10);
+        // Determine startDate based on period
+        Instant startDate = null;
+        Instant now = Instant.now();
+        if ("week".equalsIgnoreCase(period)) {
+            startDate = now.minus(7, ChronoUnit.DAYS);
+        } else if ("year".equalsIgnoreCase(period)) {
+            startDate = now.minus(365, ChronoUnit.DAYS);
+        } else {
+            // Default to month (30 days)
+            startDate = now.minus(30, ChronoUnit.DAYS);
+        }
+
+        // Lấy top 10 sản phẩm bán chạy và bán chậm theo period
+        List<ProductSalesStatistic> topSellingProducts = orderProjectionRepository.getTopSellingProducts(startDate, 10);
+        List<ProductSalesStatistic> slowSellingProducts = orderProjectionRepository.getSlowSellingProducts(startDate, 10);
         statisticResponse.setTopSellingProducts(topSellingProducts);
         statisticResponse.setSlowSellingProducts(slowSellingProducts);
 

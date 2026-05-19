@@ -4,7 +4,7 @@ import com.hnh.dto.statistic.StatisticResponse;
 
 public interface StatisticService {
 
-    StatisticResponse getStatistic();
+    StatisticResponse getStatistic(String period);
 
 }
 

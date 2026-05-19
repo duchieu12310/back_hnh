@@ -90,17 +90,25 @@ public class InventoryServiceImpl implements InventoryService {
 
                     // Check if any associated category matches the requested filters
                     return p.getCategories().stream().anyMatch(cat -> {
-                        Category l3 = cat;
-                        if (request.getCategoryL3Ids() != null && !request.getCategoryL3Ids().isEmpty() && !request.getCategoryL3Ids().contains(l3.getId())) {
+                        List<Category> path = new ArrayList<>();
+                        Category curr = cat;
+                        while (curr != null) {
+                            path.add(0, curr);
+                            curr = curr.getParentCategory();
+                        }
+
+                        Category l1 = path.size() >= 1 ? path.get(0) : null;
+                        Category l2 = path.size() >= 2 ? path.get(1) : null;
+                        Category l3 = path.size() >= 3 ? path.get(2) : null;
+
+                        if (request.getCategoryL3Ids() != null && !request.getCategoryL3Ids().isEmpty() && (l3 == null || !request.getCategoryL3Ids().contains(l3.getId()))) {
                             return false;
                         }
 
-                        Category l2 = l3.getParentCategory();
                         if (request.getCategoryL2Ids() != null && !request.getCategoryL2Ids().isEmpty() && (l2 == null || !request.getCategoryL2Ids().contains(l2.getId()))) {
                             return false;
                         }
 
-                        Category l1 = (l2 != null) ? l2.getParentCategory() : null;
                         if (request.getCategoryL1Ids() != null && !request.getCategoryL1Ids().isEmpty() && (l1 == null || !request.getCategoryL1Ids().contains(l1.getId()))) {
                             return false;
                         }

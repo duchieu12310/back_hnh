@@ -5,15 +5,24 @@ import com.hnh.constant.SearchFields;
 import com.hnh.dto.product.ProductRequest;
 import com.hnh.dto.product.ProductResponse;
 import com.hnh.entity.product.Product;
+import com.hnh.entity.product.Variant;
+import com.hnh.entity.warehouse.Warehouse;
+import com.hnh.entity.warehouse.StorageLocation;
+import com.hnh.entity.warehouse.InventoryItem;
 import com.hnh.exception.ConflictException;
 import com.hnh.mapper.product.ProductMapper;
 import com.hnh.repository.product.ProductRepository;
+import com.hnh.repository.warehouse.WarehouseRepository;
+import com.hnh.repository.warehouse.StorageLocationRepository;
+import com.hnh.repository.warehouse.InventoryItemRepository;
 import com.hnh.service.GenericService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
+import java.util.HashSet;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +31,9 @@ public class ProductServiceImpl extends GenericService<Product, ProductRequest, 
 
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final WarehouseRepository warehouseRepository;
+    private final StorageLocationRepository storageLocationRepository;
+    private final InventoryItemRepository inventoryItemRepository;
 
     @PostConstruct
     public void initFields() {
@@ -31,13 +43,66 @@ public class ProductServiceImpl extends GenericService<Product, ProductRequest, 
     @Override
     public ProductResponse save(ProductRequest request) {
         validateUniqueness(request, null);
-        return super.save(request);
+        ProductResponse response = super.save(request);
+        initializeInventoryForProduct(response.getId());
+        return response;
     }
 
     @Override
     public ProductResponse save(Long id, ProductRequest request) {
         validateUniqueness(request, id);
-        return super.save(id, request);
+        ProductResponse response = super.save(id, request);
+        initializeInventoryForProduct(response.getId());
+        return response;
+    }
+
+    private void initializeInventoryForProduct(Long productId) {
+        Product product = productRepository.findById(productId).orElse(null);
+        if (product == null) return;
+
+        List<Warehouse> warehouses = warehouseRepository.findAll();
+        for (Warehouse warehouse : warehouses) {
+            boolean shouldInclude = false;
+            if (warehouse.getCategories() != null && !warehouse.getCategories().isEmpty()) {
+                if (warehouse.getProducts() != null) {
+                    shouldInclude = warehouse.getProducts().stream().anyMatch(p -> p.getId().equals(productId));
+                }
+            } else {
+                shouldInclude = true;
+                if (warehouse.getProducts() == null) {
+                    warehouse.setProducts(new HashSet<>());
+                }
+                if (warehouse.getProducts().stream().noneMatch(p -> p.getId().equals(productId))) {
+                    warehouse.getProducts().add(product);
+                    warehouseRepository.save(warehouse);
+                }
+            }
+
+            if (shouldInclude) {
+                StorageLocation defaultLocation = storageLocationRepository
+                        .findByWarehouseIdAndAisleAndShelfAndBin(warehouse.getId(), null, null, null)
+                        .orElseGet(() -> storageLocationRepository.save(
+                                new StorageLocation()
+                                        .setWarehouse(warehouse)
+                                        .setAisle(null)
+                                        .setShelf(null)
+                                        .setBin(null)
+                        ));
+
+                if (product.getVariants() != null) {
+                    for (Variant variant : product.getVariants()) {
+                        if (inventoryItemRepository.findByVariantIdAndStorageLocationId(variant.getId(), defaultLocation.getId()).isEmpty()) {
+                            inventoryItemRepository.save(
+                                    new InventoryItem()
+                                            .setVariant(variant)
+                                            .setStorageLocation(defaultLocation)
+                                            .setQuantity(0)
+                            );
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void validateUniqueness(ProductRequest request, Long id) {

@@ -167,9 +167,9 @@ public class OrderServiceImpl implements OrderService {
             int inventory = cartVariant.getVariant().getQuantity();
             if (cartVariant.getQuantity() > inventory) {
                 throw new RuntimeException(
-                        String.format("Sản phẩm %s không đủ số lượng trong kho. Số lượng có thể bán: %d, số lượng yêu cầu: %d",
-                                cartVariant.getVariant().getSku(), inventory, cartVariant.getQuantity())
-                );
+                        String.format(
+                                "Sản phẩm %s không đủ số lượng trong kho. Số lượng có thể bán: %d, số lượng yêu cầu: %d",
+                                cartVariant.getVariant().getSku(), inventory, cartVariant.getQuantity()));
             }
         }
 
@@ -181,9 +181,15 @@ public class OrderServiceImpl implements OrderService {
         order.setToName(user.getFullname());
         order.setToPhone(user.getPhone());
         order.setToAddress(user.getDefaultAddress() != null ? user.getDefaultAddress().getLine() : "");
-        order.setToWardName(user.getDefaultAddress() != null && user.getDefaultAddress().getWard() != null ? user.getDefaultAddress().getWard().getName() : "");
-        order.setToDistrictName(user.getDefaultAddress() != null && user.getDefaultAddress().getDistrict() != null ? user.getDefaultAddress().getDistrict().getName() : "");
-        order.setToProvinceName(user.getDefaultAddress() != null && user.getDefaultAddress().getProvince() != null ? user.getDefaultAddress().getProvince().getName() : "");
+        order.setToWardName(user.getDefaultAddress() != null && user.getDefaultAddress().getWard() != null
+                ? user.getDefaultAddress().getWard().getName()
+                : "");
+        order.setToDistrictName(user.getDefaultAddress() != null && user.getDefaultAddress().getDistrict() != null
+                ? user.getDefaultAddress().getDistrict().getName()
+                : "");
+        order.setToProvinceName(user.getDefaultAddress() != null && user.getDefaultAddress().getProvince() != null
+                ? user.getDefaultAddress().getProvince().getName()
+                : "");
         order.setOrderResource((OrderResource) new OrderResource().setId(1L));
         order.setUser(user);
 
@@ -203,7 +209,8 @@ public class OrderServiceImpl implements OrderService {
                             .setVariant(cartVariant.getVariant())
                             .setPrice(BigDecimal.valueOf(currentPrice))
                             .setQuantity(cartVariant.getQuantity())
-                            .setAmount(BigDecimal.valueOf(currentPrice).multiply(BigDecimal.valueOf(cartVariant.getQuantity())));
+                            .setAmount(BigDecimal.valueOf(currentPrice)
+                                    .multiply(BigDecimal.valueOf(cartVariant.getQuantity())));
                 })
                 .collect(Collectors.toSet()));
 
@@ -251,9 +258,7 @@ public class OrderServiceImpl implements OrderService {
                 paypalRequest.setIntent(OrderIntent.CAPTURE);
                 paypalRequest.setPurchaseUnits(List.of(
                         new PaypalRequest.PurchaseUnit(
-                                new PaypalRequest.PurchaseUnit.Money("USD", totalPayUSD.toString())
-                        )
-                ));
+                                new PaypalRequest.PurchaseUnit.Money("USD", totalPayUSD.toString()))));
 
                 paypalRequest.setApplicationContext(new PaypalRequest.PayPalAppContext()
                         .setBrandName("Phuc Anh Duong")
@@ -279,7 +284,8 @@ public class OrderServiceImpl implements OrderService {
                 throw new RuntimeException("Cannot create PayPal transaction request!" + e);
             }
         } else if (request.getPaymentMethodType() == PaymentMethodType.VNPAY) {
-            // Convert BigDecimal to long (VNPay requires amount in VND, will be converted to cents)
+            // Convert BigDecimal to long (VNPay requires amount in VND, will be converted
+            // to cents)
             long totalPayVND = order.getTotalPay().longValue();
             log.info("Creating VNPay transaction for order: {} with amount: {} VND", order.getCode(), totalPayVND);
             var url = vNpayService.getPayUrl(order.getCode(), totalPayVND, null);
@@ -307,7 +313,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void captureTransactionPaypal(String paypalOrderId, String payerId) {
         Order order = orderRepository.findByPaypalOrderId(paypalOrderId)
-                .orElseThrow(() -> new ResourceNotFoundException(ResourceName.ORDER, FieldName.PAYPAL_ORDER_ID, paypalOrderId));
+                .orElseThrow(() -> new ResourceNotFoundException(ResourceName.ORDER, FieldName.PAYPAL_ORDER_ID,
+                        paypalOrderId));
 
         order.setPaypalOrderStatus(OrderStatus.APPROVED.toString());
 
@@ -323,7 +330,8 @@ public class OrderServiceImpl implements OrderService {
             Notification notification = new Notification()
                     .setUser(order.getUser())
                     .setType(NotificationType.CHECKOUT_PAYPAL_SUCCESS)
-                    .setMessage(String.format("Đơn hàng %s của bạn đã được thanh toán thành công bằng PayPal.", order.getCode()))
+                    .setMessage(String.format("Đơn hàng %s của bạn đã được thanh toán thành công bằng PayPal.",
+                            order.getCode()))
                     .setAnchor("/order/detail/" + order.getCode())
                     .setStatus(1);
 
@@ -341,7 +349,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void captureTransactionVNPay(String vnpayOrderId, boolean isSuccess) {
         Order order = orderRepository.findByCode(vnpayOrderId)
-                .orElseThrow(() -> new ResourceNotFoundException(ResourceName.ORDER, FieldName.ORDER_CODE, vnpayOrderId));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(ResourceName.ORDER, FieldName.ORDER_CODE, vnpayOrderId));
         if (isSuccess) {
             order.setPaypalOrderStatus(OrderStatus.COMPLETED.toString());
             order.setPaymentStatus(2); // Status 2: Đã thanh toán
@@ -349,7 +358,8 @@ public class OrderServiceImpl implements OrderService {
             Notification notification = new Notification()
                     .setUser(order.getUser())
                     .setType(NotificationType.CHECKOUT_PAYPAL_SUCCESS)
-                    .setMessage(String.format("Đơn hàng %s của bạn đã được thanh toán thành công bằng VNPay.", order.getCode()))
+                    .setMessage(String.format("Đơn hàng %s của bạn đã được thanh toán thành công bằng VNPay.",
+                            order.getCode()))
                     .setAnchor("/order/detail/" + order.getCode())
                     .setStatus(1);
             notificationRepository.save(notification);
@@ -376,7 +386,4 @@ public class OrderServiceImpl implements OrderService {
         return price * (100 - discount) / 100;
     }
 
-
-
 }
-

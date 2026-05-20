@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -21,7 +24,8 @@ public class AutoWaybillService {
     private final OrderRepository orderRepository;
     private final WaybillService waybillService;
 
-    // @Lazy để tránh circular dependency: OrderService -> AutoWaybillService -> OrderService
+    // @Lazy để tránh circular dependency: OrderService -> AutoWaybillService ->
+    // OrderService
     @Lazy
     @Autowired
     private OrderService orderService;
@@ -30,11 +34,10 @@ public class AutoWaybillService {
 
     // Từ khóa lỗi hết hàng — chỉ hủy đơn khi gặp các lỗi này
     private static final List<String> STOCK_ERROR_KEYWORDS = List.of(
-        "Không tìm thấy kho nào",
-        "không đủ số lượng",
-        "out of stock",
-        "insufficient"
-    );
+            "Không tìm thấy kho nào",
+            "không đủ số lượng",
+            "out of stock",
+            "insufficient");
 
     public AutoWaybillService(OrderRepository orderRepository, WaybillService waybillService) {
         this.orderRepository = orderRepository;
@@ -57,10 +60,24 @@ public class AutoWaybillService {
         if (!autoWaybillEnabled) {
             return;
         }
+
         log.info("AutoWaybillService [REALTIME]: Processing order immediately: {}", order.getCode());
         processOrder(order);
     }
+    // private final ScheduledExecutorService scheduler =
+    // Executors.newScheduledThreadPool(1);
 
+    // public void processOrderImmediately(Order order) {
+    // if (!autoWaybillEnabled) {
+    // return;
+    // }
+
+    // scheduler.schedule(() -> {
+    // log.info("AutoWaybillService [DELAY 30s]: Processing order: {}",
+    // order.getCode());
+    // processOrder(order);
+    // }, 30, TimeUnit.SECONDS);
+    // }
     /**
      * Scheduled job: chạy mỗi 60 giây để xử lý các đơn còn tồn đọng
      */
